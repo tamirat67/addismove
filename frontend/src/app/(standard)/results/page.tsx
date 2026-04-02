@@ -49,7 +49,7 @@ export default function Results() {
   }, []);
 
   return (
-    <div className="space-y-4 pb-10">
+    <div className="max-w-md mx-auto w-full px-4 pt-4 space-y-4 pb-10">
       <div className="flex items-center gap-3 mb-6">
         <Link href="/" className="text-gray-500 hover:text-black transition-colors">
           <ArrowLeft className="w-5 h-5" />
