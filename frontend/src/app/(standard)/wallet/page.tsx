@@ -10,7 +10,7 @@ export default function Wallet() {
   const { balance, transactions } = useTenant();
 
   return (
-    <div className="max-w-md mx-auto w-full px-4 pt-4 pb-20 space-y-8 animate-in fade-in duration-500">
+    <div className="w-full px-4 pt-4 space-y-8 animate-in fade-in duration-500">
       <header className="flex items-center justify-between px-1">
         <div>
           <h2 className="text-2xl font-black tracking-tight text-slate-800 uppercase">My Wallet</h2>

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="max-w-md mx-auto w-full px-4 pt-4 pb-20 space-y-8 animate-in slide-in-from-bottom-4 duration-500 fade-in">
+    <div className="w-full px-4 space-y-8 animate-in slide-in-from-bottom-4 duration-500 fade-in">
       {/* Header / Intro */}
       <div className="pt-4 px-1">
         <h1 className="text-3xl font-black tracking-tighter text-slate-900 leading-tight">
