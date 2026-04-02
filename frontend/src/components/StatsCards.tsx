@@ -13,53 +13,71 @@ export function StatsCards() {
       label: "Active Passengers",
       value: tenant === "anbessa" ? "1,204" : "842",
       icon: Users,
+      trend: "+12.5%",
+      subtext: "vs last hour",
       color: theme.primary,
-      bg: `${theme.primary}10`,
     },
     {
       label: "Today's Revenue",
       value: tenant === "anbessa" ? "45,200 ETB" : "32,800 ETB",
       icon: TrendingUp,
-      color: theme.primary,
-      bg: `${theme.primary}10`,
+      trend: "+8.2%",
+      subtext: "vs yesterday",
+      color: theme.secondary,
     },
     {
       label: "Fleet Status",
       value: tenant === "anbessa" ? "92%" : "98%",
       icon: Activity,
-      color: theme.primary,
-      bg: `${theme.primary}10`,
+      trend: "Optimal",
+      subtext: tenant === "anbessa" ? "42/45 active" : "11/12 active",
+      color: "#10b981", // Success Green
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       {stats.map((stat, i) => (
         <motion.div
           key={`${tenant}-${stat.label}`}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: i * 0.1 }}
+          whileHover={{ y: -4 }}
+          className="relative group"
         >
-          <Card className="border-0 shadow-sm overflow-hidden relative group">
+          <Card className="border-0 shadow-lg shadow-black/[0.03] overflow-hidden bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 rounded-3xl">
             <div 
-              className="absolute left-0 top-0 w-1.5 h-full transition-all group-hover:w-2"
-              style={{ backgroundColor: theme.primary }}
+              className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full opacity-[0.03] blur-2xl group-hover:opacity-[0.08] transition-opacity"
+              style={{ backgroundColor: stat.color }}
             ></div>
-            <CardContent className="p-5 flex items-center justify-between">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div 
+                  className="p-3 rounded-2xl shadow-inner border border-white/50"
+                  style={{ backgroundColor: `${stat.color}15`, color: stat.color }}
+                >
+                  <stat.icon className="w-6 h-6" />
+                </div>
+                <div className="flex flex-col items-end">
+                  <span 
+                    className="text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest"
+                    style={{ backgroundColor: `${stat.color}10`, color: stat.color }}
+                  >
+                    {stat.trend}
+                  </span>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">
+                    {stat.subtext}
+                  </p>
+                </div>
+              </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1 italic">
                   {stat.label}
                 </p>
-                <h3 className="text-2xl font-bold tracking-tight" style={{ color: theme.text }}>
+                <h3 className="text-3xl font-black tracking-tight text-slate-800">
                   {stat.value}
                 </h3>
-              </div>
-              <div 
-                className="p-3 rounded-2xl transition-transform group-hover:scale-110 duration-300"
-                style={{ backgroundColor: stat.bg, color: stat.color }}
-              >
-                <stat.icon className="w-6 h-6" />
               </div>
             </CardContent>
           </Card>

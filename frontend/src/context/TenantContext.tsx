@@ -13,16 +13,16 @@ interface TenantTheme {
 
 const themes: Record<TenantType, TenantTheme> = {
   anbessa: {
-    primary: "#E21D1D", // Red from bus livery
-    secondary: "#FFC300", // Yellow from bus livery
-    accent: "#FDE68A", // Light Yellow
-    text: "#B91C1C", // Dark Red
+    primary: "#D32F2F", // Anbessa Crimson Red
+    secondary: "#FFD600", // Anbessa Golden Yellow
+    accent: "#FFAB00", // Amber Accent
+    text: "#212121", // Onyx
   },
   lrt: {
-    primary: "#008751", // ERC/LRT Green
-    secondary: "#FFFFFF", // White
-    accent: "#FFD700", // Gold/Yellow often in logos
-    text: "#064E3B", // Dark Green
+    primary: "#00796B", // ERC Teal/Green
+    secondary: "#01579B", // Rail Deep Blue
+    accent: "#FBC02D", // Ethiopia Star Yellow
+    text: "#1A237E", // Midnight Blue
   },
 };
 

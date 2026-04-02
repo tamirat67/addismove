@@ -1,36 +1,69 @@
 "use client";
 
-import { useTenant, TenantType } from "@/context/TenantContext";
-import { Button } from "@/components/ui/button";
+import { useTenant } from "@/context/TenantContext";
 import { Bus, Train } from "lucide-react";
 
 export function TenantSwitcher() {
   const { tenant, setTenant } = useTenant();
 
   return (
-    <div className="flex gap-2 p-1 bg-gray-100 rounded-xl mb-6">
-      <Button
-        variant={tenant === "anbessa" ? "default" : "ghost"}
-        onClick={() => setTenant("anbessa")}
-        className={`flex-1 rounded-lg h-10 transition-all ${
-          tenant === "anbessa" 
-            ? "bg-[#E21D1D] hover:bg-[#B91C1C] text-white shadow-sm" 
-            : "text-gray-500 hover:text-gray-700 hover:bg-gray-200"
-        }`}
-      >
-        <Bus className="w-4 h-4 mr-2" /> Anbessa
-      </Button>
-      <Button
-        variant={tenant === "lrt" ? "default" : "ghost"}
-        onClick={() => setTenant("lrt")}
-        className={`flex-1 rounded-lg h-10 transition-all ${
-          tenant === "lrt" 
-            ? "bg-[#92c01f] hover:bg-[#7fa81a] text-white shadow-sm"
-            : "text-gray-500 hover:text-gray-700 hover:bg-gray-200"
-        }`}
-      >
-        <Train className="w-4 h-4 mr-2" /> LRT
-      </Button>
+    <div className="flex flex-col gap-2 bg-slate-50/50 p-2 rounded-2xl border border-slate-100">
+      <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 px-2 mb-1">
+        Context Switcher
+      </p>
+      <div className="flex flex-col gap-1.5">
+        <button
+          onClick={() => setTenant("anbessa")}
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-300 group ${
+            tenant === "anbessa" 
+              ? "bg-white shadow-sm ring-1 ring-slate-200" 
+              : "hover:bg-white/50"
+          }`}
+        >
+          <div 
+            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-transform ${
+              tenant === "anbessa" ? "scale-110 rotate-3" : "opacity-40 group-hover:opacity-100"
+            }`}
+            style={{ backgroundColor: tenant === "anbessa" ? "#D32F2F" : "#CBD5E1" }}
+          >
+            <Bus className={`w-4 h-4 ${tenant === "anbessa" ? "text-white" : "text-slate-400"}`} />
+          </div>
+          <span className={`text-[11px] font-black uppercase tracking-widest transition-colors ${
+            tenant === "anbessa" ? "text-slate-800" : "text-slate-400 group-hover:text-slate-600"
+          }`}>
+            Anbessa
+          </span>
+          {tenant === "anbessa" && (
+            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+          )}
+        </button>
+
+        <button
+          onClick={() => setTenant("lrt")}
+          className={`flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-300 group ${
+            tenant === "lrt" 
+              ? "bg-white shadow-sm ring-1 ring-slate-200" 
+              : "hover:bg-white/50"
+          }`}
+        >
+          <div 
+            className={`w-8 h-8 rounded-lg flex items-center justify-center transition-transform ${
+              tenant === "lrt" ? "scale-110 -rotate-3" : "opacity-40 group-hover:opacity-100"
+            }`}
+            style={{ backgroundColor: tenant === "lrt" ? "#00796B" : "#CBD5E1" }}
+          >
+            <Train className={`w-4 h-4 ${tenant === "lrt" ? "text-white" : "text-slate-400"}`} />
+          </div>
+          <span className={`text-[11px] font-black uppercase tracking-widest transition-colors ${
+            tenant === "lrt" ? "text-slate-800" : "text-slate-400 group-hover:text-slate-600"
+          }`}>
+            Addis LRT
+          </span>
+          {tenant === "lrt" && (
+            <div className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

@@ -18,12 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${font.className} bg-slate-50 min-h-screen pt-16 pb-6 text-slate-800`}>
+      <body className={`${font.className} bg-slate-50 min-h-screen text-slate-800`}>
         <TenantProvider>
           <Navigation />
-          <main className="max-w-5xl mx-auto p-4 lg:p-8">
+          <div className="flex flex-col min-h-screen">
             {children}
-          </main>
+          </div>
         </TenantProvider>
       </body>
     </html>

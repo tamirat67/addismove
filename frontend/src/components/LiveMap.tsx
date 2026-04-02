@@ -1,67 +1,99 @@
 "use client";
 
 import { useTenant } from "@/context/TenantContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MoveUpRight, Navigation, Map as MapIcon, RefreshCw } from "lucide-react";
-import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Bus, Train } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function LiveMap() {
   const { tenant, theme } = useTenant();
 
   return (
-    <Card className="border-0 shadow-sm overflow-hidden mb-6 group">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-bold uppercase tracking-wider text-gray-500">
-          Live Tracking
-        </CardTitle>
-        <div className="flex items-center gap-2">
-          <RefreshCw className="w-3.5 h-3.5 text-gray-400 animate-spin-slow" />
-          <span className="text-[10px] font-bold text-gray-400 uppercase">Updating</span>
+    <Card className="border-0 shadow-lg shadow-black/[0.03] rounded-3xl overflow-hidden bg-slate-900 aspect-square lg:aspect-auto lg:h-[480px] relative group h-full">
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+      
+      {/* Map Header */}
+      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl">
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span className="text-[10px] font-black text-white uppercase tracking-widest">
+            Live Fleet Radar
+          </span>
         </div>
-      </CardHeader>
-      <CardContent className="p-0 relative h-64 bg-slate-100 overflow-hidden">
-        {/* Placeholder SVG Map */}
-        <div className="absolute inset-0 bg-blue-50/50">
+        <div className="flex gap-2">
+          <div className="px-2 py-1 bg-white/10 rounded-lg text-[8px] font-bold text-white uppercase border border-white/5">
+            {tenant === "anbessa" ? "Hub: Piassa" : "Control: Stadium"}
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center">
+        {/* Mock Map Grid */}
+        <div className="w-full h-full opacity-30 pointer-events-none">
+          <div className="absolute inset-0 grid grid-cols-8 grid-rows-8 border border-white/5"></div>
           <svg className="w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path d="M0,20 L100,20 M0,50 L100,50 M0,80 L100,80 M20,0 L20,100 M50,0 L50,100 M80,0 L80,100" stroke="#000" strokeWidth="0.2" fill="none" />
-            <path d="M10,10 Q50,40 90,90" stroke={theme.primary} strokeWidth="1" fill="none" strokeDasharray="2 2" />
+            <path 
+              d="M10,10 Q50,40 90,90" 
+              stroke={theme.primary} 
+              strokeWidth="0.5" 
+              fill="none" 
+              strokeDasharray="2 2" 
+            />
           </svg>
         </div>
 
-        {/* Interactive Markers */}
-        <motion.div 
-          animate={{ x: [20, 50, 40], y: [30, 60, 50] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute z-10 w-8 h-8 rounded-full border-4 border-white shadow-lg flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
-          style={{ backgroundColor: theme.primary }}
-        >
-          <Navigation className="w-3 h-3 text-white rotate-45" />
-        </motion.div>
+        {/* Vehicle Markers */}
+        <AnimatePresence>
+          {[1, 2, 3, 4, 5].map((i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                x: [Math.random() * 200 - 100, Math.random() * 200 - 100],
+                y: [Math.random() * 200 - 100, Math.random() * 200 - 100],
+              }}
+              transition={{ 
+                duration: 15 + Math.random() * 20, 
+                repeat: Infinity, 
+                repeatType: "reverse",
+                ease: "linear"
+              }}
+              className="absolute"
+            >
+              <div className="relative group/marker">
+                <div 
+                  className="w-12 h-12 rounded-full blur-xl absolute -inset-2 opacity-20 transition-opacity group-hover/marker:opacity-40"
+                  style={{ backgroundColor: theme.primary }}
+                ></div>
+                <div 
+                  className="w-8 h-8 rounded-xl flex items-center justify-center relative border border-white/20 shadow-2xl transition-transform group-hover/marker:scale-110"
+                  style={{ backgroundColor: theme.primary }}
+                >
+                  {tenant === "anbessa" ? (
+                    <Bus className="w-4 h-4 text-white" />
+                  ) : (
+                    <Train className="w-4 h-4 text-white" />
+                  )}
+                  {/* Direction Arrow */}
+                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[6px] border-b-white/80"></div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
 
-        <motion.div 
-          animate={{ x: [80, 40, 60], y: [10, 30, 20] }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute z-10 w-8 h-8 rounded-full border-4 border-white shadow-lg flex items-center justify-center transform -translate-x-1/2 -translate-y-1/2"
-          style={{ backgroundColor: tenant === "anbessa" ? "#49a5d7" : "#166534" }}
-        >
-          <Navigation className="w-3 h-3 text-white rotate-[120deg]" />
-        </motion.div>
-
-        <div className="absolute bottom-4 right-4 z-20">
-          <button 
-            className="p-3 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow text-gray-700 active:scale-95"
-            style={{ color: theme.primary }}
-          >
-            <MapIcon className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="bg-white/60 backdrop-blur-sm px-4 py-2 rounded-lg text-xs font-bold text-gray-600 shadow-sm border border-white/40">
-            {tenant === "anbessa" ? "BUS MAP ACTIVE" : "TRAIN NETWORK ACTIVE"}
-          </div>
-        </div>
-      </CardContent>
+      {/* Map Actions */}
+      <div className="absolute bottom-4 left-4 right-4 z-10 flex gap-2">
+        <button className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl text-[10px] font-black text-white uppercase tracking-widest transition-all border border-white/5 shadow-lg active:scale-95">
+          Recenter
+        </button>
+        <button className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl text-[10px] font-black text-white uppercase tracking-widest transition-all border border-white/5 shadow-lg active:scale-95">
+          Filters
+        </button>
+      </div>
     </Card>
   );
 }
