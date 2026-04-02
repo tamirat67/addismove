@@ -10,66 +10,88 @@ export default function Wallet() {
   const { balance, transactions } = useTenant();
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-[#060267]">My Wallet</h2>
-        <History className="text-gray-400 w-5 h-5 hover:text-[#060267] cursor-pointer transition-colors" />
-      </div>
+    <div className="max-w-md mx-auto w-full px-4 pt-4 pb-20 space-y-8 animate-in fade-in duration-500">
+      <header className="flex items-center justify-between px-1">
+        <div>
+          <h2 className="text-2xl font-black tracking-tight text-slate-800 uppercase">My Wallet</h2>
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Secure Digital Payments</p>
+        </div>
+        <button className="p-3 bg-white shadow-sm border border-slate-100 rounded-2xl text-slate-400 hover:text-[#060267] transition-all active:scale-95">
+          <History className="w-5 h-5" />
+        </button>
+      </header>
 
-      <Card className="bg-gradient-to-br from-[#060267] to-[#1a118c] text-white overflow-hidden shadow-lg border-0 relative">
-        <div className="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-        <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-[#49a5d7]/20 rounded-full blur-2xl"></div>
-        <CardContent className="p-6 relative z-10">
-          <div className="flex justify-between items-start mb-6">
-            <span className="text-white/80 text-sm font-medium">Available Balance</span>
-            <CreditCard className="w-6 h-6 text-white/50" />
+      {/* Balance Card */}
+      <Card className="bg-[#060267] text-white overflow-hidden shadow-2xl shadow-blue-900/20 border-0 relative rounded-[2.5rem]">
+        <div className="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl"></div>
+        <CardContent className="p-8 relative z-10">
+          <div className="flex justify-between items-start mb-10">
+            <div className="space-y-1">
+              <span className="text-white/60 text-[10px] font-black uppercase tracking-widest italic">Personal Account</span>
+              <p className="text-sm font-bold tracking-tight">Active Balance</p>
+            </div>
+            <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+              <CreditCard className="w-6 h-6 text-white" />
+            </div>
           </div>
-          <motion.h2 
-            key={balance}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="text-4xl font-extrabold tracking-tight"
-          >
-            {balance.toFixed(2)} <span className="text-lg font-normal text-white/80">ETB</span>
-          </motion.h2>
-          <div className="mt-8 flex gap-3">
+          
+          <div className="space-y-1">
+            <motion.h2 
+              key={balance}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-5xl font-black tracking-tighter"
+            >
+              {balance.toFixed(2)} <span className="text-xl font-bold opacity-60 ml-1">ETB</span>
+            </motion.h2>
+          </div>
+
+          <div className="mt-10 flex gap-4">
             <TopUpDialog />
-            <button className="flex-1 bg-white/10 hover:bg-white/20 text-white border-0 font-medium h-11 rounded-lg backdrop-blur-sm transition-colors">
+            <button className="flex-1 bg-white hover:bg-slate-100 text-[#060267] font-black text-xs uppercase tracking-widest h-12 rounded-[1.25rem] shadow-lg transition-all active:scale-[0.98]">
               Transfer
             </button>
           </div>
         </CardContent>
       </Card>
 
-      <div>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wide">Recent Transactions</h3>
-          <span className="text-xs text-[#49a5d7] font-bold cursor-pointer hover:underline">View All</span>
+      {/* Transactions */}
+      <div className="space-y-4">
+        <div className="flex justify-between items-center px-1">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Activity Log</h3>
+          <span className="text-[10px] text-blue-600 font-black uppercase tracking-widest cursor-pointer hover:underline">Full History</span>
         </div>
+        
         <div className="space-y-3">
-          {transactions.map((tx, i) => (
+          {transactions.slice(0, 5).map((tx, i) => (
             <motion.div
               key={tx.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.05 }}
             >
-              <Card className="border-0 shadow-sm transition-all hover:bg-gray-50 cursor-pointer overflow-hidden relative">
-                <CardContent className="p-4 flex justify-between items-center bg-white relative z-10">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-lg ${tx.amount > 0 ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500"}`}>
-                      {tx.amount > 0 ? <ArrowDownLeft className="w-4 h-4" /> : <ArrowUpRight className="w-4 h-4" />}
+              <Card className="border border-slate-100 shadow-sm transition-all hover:shadow-md hover:border-slate-200 cursor-pointer overflow-hidden rounded-[1.5rem]">
+                <CardContent className="p-4 flex justify-between items-center bg-white">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-3 rounded-2xl ${tx.amount > 0 ? "bg-emerald-50 text-emerald-500" : "bg-rose-50 text-rose-500"}`}>
+                      {tx.amount > 0 ? <ArrowDownLeft className="w-5 h-5" /> : <ArrowUpRight className="w-5 h-5" />}
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900 text-sm">{tx.type}</p>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{tx.date}</p>
+                      <p className="font-black text-slate-800 text-sm leading-tight">{tx.type}</p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">{tx.date}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className={`font-black text-sm ${tx.amount > 0 ? "text-green-600" : "text-red-600"}`}>
-                      {tx.amount > 0 ? "+" : ""}{tx.amount.toFixed(2)} ETB
+                    <p className={`font-black text-sm tracking-tight ${tx.amount > 0 ? "text-emerald-600" : "text-slate-800"}`}>
+                      {tx.amount > 0 ? "+" : ""}{tx.amount.toFixed(2)}
                     </p>
-                    <p className="text-[9px] font-bold text-gray-400/80 uppercase">{tx.status}</p>
+                    <span 
+                      className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded-full border border-slate-100 mt-1 inline-block"
+                      style={{ color: tx.status === "Success" ? "#10b981" : "#f43f5e" }}
+                    >
+                      {tx.status}
+                    </span>
                   </div>
                 </CardContent>
               </Card>
