@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookingConfirm } from "@/components/BookingConfirm";
+import { LiveMap } from "@/components/LiveMap";
 import Link from "next/link";
-import { Bus, Train, Clock, ArrowLeft, MoveRight, Shuffle, Loader2, ListFilter } from "lucide-react";
+import { Bus, Train, Clock, ArrowLeft, Shuffle, Loader2, ListFilter, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const mockResults = [
@@ -49,14 +50,18 @@ export default function Results() {
   }, []);
 
   return (
-    <div className="max-w-md mx-auto w-full px-4 pt-4 space-y-4 pb-10">
-      <div className="flex items-center gap-3 mb-6">
-        <Link href="/" className="text-gray-500 hover:text-black transition-colors">
+    <div className="w-full pb-20 lg:pb-0 h-full flex flex-col">
+      <div className="flex items-center gap-4 mb-6 px-1 lg:px-0">
+        <Link href="/" className="p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-slate-500 hover:text-[#060267] transition-all">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h2 className="text-lg font-bold text-[#060267] uppercase tracking-tight">Routes Found</h2>
-          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Megenagna to Piassa</p>
+          <h2 className="text-xl lg:text-3xl font-black text-[#060267] uppercase tracking-tight">Available Routes</h2>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-[10px] lg:text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">Megenagna</span>
+            <ArrowLeft className="w-3 h-3 text-slate-300 rotate-180" />
+            <span className="text-[10px] lg:text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">Piassa</span>
+          </div>
         </div>
       </div>
 
@@ -67,102 +72,130 @@ export default function Results() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="py-20 text-center space-y-6"
+            className="flex-1 flex flex-col items-center justify-center py-32 space-y-8"
           >
-            <div className="relative w-20 h-20 mx-auto">
+            <div className="relative w-24 h-24 mx-auto">
               <motion.div 
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 border-4 border-[#060267]/10 border-t-[#060267] rounded-full"
               />
               <div className="absolute inset-0 flex items-center justify-center">
-                <Shuffle className="w-8 h-8 text-[#060267] animate-pulse" />
+                <Shuffle className="w-10 h-10 text-[#060267] animate-pulse" />
               </div>
             </div>
-            <div>
-              <p className="text-[#060267] font-black uppercase text-sm tracking-widest">Finding Best Routes</p>
-              <p className="text-xs text-gray-400 font-medium mt-1">Checking Anbessa & LRT Schedules...</p>
+            <div className="text-center">
+              <p className="text-[#060267] font-black uppercase text-lg lg:text-xl tracking-tight">Analyzing Network...</p>
+              <p className="text-xs lg:text-sm text-slate-400 font-medium mt-2">Checking real-time Anbessa & LRT schedules</p>
             </div>
           </motion.div>
         ) : (
           <motion.div
             key="results"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start"
           >
-            {/* Filters */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide no-scrollbar">
-              {["Fastest", "Cheapest", "Balanced"].map((f) => (
-                <Button
-                  key={f}
-                  variant={filter === f ? "default" : "outline"}
-                  onClick={() => setFilter(f)}
-                  className={`rounded-full px-4 h-8 text-[10px] font-bold uppercase tracking-wider transition-all border-gray-200 ${
-                    filter === f ? "bg-[#060267] text-white shadow-md" : "bg-white text-gray-500"
-                  }`}
-                >
-                  {f}
+            {/* Left Column: Route List (5 Cols) */}
+            <div className="lg:col-span-5 space-y-6">
+              {/* Filters */}
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                {["Fastest", "Cheapest", "Balanced"].map((f) => (
+                  <Button
+                    key={f}
+                    variant={filter === f ? "default" : "outline"}
+                    onClick={() => setFilter(f)}
+                    className={`rounded-xl px-5 h-10 text-[11px] font-black uppercase tracking-wider transition-all border border-slate-200 ${
+                      filter === f ? "bg-[#060267] text-white shadow-lg pointer-events-none" : "bg-white text-slate-500 hover:bg-slate-50"
+                    }`}
+                  >
+                    {f}
+                  </Button>
+                ))}
+                <Button variant="outline" size="icon" className="h-10 w-10 shrink-0 rounded-xl bg-white border-slate-200 text-slate-400">
+                  <ListFilter className="w-5 h-5" />
                 </Button>
-              ))}
-              <Button variant="ghost" size="sm" className="h-8 rounded-full text-gray-400"><ListFilter className="w-4 h-4" /></Button>
+              </div>
+
+              {/* Results Cards */}
+              <div className="space-y-4">
+                {mockResults.map((route, i) => (
+                  <motion.div
+                    key={route.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <Card 
+                      className={`border-2 shadow-sm overflow-hidden relative cursor-pointer group transition-all duration-300 hover:shadow-xl hover:shadow-blue-900/10 hover:-translate-y-1 rounded-[1.5rem] bg-white ${
+                        route.tag === filter ? "border-[#92c01f] ring-4 ring-[#92c01f]/10" : "border-slate-100 hover:border-slate-300"
+                      }`}
+                    >
+                      {route.tag === filter && (
+                        <div className="absolute top-0 right-0 bg-[#92c01f] text-white text-[10px] font-black px-4 py-1.5 rounded-bl-xl uppercase tracking-widest z-10 shadow-sm">
+                          Best Option
+                        </div>
+                      )}
+                      
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-6">
+                          <div>
+                            <h3 className="font-black text-[#060267] flex items-center gap-2 text-xl tracking-tight">
+                              {route.name}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-2 text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-50 px-2.5 py-1 rounded-md inline-block">
+                              {route.steps}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="block font-black text-2xl text-slate-800 leading-none">{route.price}</span>
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">ETB</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center justify-between mt-6 border-t border-slate-100 pt-5">
+                          <div className="flex items-center gap-4 text-slate-500 text-[11px] font-black uppercase tracking-wider">
+                            <span className="flex items-center bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg">
+                              <Clock className="w-4 h-4 mr-2" /> {route.duration}
+                            </span>
+                          </div>
+                          <Button 
+                            onClick={() => setSelectedRoute(route)}
+                            className="bg-[#060267] hover:bg-black text-white rounded-xl shadow-lg shadow-blue-900/20 px-8 h-10 font-black uppercase tracking-widest text-[10px]"
+                          >
+                            Book Pass
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
-            {/* Results Cards */}
-            {mockResults.map((route, i) => (
-              <motion.div
-                key={route.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <Card 
-                  className={`border-0 shadow-sm overflow-hidden relative group transition-all hover:shadow-lg hover:-translate-y-0.5 ${
-                    route.tag === "Fastest" ? "ring-2 ring-[#92c01f]" : ""
-                  }`}
-                >
-                  {route.tag === "Fastest" && (
-                    <div className="absolute top-0 right-0 bg-[#92c01f] text-white text-[10px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-widest z-10">
-                      Fastest
-                    </div>
-                  )}
-                  <CardContent className="p-5">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="font-bold text-[#060267] flex items-center gap-2 text-lg">
-                          {route.name}
-                        </h3>
-                        <div className="flex items-center gap-2 mt-1 text-xs font-bold uppercase tracking-tight text-gray-500">
-                          {route.steps}
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="block font-black text-xl text-gray-900 leading-none">{route.price}</span>
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">ETB</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between text-sm mt-6 border-t pt-4 border-gray-50">
-                      <div className="flex items-center gap-4 text-gray-500 text-xs font-bold uppercase tracking-wider">
-                        <span className="flex items-center">
-                          <Clock className="w-4 h-4 mr-1.5 text-gray-400" /> {route.duration}
-                        </span>
-                        <span className="flex items-center">
-                           10 min walk
-                        </span>
-                      </div>
-                      <Button 
-                        size="sm" 
-                        onClick={() => setSelectedRoute(route)}
-                        className="bg-[#060267] hover:bg-[#060267]/90 text-white rounded-xl shadow-lg px-6 font-bold"
-                      >
-                        Book
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+            {/* Right Column: Route Map (Desktop Only - 7 Cols) */}
+            <div className="hidden lg:block lg:col-span-7 sticky top-24">
+              <div className="w-full h-[600px] bg-slate-900 rounded-[3rem] overflow-hidden shadow-2xl relative border-4 border-white group">
+                <LiveMap />
+                
+                {/* Overlay Context Info */}
+                <div className="absolute top-6 left-6 right-6 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="bg-white/95 backdrop-blur shadow-lg border border-white p-4 rounded-2xl flex-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Departure</p>
+                    <p className="font-bold text-slate-800 text-sm flex items-center gap-2">
+                       <MapPin className="w-4 h-4 text-[#060267]" /> Megenagna Station
+                    </p>
+                  </div>
+                  <div className="bg-white/95 backdrop-blur shadow-lg border border-white p-4 rounded-2xl flex-1">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Arrival</p>
+                    <p className="font-bold text-slate-800 text-sm flex items-center gap-2">
+                       <MapPin className="w-4 h-4 text-rose-500" /> Piassa Hub
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
           </motion.div>
         )}
       </AnimatePresence>
