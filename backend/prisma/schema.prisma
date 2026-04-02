@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PASSENGER
+  ADMIN // Tenant Admin
+  SUPER_ADMIN // System Admin
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String   @unique // e.g., "Anbessa", "LRT"
+  type      String   // e.g., "BUS", "TRAIN"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  routes    Route[]
+  tickets   Ticket[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(PASSENGER)
+  tenantId  String?  // If role is ADMIN, which tenant do they manage?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  wallet    Wallet?
+  tickets   Ticket[]
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  balance   Float    @default(0.0)
+  user      User     @relation(fields: [userId], references: [id])
+  updatedAt DateTime @updatedAt
+}
+
+model Route {
+  id        String   @id @default(uuid())
+  name      String
+  from      String
+  to        String
+  price     Float
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tickets   Ticket[]
+}
+
+model Ticket {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  routeId   String
+  route     Route    @relation(fields: [routeId], references: [id])
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  qrCode    String   @unique
+  status    String   @default("ACTIVE") // ACTIVE, USED, EXPIRED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
