@@ -18,7 +18,7 @@ export default function Home() {
         <div className="pt-4 lg:pt-0">
           <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black tracking-tighter text-slate-900 leading-[1.1]">
             Navigate Addis <br /> 
-            <span className="text-[#060267] bg-clip-text">Smarter & Faster.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D32F2F] to-[#FFD600]">Smarter & Faster.</span>
           </h1>
           <p className="text-xs lg:text-sm font-bold text-slate-400 uppercase tracking-widest mt-4 ml-1">
             The integrated network for Bus & Rail
@@ -29,13 +29,13 @@ export default function Home() {
           <TabsList className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl w-full justify-start h-auto gap-2 mb-6">
             <TabsTrigger 
               value="route" 
-              className="rounded-xl px-6 py-3 data-[state=active]:bg-[#060267] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
+              className="rounded-xl px-6 py-3 data-[state=active]:bg-[#D32F2F] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
             >
               Plan Journey
             </TabsTrigger>
             <TabsTrigger 
               value="passes" 
-              className="rounded-xl px-6 py-3 data-[state=active]:bg-[#060267] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
+              className="rounded-xl px-6 py-3 data-[state=active]:bg-[#D32F2F] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
             >
               Direct Passes
             </TabsTrigger>
@@ -50,24 +50,24 @@ export default function Home() {
                   <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-slate-100 rounded-full z-0"></div>
                   
                   <div className="relative z-10 group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-slate-300 bg-white group-focus-within:border-[#92c01f] transition-colors shadow-sm"></div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-slate-300 bg-white group-focus-within:border-[#FFD600] transition-colors shadow-sm"></div>
                     <Input 
                       placeholder="From: e.g. Megenagna" 
-                      className="pl-12 h-14 bg-slate-50/80 border border-slate-100 focus-visible:ring-2 focus-visible:border-transparent focus-visible:ring-[#92c01f]/20 rounded-2xl text-sm font-bold placeholder:text-slate-400 transition-all focus-visible:bg-white" 
+                      className="pl-12 h-14 bg-slate-50/80 border border-slate-100 focus-visible:ring-2 focus-visible:border-transparent focus-visible:ring-[#FFD600]/20 rounded-2xl text-sm font-bold placeholder:text-slate-400 transition-all focus-visible:bg-white" 
                     />
                   </div>
 
                   <div className="relative z-10 group pt-2">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-slate-800 rounded-sm group-focus-within:bg-[#060267] transition-colors shadow-sm"></div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-slate-800 rounded-sm group-focus-within:bg-[#D32F2F] transition-colors shadow-sm"></div>
                     <Input 
                       placeholder="To: e.g. Piassa" 
-                      className="pl-12 h-14 bg-slate-50/80 border border-slate-100 focus-visible:ring-2 focus-visible:border-transparent focus-visible:ring-[#060267]/20 rounded-2xl text-sm font-bold placeholder:text-slate-400 transition-all focus-visible:bg-white" 
+                      className="pl-12 h-14 bg-slate-50/80 border border-slate-100 focus-visible:ring-2 focus-visible:border-transparent focus-visible:ring-[#D32F2F]/20 rounded-2xl text-sm font-bold placeholder:text-slate-400 transition-all focus-visible:bg-white" 
                     />
                   </div>
                 </div>
 
                 <Link href="/results" className="block pt-2">
-                  <Button className="w-full bg-[#060267] hover:bg-black text-white shadow-xl shadow-blue-900/20 text-xs font-black uppercase tracking-widest h-14 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                  <Button className="w-full bg-[#D32F2F] hover:bg-black text-white shadow-xl shadow-blue-900/20 text-xs font-black uppercase tracking-widest h-14 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                     Find Best Route <ArrowRight className="w-5 h-5" />
                   </Button>
                 </Link>
@@ -118,13 +118,13 @@ export default function Home() {
                 </motion.button>
               ))}
             </div>
-            <div className="bg-blue-50 border border-blue-100 rounded-3xl p-6 flex items-start gap-4">
-              <div className="p-2 bg-blue-100 text-blue-600 rounded-full shrink-0">
+            <div className="bg-red-50 border border-red-100 rounded-3xl p-6 flex items-start gap-4">
+              <div className="p-2 bg-red-100 text-red-600 rounded-full shrink-0">
                 <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="text-sm font-black text-blue-900 uppercase tracking-tight">NFC Tap & Go</h4>
-                <p className="text-xs text-blue-700/80 font-medium leading-relaxed mt-1">Direct passes allow you to securely tap your phone on the turnstile without selecting a specific destination.</p>
+                <h4 className="text-sm font-black text-red-900 uppercase tracking-tight">NFC Tap & Go</h4>
+                <p className="text-xs text-red-700/80 font-medium leading-relaxed mt-1">Direct passes allow you to securely tap your phone on the turnstile without selecting a specific destination.</p>
               </div>
             </div>
           </TabsContent>
