@@ -115,8 +115,9 @@ export function TopUpDialog() {
                 <Input 
                   type="number" 
                   placeholder="Custom Amount" 
+                  value={amount || ""}
                   className="h-12 bg-white rounded-xl border-gray-200 text-center font-bold"
-                  onChange={(e) => setAmount(Number(e.target.value))}
+                  onChange={(e) => setAmount(e.target.value === "" ? 0 : Number(e.target.value))}
                 />
               </motion.div>
             )}
