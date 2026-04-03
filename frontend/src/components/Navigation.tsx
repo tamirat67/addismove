@@ -29,7 +29,7 @@ export function Navigation() {
         <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
           <div
             className="p-2 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ring-2"
-            style={{ backgroundColor: "#FFD600", ringColor: "#FFD600" }}
+            style={{ backgroundColor: "#FFD600" }}
           >
             <BusFront className="w-5 h-5" style={{ color: "#CC1F1F" }} strokeWidth={2.5} />
           </div>

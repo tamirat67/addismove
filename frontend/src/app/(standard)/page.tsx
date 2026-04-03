@@ -31,14 +31,13 @@ export default function Home() {
           <TabsList className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl w-full justify-start h-auto gap-2 mb-6">
             <TabsTrigger
               value="route"
-              className="rounded-xl px-6 py-3 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
-              style={{ ['--active-bg' as string]: '#CC1F1F' }}
+              className="rounded-xl px-6 py-3 data-[state=active]:bg-[#CC1F1F] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
             >
               Plan Journey
             </TabsTrigger>
             <TabsTrigger
               value="passes"
-              className="rounded-xl px-6 py-3 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
+              className="rounded-xl px-6 py-3 data-[state=active]:bg-[#CC1F1F] data-[state=active]:text-white data-[state=active]:shadow-lg transition-all text-[11px] font-black uppercase tracking-widest text-slate-500 flex-1 lg:flex-none"
             >
               Bus Passes
             </TabsTrigger>

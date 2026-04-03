@@ -80,7 +80,7 @@ export default function Wallet() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <h3 className="text-[10px] hidden sm:block font-black text-slate-400 uppercase tracking-[0.2em] px-2">Activity Log</h3>
               <TabsList className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl w-full sm:w-auto">
-                <TabsTrigger value="all" className="rounded-xl px-6 py-2.5 data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm" style={{ ['--tw-data-state-active-bg' as string]: '#CC1F1F' }}>All</TabsTrigger>
+                <TabsTrigger value="all" className="rounded-xl px-6 py-2.5 data-[state=active]:bg-[#CC1F1F] data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">All</TabsTrigger>
                 <TabsTrigger value="recharges" className="rounded-xl px-6 py-2.5 data-[state=active]:bg-emerald-500 data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">Recharges</TabsTrigger>
                 <TabsTrigger value="spends" className="rounded-xl px-6 py-2.5 data-[state=active]:bg-rose-500 data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">Spends</TabsTrigger>
               </TabsList>
