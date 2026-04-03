@@ -214,22 +214,45 @@ export default function Home() {
               </Link>
           </div>
 
-          <div className="h-[600px] w-full relative group shadow-inner">
+          <div className="h-[640px] w-full relative group shadow-2xl rounded-3xl overflow-hidden border border-slate-200">
               <LiveMap />
-              {/* Floating Map Controls / Stats */}
-              <div className="absolute top-10 left-10 p-6 bg-white shadow-2xl rounded-3xl z-10 border border-slate-100 max-w-xs animate-in slide-in-from-left-4 duration-1000">
-                  <div className="flex items-center gap-3 mb-4">
-                      <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
-                      <p className="text-xs font-black uppercase tracking-widest text-slate-800">System Status: Active</p>
-                  </div>
-                  <div className="space-y-4 text-slate-600">
-                    <div className="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Active Buses</span>
-                        <span className="text-sm font-black text-slate-900">112</span>
+              {/* Floating Anbessa Pro Status Card (Top Right to avoid Title Overlap) */}
+              <div className="absolute top-4 right-4 md:top-8 md:right-8 p-6 bg-white/95 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-[2rem] z-10 border border-white/20 max-w-[280px] animate-in slide-in-from-right-4 duration-1000">
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]"></div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#CC1F1F]">Anbessa Pro Live</span>
+                        </div>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest px-2 py-0.5 rounded-full bg-slate-50 border border-slate-100 italic">v.2.4</span>
                     </div>
-                    <div className="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">On-Time Rate</span>
-                        <span className="text-sm font-black text-emerald-600">94.2%</span>
+
+                    <div className="space-y-4">
+                        <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-100 group-hover:border-[#FFD600]/30 transition-all">
+                            <div className="flex flex-col">
+                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Fleet Operations</span>
+                                <div className="flex items-end justify-between">
+                                    <span className="text-2xl font-black text-slate-900 tracking-tighter">112</span>
+                                    <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg uppercase tracking-tighter">On-Track</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-100 group-hover:border-[#CC1F1F]/20 transition-all">
+                            <div className="flex flex-col">
+                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">System Efficiency</span>
+                                <div className="flex items-end justify-between">
+                                    <span className="text-2xl font-black text-slate-900 tracking-tighter">94.2%</span>
+                                    <span className="text-[9px] font-black text-[#CC1F1F] bg-rose-50 px-2 py-1 rounded-lg uppercase tracking-tighter">+2.4%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="pt-2">
+                        <button className="w-full bg-slate-900 py-3 rounded-xl text-[9px] font-black text-white uppercase tracking-[0.2em] transition-all hover:bg-black active:scale-95 shadow-lg">
+                            Analyze All Units
+                        </button>
                     </div>
                   </div>
               </div>

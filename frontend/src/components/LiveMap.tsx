@@ -24,22 +24,7 @@ export function LiveMap() {
         </svg>
       </div>
       
-      {/* Map Header */}
-      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-gray-200 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-sm shadow-emerald-200"></div>
-          <span className="text-xs font-black text-gray-800 uppercase tracking-widest flex items-center gap-1.5">
-            <MapPin className="w-4 h-4 text-emerald-500" />
-            Live Fleet Radar
-          </span>
-        </div>
-        <div className="flex gap-2">
-          <div className="px-2 py-1 bg-gray-100 rounded-lg text-[10px] font-bold text-gray-600 uppercase border border-gray-200">
-            Hub: Piassa
-          </div>
-        </div>
-      </div>
-
+      {/* Map Content Area */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         {/* Vehicle Markers */}
         <AnimatePresence>

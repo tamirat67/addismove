@@ -36,6 +36,8 @@ export interface TicketData {
   price: number;
   expiry: string;
   qrCode: string;
+  nfcId: string; // NFC Token ID
+  securityCode: string; // 6-digit Manual OTP
   status: "Active" | "Expiring" | "Used";
 }
 
@@ -49,7 +51,7 @@ interface TenantContextProps {
   transactions: Transaction[];
   addTransaction: (tx: Omit<Transaction, "id" | "date">) => void;
   tickets: TicketData[];
-  addTicket: (ticket: Omit<TicketData, "id" | "qrCode" | "status">) => void;
+  addTicket: (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => void;
 }
 
 const TenantContext = createContext<TenantContextProps | undefined>(undefined);
@@ -75,12 +77,14 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   ]);
   const [tickets, setTickets] = useState<TicketData[]>([
     {
-      id: "T1",
+      id: "ANB-24-XJ-9L-03",
       route: "Megenagna → Piassa",
       type: "Combined",
       price: 12.00,
       expiry: "Today, 4:30 PM",
-      qrCode: "MOCK-QR-CODE-123",
+      qrCode: "QR-882109-XJ",
+      nfcId: "NF-8B2-C91",
+      securityCode: "882 109",
       status: "Active"
     }
   ]);
@@ -109,11 +113,14 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     setTransactions((prev) => [newTx, ...prev]);
   };
 
-  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "status">) => {
+  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => {
+    const randomHex = () => Math.random().toString(16).toUpperCase().substr(2, 4);
     const newTicket: TicketData = {
       ...ticket,
-      id: `TKT-${Math.floor(Math.random() * 1000000)}`,
+      id: `ANB-24-${randomHex()}-${randomHex()}`,
       qrCode: `QR-${Math.random().toString(36).toUpperCase().substr(2, 8)}`,
+      nfcId: `NF-${randomHex()}-${randomHex()}`,
+      securityCode: Math.floor(100000 + Math.random() * 900000).toString().replace(/(\d{3})(\d{3})/, "$1 $2"),
       status: "Active"
     };
     setTickets((prev) => [newTicket, ...prev]);
