@@ -9,40 +9,41 @@ import Link from "next/link";
 import { Bus, Clock, ArrowLeft, Loader2, ListFilter, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const mockResults = [
-  {
-    id: "r1",
-    name: "Megenagna – Piassa Express",
-    type: "Bus",
-    price: 8.00,
-    duration: "35 min",
-    tag: "Fastest",
-    steps: "🚌 Route 45 · Non-stop",
-  },
-  {
-    id: "r2",
-    name: "Megenagna – Piassa Via Arat Kilo",
-    type: "Bus",
-    price: 6.00,
-    duration: "55 min",
-    tag: "Cheapest",
-    steps: "🚌 Route 12 · 1 Transfer",
-  },
-  {
-    id: "r3",
-    name: "Megenagna – Piassa All-Day Pass",
-    type: "Bus",
-    price: 18.00,
-    duration: "Unlimited",
-    tag: "Balanced",
-    steps: "🚌 All Day · Any Route",
-  },
-];
+import { anbessaRoutes, BusRoute } from "@/lib/routes";
+
+const computeDuration = (distanceStr: string) => {
+  const dist = parseFloat(distanceStr.split(" ")[0]);
+  if (isNaN(dist)) return "45 min";
+  const mins = Math.round(dist * 4 + 10); // ~4 mins per km + 10 mins buffer
+  return `${mins} min`;
+};
+
+const computePrice = (distanceStr: string) => {
+  const dist = parseFloat(distanceStr.split(" ")[0]);
+  if (isNaN(dist)) return 10.00;
+  return Math.round(dist * 1.5); // 1.5 ETB per km
+};
 
 export default function Results() {
   const [loading, setLoading] = useState(true);
-  const [selectedRoute, setSelectedRoute] = useState<typeof mockResults[0] | null>(null);
   const [filter, setFilter] = useState("Fastest");
+
+  // Simulate finding routes based on the search "Megenagna" or "Piassa"
+  const searchResults = anbessaRoutes.filter(r => 
+    r.start.toLowerCase().includes("megenagna") || 
+    r.destination.toLowerCase().includes("piassa") ||
+    r.destination.toLowerCase().includes("piazza")
+  ).slice(0, 4).map((r, i) => ({
+    id: r.id,
+    name: `${r.start} – ${r.destination}`,
+    type: "Bus",
+    price: computePrice(r.distance),
+    duration: computeDuration(r.distance),
+    tag: i === 0 ? "Fastest" : i === 1 ? "Cheapest" : "Balanced",
+    steps: `🚌 Route ${r.id} · ${r.passBy === "-" ? "Direct" : "via " + r.passBy}`,
+  }));
+
+  const [selectedRoute, setSelectedRoute] = useState<typeof searchResults[0] | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
@@ -125,7 +126,7 @@ export default function Results() {
 
               {/* Results Cards */}
               <div className="space-y-4">
-                {mockResults.map((route, i) => (
+                {searchResults.map((route: any, i: number) => (
                   <motion.div key={route.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}>
                     <Card
                       className={`border-2 shadow-sm overflow-hidden relative cursor-pointer group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 rounded-[1.5rem] bg-white ${

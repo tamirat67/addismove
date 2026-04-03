@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LiveMap } from "@/components/LiveMap";
 import Link from "next/link";
-import { ArrowRight, Bus, Clock, MapPin } from "lucide-react";
+import { ArrowRight, Bus, Clock, MapPin, Info } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
@@ -124,12 +124,30 @@ export default function Home() {
               <div>
                 <h4 className="text-sm font-black uppercase tracking-tight" style={{ color: "#CC1F1F" }}>NFC Tap &amp; Go</h4>
                 <p className="text-xs text-slate-600 font-medium leading-relaxed mt-1">
-                  Bus passes let you securely tap your phone on the validator without selecting a destination each time.
+                  Established in 1945, Anbessa Bus is Addis Ababa's premier transport provider. Tapping your phone on the validator gets you moving instantly.
                 </p>
               </div>
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* History Quick Link */}
+        <Link href="/routes" className="group">
+          <Card className="border-0 bg-white/50 backdrop-blur-sm border border-white hover:border-[#CC1F1F]/20 transition-all rounded-[2rem] p-6 shadow-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: "#CC1F1F" }}>
+                  <Info className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-black uppercase tracking-tighter text-slate-800">Route Directory & History</h4>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-0.5">Explore 115+ Active Routes</p>
+                </div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Card>
+        </Link>
       </div>
 
       {/* Right Column: Interactive Map (Desktop Only) */}

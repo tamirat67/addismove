@@ -6,25 +6,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Bus, MoreVertical, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { anbessaRoutes } from "@/lib/routes";
 
-const mockRoutes = {
-  anbessa: [
-    { id: "a1", name: "Megenagna - Piassa", status: true, vehicles: 12 },
-    { id: "a2", name: "Ayat - Bole", status: true, vehicles: 8 },
-    { id: "a3", name: "Kality - Stadium", status: false, vehicles: 0 },
-    { id: "a4", name: "Lebu - Mexico", status: true, vehicles: 6 },
-    { id: "a5", name: "Shiro Meda - Merkato", status: true, vehicles: 9 },
-  ],
-};
+const routes = anbessaRoutes.slice(0, 5).map(r => ({
+  id: r.id,
+  name: `${r.start} - ${r.destination}`,
+  status: true,
+  vehicles: Math.floor(Math.random() * 10) + 5
+}));
 
 export function RouteManager() {
-  const { tenant, theme } = useTenant();
-  const routes = mockRoutes[tenant];
-  const [activeIds, setActiveIds] = useState(routes.map(r => r.id));
+  const { theme } = useTenant();
+  const [activeIds, setActiveIds] = useState<string[]>(routes.map(r => r.id));
 
   const toggleRoute = (id: string) => {
-    setActiveIds(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    setActiveIds((prev: string[]) => 
+      prev.includes(id) ? prev.filter((i: string) => i !== id) : [...prev, id]
     );
   };
 
@@ -33,7 +30,7 @@ export function RouteManager() {
       <CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 bg-slate-50/50 px-6 py-4">
         <div>
           <CardTitle className="text-sm font-black uppercase tracking-widest text-slate-800">
-            {tenant === "anbessa" ? "Fleet Management" : "Network Operations"}
+            Fleet Management
           </CardTitle>
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-0.5">
             Real-time status tracking
@@ -55,7 +52,7 @@ export function RouteManager() {
             </thead>
             <tbody>
               <AnimatePresence mode="popLayout">
-                {routes.map((route, i) => (
+                {routes.map((route: any, i: number) => (
                   <motion.tr
                     key={route.id}
                     initial={{ opacity: 0, x: -20 }}
