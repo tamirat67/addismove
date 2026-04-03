@@ -43,17 +43,17 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full">
-      {/* 1. HERO SECTION (ULTRA-CLEAN TRANSPARENCY) */}
-      <section className="relative h-[480px] lg:h-[520px] w-full flex items-center justify-center overflow-hidden bg-black/5">
-        {/* Background Image with pure clarity */}
+      {/* 1. HERO SECTION (STANDARDIZED COMPACT & GLASS TRANSPARENCY) */}
+      <section className="relative h-[480px] lg:h-[520px] w-full flex items-center justify-center overflow-hidden">
+        {/* Background Image - Cinematic & Clear */}
         <div className="absolute inset-0 z-0">
           <img 
             src="/hero.png" 
             alt="Anbessa Bus" 
             className="w-full h-full object-cover"
           />
-          {/* Subtle vignette rather than heavy masking */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+          {/* Subtle bottom vignette to lift the card slightly */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         </div>
 
         {/* Content Container */}
@@ -63,49 +63,49 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-6 lg:mb-8"
           >
-            <p className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[9px] lg:text-xs mb-2 drop-shadow-md">
+            <p className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[9px] lg:text-xs mb-2 drop-shadow-lg">
               One App · Bus Rapid · Smart Travel
             </p>
-            <h1 className="text-3xl lg:text-5xl font-black text-white tracking-tighter leading-none uppercase drop-shadow-xl">
+            <h1 className="text-3xl lg:text-5xl font-black text-white tracking-tighter leading-none uppercase drop-shadow-2xl">
               Home <span style={{ color: "#FFD600" }}>Dashboard</span>
             </h1>
           </motion.div>
 
-          {/* SMART BOOKING CARD (ABSOLUTE 100% CLEAR GLASS) */}
+          {/* SMART BOOKING CARD (SUBTLE GLASS / MINIMUM VISIBILITY) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="w-full max-w-2xl px-2"
           >
             <div 
-                className="backdrop-blur-sm border-2 border-white/20 rounded-[2.5rem] shadow-2xl overflow-hidden"
-                style={{ backgroundColor: "transparent" }}
+                className="backdrop-blur-md border border-white/20 rounded-[2.5rem] shadow-2xl overflow-hidden"
+                style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
             >
-              {/* Branded Card Header (Strictly Zero BG) */}
-              <div className="px-6 lg:px-8 py-3 lg:py-4 flex items-center justify-between border-b border-white/10" style={{ background: "transparent" }}>
+              {/* Branded Card Header (Subtle Tint) */}
+              <div className="px-6 lg:px-8 py-3 lg:py-4 flex items-center justify-between border-b border-white/10" style={{ background: "rgba(255, 255, 255, 0.03)" }}>
                 <div className="flex items-center gap-3">
-                    <div className="p-1.5 bg-[#CC1F1F]/60 rounded-lg border border-white/10">
+                    <div className="p-1.5 bg-[#CC1F1F]/60 rounded-lg border border-white/10 shadow-sm">
                         <Bus className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-white font-black uppercase tracking-widest text-[9px] lg:text-xs drop-shadow-sm">Anbessa Pro</span>
                 </div>
-                <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/60 uppercase tracking-widest">
+                <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/50 uppercase tracking-widest">
                     Live Status: <span className="text-emerald-400">Normal Operations</span>
                 </div>
               </div>
 
-              <div className="p-6 lg:p-10 space-y-6" style={{ background: "transparent" }}>
+              <div className="p-6 lg:p-10 space-y-6">
                 <div className="space-y-4 relative">
                   <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-white/10 rounded-full z-0"></div>
 
-                  {/* FROM INPUT (PURE GLASS) */}
+                  {/* FROM INPUT (GLASS DEFINED) */}
                   <div className="relative z-10 group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/40 bg-white/20 group-focus-within:border-[#FFD600] transition-colors shadow-sm"></div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/40 bg-white/10 group-focus-within:border-[#FFD600] transition-colors shadow-sm"></div>
                     <Input
                       placeholder="From: Departure Station"
                       value={from}
                       onChange={(e) => handleFromChange(e.target.value)}
-                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-filter-none"
+                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-blur-none"
                     />
                     <AnimatePresence>
                       {fromSuggestions.length > 0 && (
@@ -120,14 +120,14 @@ export default function Home() {
                     </AnimatePresence>
                   </div>
 
-                  {/* TO INPUT (PURE GLASS) */}
+                  {/* TO INPUT (GLASS DEFINED) */}
                   <div className="relative z-10 group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-sm group-focus-within:bg-[#CC1F1F] bg-white/30 transition-colors shadow-sm"></div>
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-sm group-focus-within:bg-[#CC1F1F] bg-white/20 transition-colors shadow-sm"></div>
                     <Input
                       placeholder="To: Destination Station"
                       value={to}
                       onChange={(e) => handleToChange(e.target.value)}
-                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#CC1F1F]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-filter-none"
+                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#CC1F1F]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-blur-none"
                     />
                     <AnimatePresence>
                       {toSuggestions.length > 0 && (
@@ -148,7 +148,7 @@ export default function Home() {
                     className="w-full text-white shadow-xl text-base font-black uppercase tracking-widest h-16 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 hover:opacity-90 border border-white/10"
                     style={{ backgroundColor: "rgba(204, 31, 31, 0.5)" }}
                   >
-                    <Search className="w-6 h-6" /> Search Live Routes
+                    <Search className="w-6 h-6" /> Search Routes
                   </Button>
                 </Link>
               </div>
