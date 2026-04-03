@@ -6,7 +6,8 @@ import { Users, TrendingUp, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function StatsCards() {
-  const { tenant, theme } = useTenant();
+  const { tenant, theme, adminTheme } = useTenant();
+  const isDark = adminTheme === "zinc";
 
   const stats = [
     {
@@ -14,24 +15,24 @@ export function StatsCards() {
       value: "1,204",
       icon: Users,
       trend: "+12.5%",
-      subtext: "vs last hour",
-      color: "#CC1F1F",
+      subtext: "Live Network Load",
+      color: "#CC1F1F", // Anbessa Red
     },
     {
-      label: "Today's Revenue",
+      label: "Daily Revenue",
       value: "45,200 ETB",
       icon: TrendingUp,
       trend: "+8.2%",
-      subtext: "vs yesterday",
-      color: "#FFD600",
+      subtext: "vs Yesterday",
+      color: "#FFD600", // Anbessa Gold
     },
     {
-      label: "Fleet Status",
+      label: "Fleet Health",
       value: "92%",
       icon: Activity,
       trend: "Optimal",
-      subtext: "42/45 active",
-      color: "#10b981",
+      subtext: "42/45 Units Active",
+      color: "#10b981", // Emerald
     },
   ];
 
@@ -46,36 +47,42 @@ export function StatsCards() {
           whileHover={{ y: -4 }}
           className="relative group"
         >
-          <Card className="border-0 shadow-lg shadow-black/[0.03] overflow-hidden bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 rounded-3xl">
+          <Card className={`border-0 shadow-xl overflow-hidden transition-all duration-500 rounded-[2rem] ${
+              isDark ? "bg-zinc-900 border-zinc-800" : "bg-white hover:bg-slate-50/50 backdrop-blur-sm"
+          }`}>
             <div 
-              className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full opacity-[0.03] blur-2xl group-hover:opacity-[0.08] transition-opacity"
+              className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full opacity-[0.05] blur-3xl group-hover:opacity-[0.1] transition-opacity"
               style={{ backgroundColor: stat.color }}
             ></div>
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
+            <CardContent className="p-8">
+              <div className="flex items-start justify-between mb-8">
                 <div 
-                  className="p-3 rounded-2xl shadow-inner border border-white/50"
-                  style={{ backgroundColor: `${stat.color}15`, color: stat.color }}
+                  className={`p-4 rounded-2xl shadow-inner border transition-colors ${
+                      isDark ? "bg-zinc-800 border-zinc-700" : "bg-white border-white"
+                  }`}
+                  style={{ color: stat.color }}
                 >
-                  <stat.icon className="w-6 h-6" />
+                  <stat.icon className="w-6 h-6 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col items-end">
                   <span 
-                    className="text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest"
-                    style={{ backgroundColor: `${stat.color}10`, color: stat.color }}
+                    className="text-[10px] font-black px-3 py-1 rounded-lg uppercase tracking-widest shadow-sm border border-white/10"
+                    style={{ backgroundColor: `${stat.color}20`, color: stat.color }}
                   >
                     {stat.trend}
                   </span>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter mt-1">
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-2 px-1">
                     {stat.subtext}
                   </p>
                 </div>
               </div>
-              <div>
-                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1 italic">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] italic">
                   {stat.label}
                 </p>
-                <h3 className="text-3xl font-black tracking-tight text-slate-800">
+                <h3 className={`text-3xl font-black tracking-tight transition-colors ${
+                    isDark ? "text-white" : "text-slate-900"
+                }`}>
                   {stat.value}
                 </h3>
               </div>

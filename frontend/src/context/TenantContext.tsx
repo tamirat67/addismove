@@ -52,12 +52,17 @@ interface TenantContextProps {
   addTransaction: (tx: Omit<Transaction, "id" | "date">) => void;
   tickets: TicketData[];
   addTicket: (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => void;
+  validateTicket: (id: string) => boolean;
+  issueManualTicket: (route: string, type: string, price: number) => void;
+  adminTheme: "light" | "zinc";
+  setAdminTheme: (theme: "light" | "zinc") => void;
 }
 
 const TenantContext = createContext<TenantContextProps | undefined>(undefined);
 
 export function TenantProvider({ children }: { children: ReactNode }) {
   const [tenant, setTenant] = useState<TenantType>("anbessa");
+  const [adminTheme, setAdminTheme] = useState<"light" | "zinc">("light");
   const [balance, setBalance] = useState(120.00);
   const [transactions, setTransactions] = useState<Transaction[]>([
     {
@@ -126,13 +131,32 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     setTickets((prev) => [newTicket, ...prev]);
   };
 
+  const validateTicket = (id: string): boolean => {
+    const ticketIndex = tickets.findIndex(t => t.id === id || t.securityCode === id || t.nfcId === id);
+    if (ticketIndex === -1) return false;
+    
+    if (tickets[ticketIndex].status === "Used") return false;
+
+    const newTickets = [...tickets];
+    newTickets[ticketIndex].status = "Used";
+    setTickets(newTickets);
+    return true;
+  };
+
+  const issueManualTicket = (route: string, type: string, price: number) => {
+    addTicket({ route, type, price, expiry: "Station Issue · 4h" });
+    addTransaction({ type: "Station Cash Sale", amount: price, status: "Success" });
+  };
+
   return (
     <TenantContext.Provider 
       value={{ 
         tenant, theme: themes[tenant], setTenant, 
         balance, addBalance, deductBalance, 
         transactions, addTransaction,
-        tickets, addTicket
+        tickets, addTicket,
+        validateTicket, issueManualTicket,
+        adminTheme, setAdminTheme
       }}
     >
       {children}

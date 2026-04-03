@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Search, Bus, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 export default function RoutesDirectory() {
   const [search, setSearch] = useState("");
@@ -85,15 +86,15 @@ export default function RoutesDirectory() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto min-h-[400px] pb-4">
-            <table className="w-full text-left border-collapse min-w-[600px]">
+          <div className="overflow-x-auto custom-scrollbar min-h-[400px] pb-4 px-1">
+            <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
                 <tr className="border-b border-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  <th className="px-6 py-4">#</th>
-                  <th className="px-6 py-4">Start</th>
-                  <th className="px-6 py-4">Pass-by</th>
-                  <th className="px-6 py-4">Destination</th>
-                  <th className="px-6 py-4 text-right">Distance</th>
+                  <th className="px-8 py-6">ID</th>
+                  <th className="px-8 py-6">Departure Hub</th>
+                  <th className="px-8 py-6">Operational Path</th>
+                  <th className="px-8 py-6">Arrival Hub</th>
+                  <th className="px-8 py-6 text-right">Fare Data</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
@@ -103,27 +104,33 @@ export default function RoutesDirectory() {
                       key={route.id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: i * 0.002 }} // Staggering 121 items slowly
-                      className="group hover:bg-slate-50/80 transition-colors"
+                      transition={{ delay: i * 0.005 }}
+                      className="group hover:bg-slate-50 transition-all cursor-pointer relative"
                     >
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-[10px] font-black text-white" style={{ backgroundColor: "#CC1F1F" }}>
+                      <td className="px-8 py-6">
+                        <Link href={`/routes/${route.id}`} className="absolute inset-0 z-10" />
+                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl text-[11px] font-black text-white shadow-lg group-hover:scale-110 transition-transform" style={{ backgroundColor: "#CC1F1F" }}>
                           {route.id}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-slate-800 group-hover:text-black">{route.start}</p>
+                      <td className="px-8 py-6">
+                        <p className="text-sm font-black text-slate-900 group-hover:text-[#CC1F1F] transition-colors">{route.start}</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Official Origin</p>
                       </td>
-                      <td className="px-6 py-4">
-                        <p className="text-xs text-slate-500 font-medium">{route.passBy === "-" ? "Direct" : route.passBy}</p>
+                      <td className="px-8 py-6">
+                        <p className="text-xs text-slate-500 font-bold uppercase tracking-tight">{route.passBy === "-" ? "Direct Express" : "via " + route.passBy}</p>
                       </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-slate-800 group-hover:text-black">{route.destination}</p>
+                      <td className="px-8 py-6">
+                        <p className="text-sm font-black text-slate-900">{route.destination}</p>
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Final Hub</p>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <span className="text-xs font-black text-[#CC1F1F] bg-[#CC1F1F0D] px-2 py-1 rounded-md">
-                          {route.distance === "N/A" ? "TBD" : route.distance}
-                        </span>
+                      <td className="px-8 py-6 text-right">
+                        <div className="flex flex-col items-end">
+                            <span className="text-[10px] font-black text-[#CC1F1F] bg-[#CC1F1F0D] px-3 py-1.5 rounded-lg border border-[#CC1F1F1A]">
+                            {route.distance === "N/A" ? "TBD" : route.distance}
+                            </span>
+                            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Distance Metric</span>
+                        </div>
                       </td>
                     </motion.tr>
                   ))}
@@ -131,9 +138,9 @@ export default function RoutesDirectory() {
               </tbody>
             </table>
             {filteredRoutes.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <Search className="w-12 h-12 text-slate-200 mb-4" />
-                <p className="text-sm font-bold text-slate-500">No routes found matching your search.</p>
+              <div className="flex flex-col items-center justify-center py-32 text-center">
+                <Search className="w-16 h-16 text-slate-100 mb-4" />
+                <p className="text-lg font-black text-slate-300 uppercase tracking-widest">No Sector Found</p>
               </div>
             )}
           </div>
