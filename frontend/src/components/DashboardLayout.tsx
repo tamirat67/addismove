@@ -16,23 +16,26 @@ import {
   LogOut,
   Sun,
   Moon,
-  Monitor
+  Monitor,
+  Ticket
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { TenantSwitcher } from "./TenantSwitcher";
 
 interface NavItemProps {
   icon: React.ElementType;
   label: string;
   active?: boolean;
+  href?: string;
 }
 
-const NavItem = ({ icon: Icon, label, active }: NavItemProps) => {
+const NavItem = ({ icon: Icon, label, active, href }: NavItemProps) => {
   const { theme, adminTheme } = useTenant();
   const isDark = adminTheme === "zinc";
 
-  return (
+  const content = (
     <div 
       className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all duration-200 group ${
         active 
@@ -49,11 +52,18 @@ const NavItem = ({ icon: Icon, label, active }: NavItemProps) => {
       </span>
     </div>
   );
+
+  return href ? (
+    <Link href={href} className="block">
+      {content}
+    </Link>
+  ) : content;
 };
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { tenant, theme, adminTheme, setAdminTheme } = useTenant();
   const [isOpen, setIsOpen] = useState(true);
+  const pathname = usePathname();
   const isDark = adminTheme === "zinc";
 
   return (
@@ -92,7 +102,8 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="space-y-1.5 flex-1 overflow-y-auto custom-scrollbar pr-1">
-            <NavItem icon={LayoutDashboard} label="Dashboard" active />
+            <NavItem icon={LayoutDashboard} label="Dashboard" href="/admin" active={pathname === '/admin'} />
+            <NavItem icon={Ticket} label="Tickets" href="/admin/tickets" active={pathname.startsWith('/admin/tickets')} />
             <NavItem icon={MapIcon} label="Fleet Map" />
             <NavItem icon={Bus} label="Bus Fleet" />
             <NavItem icon={History} label="Operations" />

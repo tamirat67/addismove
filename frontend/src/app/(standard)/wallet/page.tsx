@@ -112,10 +112,10 @@ export default function Wallet() {
           <Tabs defaultValue="all" className="w-full">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
               <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] px-2">Global Activity Log</h3>
-              <TabsList className="bg-slate-100/50 p-1.5 rounded-2xl w-full sm:w-auto border border-slate-200">
-                <TabsTrigger value="all" className="rounded-xl px-6 py-3 data-[state=active]:bg-[#CC1F1F] data-[state=active]:text-white data-[state=active]:shadow-lg font-black text-[10px] uppercase tracking-widest transition-all">All Records</TabsTrigger>
-                <TabsTrigger value="recharges" className="rounded-xl px-6 py-3 data-[state=active]:bg-[#FFD600] data-[state=active]:text-[#CC1F1F] data-[state=active]:shadow-lg font-black text-[10px] uppercase tracking-widest transition-all">Top Ups</TabsTrigger>
-                <TabsTrigger value="spends" className="rounded-xl px-6 py-3 data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-lg font-black text-[10px] uppercase tracking-widest transition-all">Spends</TabsTrigger>
+              <TabsList className="h-auto flex-wrap bg-slate-100/50 p-1.5 rounded-2xl w-full sm:w-auto border border-slate-200">
+                <TabsTrigger value="all" className="flex-1 min-w-[100px] rounded-xl px-6 py-3 data-[state=active]:bg-[#CC1F1F] data-[state=active]:text-white data-[state=active]:shadow-lg font-black text-[10px] uppercase tracking-widest transition-all">All Records</TabsTrigger>
+                <TabsTrigger value="recharges" className="flex-1 min-w-[100px] rounded-xl px-6 py-3 data-[state=active]:bg-[#FFD600] data-[state=active]:text-[#CC1F1F] data-[state=active]:shadow-lg font-black text-[10px] uppercase tracking-widest transition-all">Top Ups</TabsTrigger>
+                <TabsTrigger value="spends" className="flex-1 min-w-[100px] rounded-xl px-6 py-3 data-[state=active]:bg-slate-900 data-[state=active]:text-white data-[state=active]:shadow-lg font-black text-[10px] uppercase tracking-widest transition-all">Spends</TabsTrigger>
               </TabsList>
             </div>
 

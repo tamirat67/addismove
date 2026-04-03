@@ -13,7 +13,7 @@ export const config = {
   ],
 };
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   // Pass through all requests for now to ensure base app routing works.
   // We can re-enable subdomain/tenant logic once the base 404 is resolved.
   return NextResponse.next();

@@ -6,24 +6,28 @@ import { Users, TrendingUp, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function StatsCards() {
-  const { tenant, theme, adminTheme } = useTenant();
+  const { tenant, theme, adminTheme, tickets } = useTenant();
   const isDark = adminTheme === "zinc";
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayTickets = tickets.filter(t => t.createdAt.startsWith(todayStr));
+  const todayRevenue = todayTickets.reduce((acc, t) => acc + t.price, 0);
 
   const stats = [
     {
-      label: "Active Passengers",
-      value: "1,204",
+      label: "Today Tickets",
+      value: todayTickets.length.toString(),
       icon: Users,
-      trend: "+12.5%",
-      subtext: "Live Network Load",
+      trend: "Real-time",
+      subtext: "Total Assets Sold",
       color: "#CC1F1F", // Anbessa Red
     },
     {
       label: "Daily Revenue",
-      value: "45,200 ETB",
+      value: `${todayRevenue.toFixed(2)} ETB`,
       icon: TrendingUp,
-      trend: "+8.2%",
-      subtext: "vs Yesterday",
+      trend: "+0%",
+      subtext: "Today's Intake",
       color: "#FFD600", // Anbessa Gold
     },
     {

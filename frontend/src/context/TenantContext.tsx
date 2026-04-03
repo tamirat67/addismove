@@ -41,6 +41,7 @@ export interface TicketData {
   status: "Active" | "Expiring" | "Used";
   plateNumber: string; // Bus Plate (Targa)
   driverName: string; // Driver Identity
+  createdAt: string; // ISO date or formatted for reports
 }
 
 
@@ -70,7 +71,7 @@ interface TenantContextProps {
   transactions: Transaction[];
   addTransaction: (tx: Omit<Transaction, "id" | "date">) => void;
   tickets: TicketData[];
-  addTicket: (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => void;
+  addTicket: (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status" | "plateNumber" | "driverName" | "createdAt" | "expiry">) => void;
   validateTicket: (id: string) => boolean;
   issueManualTicket: (route: string, type: string, price: number) => void;
   bulkIssueTickets: (route: string, type: string, price: number, plateNumber: string, driverName: string, count: number) => void;
@@ -112,7 +113,79 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       securityCode: "882 109",
       status: "Active",
       plateNumber: "AB-3-A7721",
-      driverName: "Driver: Kassa T."
+      driverName: "Driver: Kassa T.",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "ANB-24-PRE-SEED-01",
+      route: "Bole → Mexico",
+      type: "Bus",
+      price: 12.00,
+      expiry: "Today, 8:00 PM",
+      qrCode: "QR-PRE-01",
+      nfcId: "NF-PRE-01",
+      securityCode: "123 456",
+      status: "Active",
+      plateNumber: "AB-4-M0021",
+      driverName: "Driver: Kassa T.",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "ANB-24-PRE-SEED-02",
+      route: "Ayat → Tor Hailoch",
+      type: "Express",
+      price: 12.00,
+      expiry: "Today, 10:00 PM",
+      qrCode: "QR-PRE-02",
+      nfcId: "NF-PRE-02",
+      securityCode: "456 789",
+      status: "Active",
+      plateNumber: "AB-2-Y8831",
+      driverName: "Driver: Mekonnen L.",
+      createdAt: new Date().toISOString()
+    },
+    // Historical Tickets for Weekly/Monthly Reports
+    {
+      id: "ANB-24-HIST-01",
+      route: "Megenagna → Piassa",
+      type: "Bus",
+      price: 12.00,
+      expiry: "Expired",
+      qrCode: "QR-HIST-01",
+      nfcId: "NF-HIST-01",
+      securityCode: "111 222",
+      status: "Used",
+      plateNumber: "AB-3-A7721",
+      driverName: "Driver: Solomon G.",
+      createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() // 3 days ago
+    },
+    {
+      id: "ANB-24-HIST-02",
+      route: "Bole → Mexico",
+      type: "Bus",
+      price: 12.00,
+      expiry: "Expired",
+      qrCode: "QR-HIST-02",
+      nfcId: "NF-HIST-02",
+      securityCode: "333 444",
+      status: "Used",
+      plateNumber: "AB-5-M4412",
+      driverName: "Driver: Zewdu H.",
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago (Weekly+Monthly)
+    },
+    {
+      id: "ANB-24-HIST-03",
+      route: "Ayat → Tor Hailoch",
+      type: "Express",
+      price: 12.00,
+      expiry: "Expired",
+      qrCode: "QR-HIST-03",
+      nfcId: "NF-HIST-03",
+      securityCode: "555 666",
+      status: "Used",
+      plateNumber: "AB-1-Y4401",
+      driverName: "Driver: Henok R.",
+      createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString() // 25 days ago (Monthly only)
     }
   ]);
 
@@ -140,9 +213,13 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     setTransactions((prev) => [newTx, ...prev]);
   };
 
-  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => {
+  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status" | "plateNumber" | "driverName" | "createdAt" | "expiry">) => {
     const randomHex = () => Math.random().toString(16).toUpperCase().substr(2, 4);
     
+    // Smart Fleet Assignment
+    const availableBuses = (FLEET_REGISTRY as any)[ticket.route] || [{ plate: "AB-UNK-000", driver: "System assigned" }];
+    const assignedBus = availableBuses[Math.floor(Math.random() * availableBuses.length)];
+
     const newTicket: TicketData = {
       ...ticket,
       id: `ANB-24-${randomHex()}-${randomHex()}`,
@@ -150,6 +227,10 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       nfcId: `NF-${randomHex()}-${randomHex()}`,
       securityCode: Math.floor(100000 + Math.random() * 900000).toString().replace(/(\d{3})(\d{3})/, "$1 $2"),
       status: "Active",
+      expiry: "Valid 24h",
+      plateNumber: assignedBus.plate,
+      driverName: `Driver: ${assignedBus.driver}`,
+      createdAt: new Date().toISOString(),
     };
     setTickets((prev) => [newTicket, ...prev]);
   };
@@ -167,12 +248,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   };
 
   const issueManualTicket = (route: string, type: string, price: number) => {
-    const randomPlate = () => `AB-${Math.floor(Math.random() * 5)}-A${Math.floor(1000 + Math.random() * 9000)}`;
     addTicket({ 
-        route, type, price, 
-        expiry: "Station Issue · 4h",
-        plateNumber: randomPlate(),
-        driverName: "Driver: Solomon G." 
+        route, type, price
     });
     addTransaction({ type: "Station Cash Sale", amount: price, status: "Success" });
   };
@@ -193,7 +270,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
             securityCode: Math.floor(100000 + Math.random() * 900000).toString().replace(/(\d{3})(\d{3})/, "$1 $2"),
             status: "Active",
             plateNumber,
-            driverName: `Driver: ${driverName}`
+            driverName: `Driver: ${driverName}`,
+            createdAt: new Date().toISOString()
         });
     }
 

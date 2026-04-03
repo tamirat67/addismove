@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export default function Ticket() {
   const { tickets, balance } = useTenant();
-  const [focusedTicketId, setFocusedTicketId] = useState<string | null>(null);
+  const [focusedTicketId, setFocusedTicketId] = useState<string | null>(tickets.length > 0 ? tickets[0].id : null);
   const [mode, setMode] = useState<"qr" | "nfc" | "manual">("qr");
 
   const focusedTicket = tickets.find(t => t.id === focusedTicketId) || tickets[0];
@@ -41,18 +41,7 @@ export default function Ticket() {
     return (
       <div className="max-w-7xl mx-auto w-full px-6 pt-10 pb-32 flex-1 animate-in slide-in-from-bottom duration-500">
         <div className="w-full space-y-8">
-            <button 
-                onClick={() => setFocusedTicketId(null)}
-                className="flex items-center gap-3 text-slate-400 hover:text-slate-900 transition-all group"
-            >
-                <div className="p-3 rounded-2xl bg-white shadow-sm border border-slate-100 group-hover:shadow-md transition-all">
-                    <ArrowLeft className="w-5 h-5" />
-                </div>
-                <div className="text-left">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 leading-none mb-1">Return To</p>
-                    <p className="text-xs font-black uppercase tracking-tight text-slate-900">Asset Management</p>
-                </div>
-            </button>
+            {/* No return button, token inspector is standalone */ }
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
                 {/* Left Column: Context & Metadata (Desktop Only) */}
@@ -112,78 +101,78 @@ export default function Ticket() {
                         </div>
 
                         <Card className="w-full text-center overflow-hidden border-0 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] bg-white rounded-[3rem] relative ring-1 ring-slate-100">
-                            <div className="relative py-10 px-6" style={{ backgroundColor: "#CC1F1F" }}>
+                            <div className="relative py-6 px-6" style={{ backgroundColor: "#CC1F1F" }}>
                                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.1]"></div>
-                                <div className="relative z-10 flex flex-col items-center gap-3 text-white">
+                                <div className="relative z-10 flex flex-col items-center gap-2 text-white">
                                     <div className="p-3 bg-[#FFD600] rounded-2xl shadow-2xl scale-110">
                                         <Bus className="w-7 h-7 text-[#CC1F1F]" strokeWidth={3} />
                                     </div>
-                                    <span className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[10px] mt-2 italic shadow-sm">Verified Operational Asset</span>
+                                    <span className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[10px] italic shadow-sm">Verified Operational Asset</span>
                                 </div>
                             </div>
 
-                            <CardContent className="pt-12 pb-8 px-10 relative">
-                                <div className="relative z-10 space-y-2 mb-10">
-                                    <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">Authenticated Operational Path</p>
-                                    <h3 className="text-3xl font-black tracking-tighter uppercase text-slate-900 leading-tight">
+                            <CardContent className="pt-6 pb-4 px-6 relative">
+                                <div className="relative z-10 space-y-1 mb-4">
+                                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400">Authenticated Operational Path</p>
+                                    <h3 className="text-2xl font-black tracking-tight uppercase text-slate-900 leading-tight">
                                         {focusedTicket.route}
                                     </h3>
                                 </div>
 
                                 <AnimatePresence mode="wait">
                                     {mode === "qr" && (
-                                        <motion.div key="qr" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="my-8 flex justify-center relative h-60">
+                                        <motion.div key="qr" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="my-4 flex justify-center relative h-36">
                                             <div className="absolute inset-0 rounded-[3rem] blur-3xl opacity-15" style={{ backgroundColor: "#FFD600" }}></div>
-                                            <div className="p-8 bg-white rounded-[3rem] shadow-2xl border-8 border-slate-50 relative z-10 w-60 h-60 flex items-center justify-center">
+                                            <div className="p-4 bg-white rounded-[2rem] shadow-2xl border-4 border-slate-50 relative z-10 w-36 h-36 flex items-center justify-center">
                                                 <QrCode className="w-full h-full text-slate-900" strokeWidth={0.8} />
                                             </div>
                                         </motion.div>
                                     )}
                                     {mode === "nfc" && (
-                                        <motion.div key="nfc" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="my-8 flex flex-col items-center justify-center h-60">
-                                            <div className="relative w-48 h-48 flex items-center justify-center">
+                                        <motion.div key="nfc" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="my-4 flex flex-col items-center justify-center h-36">
+                                            <div className="relative w-28 h-28 flex items-center justify-center">
                                                 <motion.div animate={{ scale: [1, 1.5], opacity: [0.3, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute inset-0 bg-[#CC1F1F] rounded-full" />
-                                                <div className="w-28 h-28 bg-white rounded-full shadow-2xl flex items-center justify-center relative z-10">
-                                                    <Fingerprint className="w-14 h-14 text-[#CC1F1F]" strokeWidth={1.2} />
+                                                <div className="w-20 h-20 bg-white rounded-full shadow-2xl flex items-center justify-center relative z-10">
+                                                    <Fingerprint className="w-10 h-10 text-[#CC1F1F]" strokeWidth={1.2} />
                                                 </div>
                                             </div>
-                                            <p className="mt-6 text-[11px] font-black uppercase text-[#CC1F1F] tracking-[0.4em] animate-pulse">TAP NEAR READER</p>
+                                            <p className="mt-3 text-[9px] font-black uppercase text-[#CC1F1F] tracking-[0.4em] animate-pulse">TAP NEAR READER</p>
                                         </motion.div>
                                     )}
                                     {mode === "manual" && (
-                                        <motion.div key="manual" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="my-8 flex flex-col items-center justify-center h-60 px-6">
-                                            <div className="w-full p-8 bg-slate-900 rounded-[2.5rem] shadow-2xl text-center">
-                                                <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.25em] mb-4 block">Security Token Code</span>
-                                                <h3 className="text-5xl font-black text-[#FFD600] tracking-[0.15em]">{focusedTicket.securityCode}</h3>
+                                        <motion.div key="manual" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="my-4 flex flex-col items-center justify-center h-36 px-6">
+                                            <div className="w-full p-4 bg-slate-900 rounded-3xl shadow-2xl text-center">
+                                                <span className="text-[8px] font-black text-white/30 uppercase tracking-[0.25em] mb-2 block">Security Token Code</span>
+                                                <h3 className="text-3xl font-black text-[#FFD600] tracking-[0.15em]">{focusedTicket.securityCode}</h3>
                                             </div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
 
-                                <div className="relative h-px w-full my-8 border-t-2 border-dashed border-slate-100"></div>
+                                <div className="relative h-px w-full my-5 border-t-2 border-dashed border-slate-100"></div>
 
-                                <div className="grid grid-cols-2 gap-y-8">
+                                <div className="grid grid-cols-2 gap-y-5">
                                     <div className="text-left">
-                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1.5">Targa / Plate</p>
+                                        <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Targa / Plate</p>
                                         <p className="font-black text-slate-900 uppercase text-sm">{focusedTicket.plateNumber}</p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1.5">Pass Status</p>
+                                        <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Pass Status</p>
                                         <p className="font-black text-emerald-600 uppercase text-sm">{focusedTicket.status}</p>
                                     </div>
                                     <div className="text-left">
-                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1.5">Operator ID</p>
-                                        <p className="font-black text-slate-700 uppercase text-[11px] truncate">{focusedTicket.driverName.replace('Driver: ', '')}</p>
+                                        <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Operator ID</p>
+                                        <p className="font-black text-slate-700 uppercase text-xs truncate">{focusedTicket.driverName.replace('Driver: ', '')}</p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1.5">Price Point</p>
+                                        <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Price Point</p>
                                         <p className="font-black text-[#CC1F1F] text-sm">{focusedTicket.price} ETB</p>
                                     </div>
                                 </div>
                             </CardContent>
-                            <div className="bg-slate-900 py-6 flex items-center justify-center gap-4">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></div>
-                                <span className="text-white font-black uppercase tracking-[0.3em] text-[10px]">Active Boarding Asset</span>
+                            <div className="bg-slate-900 py-4 flex items-center justify-center gap-3">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></div>
+                                <span className="text-white font-black uppercase tracking-[0.3em] text-[9px]">Active Boarding Asset</span>
                             </div>
                         </Card>
                     </div>
@@ -306,38 +295,47 @@ export default function Ticket() {
                         transition={{ delay: i * 0.1 }}
                         whileHover={{ y: -5 }}
                         onClick={() => setFocusedTicketId(ticket.id)}
-                        className={`group cursor-pointer bg-white rounded-[3rem] border transition-all duration-500 overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] ${
+                        className={`group cursor-pointer bg-white rounded-[2.5rem] border transition-all duration-500 overflow-hidden shadow-[0_10px_40px_-20px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] ${
                             ticket.status === "Active" ? "border-slate-50 hover:border-[#CC1F1F1A]" : "border-slate-50 opacity-60 hover:opacity-100"
                         }`}
                     >
-                        <div className="p-10 flex flex-col h-full bg-gradient-to-b from-white to-slate-50/30">
-                            <div className="flex justify-between items-start mb-10">
-                                <div className={`p-4 rounded-[1.5rem] shadow-sm transition-all group-hover:scale-110 ${ticket.status === "Active" ? "bg-[#CC1F1F0D]" : "bg-slate-100"}`}>
-                                    <Bus className={`w-8 h-8 ${ticket.status === "Active" ? "text-[#CC1F1F]" : "text-slate-400"}`} />
-                                </div>
-                                <div className={`px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border ${
-                                    ticket.status === "Active" ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-slate-50 text-slate-400 border-slate-100"
-                                }`}>
-                                    {ticket.status}
-                                </div>
+                        {/* MINI TOKEN HEADER */}
+                        <div className={`relative px-6 py-4 flex items-center justify-between overflow-hidden transition-colors ${ticket.status === "Active" ? "bg-[#CC1F1F]" : "bg-slate-400"}`}>
+                            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.1]"></div>
+                            <div className="relative z-10 flex items-center gap-2">
+                                <Bus className="w-3.5 h-3.5 text-[#FFD600]" strokeWidth={3} />
+                                <span className="text-[8px] font-black uppercase text-white tracking-widest">{ticket.status === "Active" ? "Verified Asset" : "Archived Asset"}</span>
                             </div>
-                            
-                            <div className="flex-1 space-y-2">
-                                <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] leading-none mb-2">Transit Hub Corridor</p>
-                                <h3 className="text-xl font-black text-slate-900 leading-tight uppercase group-hover:text-[#CC1F1F] transition-colors line-clamp-2">
-                                    {ticket.route}
-                                </h3>
-                                <div className="flex items-center gap-3 pt-4">
-                                    <span className="text-[10px] font-black text-slate-400 uppercase bg-slate-100 px-3 py-1 rounded-lg"># {ticket.plateNumber}</span>
+                            <div className="relative z-10 w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                        </div>
+
+                        <div className="p-8 flex flex-col h-full bg-gradient-to-b from-white to-slate-50/20">
+                            <div className="flex-1 space-y-4">
+                                <div className="space-y-1">
+                                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none">Operational Path</p>
+                                    <h3 className="text-lg font-black text-slate-900 leading-tight uppercase group-hover:text-[#CC1F1F] transition-colors line-clamp-1">
+                                        {ticket.route}
+                                    </h3>
+                                </div>
+                                
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 group-hover:border-[#CC1F1F1A]">
+                                         <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest mb-1">Targa / Plate</p>
+                                         <p className="text-[10px] font-black text-slate-900 uppercase">{ticket.plateNumber}</p>
+                                    </div>
+                                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 group-hover:border-[#CC1F1F1A]">
+                                         <p className="text-[7px] font-black text-slate-400 uppercase tracking-widest mb-1">Asset Value</p>
+                                         <p className="text-[10px] font-black text-slate-900 uppercase">{ticket.price} ETB</p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="mt-10 pt-8 border-t border-slate-100 flex items-center justify-between">
-                                <div>
-                                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Asset Value</p>
-                                    <p className="text-sm font-black text-slate-900 uppercase tracking-tighter">{ticket.price} ETB</p>
+                            <div className="mt-8 pt-6 border-t border-dashed border-slate-100 flex items-center justify-between gap-4">
+                                <div className="flex flex-col">
+                                    <span className="text-[7px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Security Token</span>
+                                    <span className="text-[10px] font-black text-slate-700 uppercase">{ticket.securityCode}</span>
                                 </div>
-                                <Button size="sm" className="bg-[#CC1F1F] text-white hover:bg-slate-900 rounded-2xl text-[9px] font-black uppercase tracking-widest px-6 h-12 shadow-xl shadow-red-500/10">
+                                <Button size="sm" className="bg-slate-900 text-white hover:bg-[#CC1F1F] rounded-xl text-[8px] font-black uppercase tracking-widest px-6 h-10 shadow-xl transition-all active:scale-95">
                                     Launch Inspector
                                 </Button>
                             </div>

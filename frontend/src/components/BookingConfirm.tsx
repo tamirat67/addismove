@@ -44,10 +44,7 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
         addTicket({ 
           route: routeData.name, 
           type: routeData.type, 
-          price: routeData.price, 
-          expiry: "Today, 6:00 PM",
-          plateNumber: "Assigning...",
-          driverName: "Pending Boarding"
+          price: routeData.price
         });
         setStep("success");
       } else {
@@ -115,20 +112,44 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
             )}
 
             {step === "processing" && (
-              <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12 space-y-4">
-                <Loader2 className="w-12 h-12 animate-spin mx-auto" style={{ color: "#CC1F1F" }} />
-                <p className="text-gray-500 font-bold uppercase text-xs tracking-widest">Processing Payment...</p>
+              <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12 space-y-6">
+                <div className="relative w-20 h-20 mx-auto">
+                    <motion.div 
+                        animate={{ scale: [1, 1.5], opacity: [0.5, 0] }} 
+                        transition={{ duration: 2, repeat: Infinity }} 
+                        className="absolute inset-0 bg-[#CC1F1F] rounded-full" 
+                    />
+                    <Loader2 className="w-20 h-20 animate-spin text-[#CC1F1F] relative z-10" strokeWidth={1} />
+                </div>
+                <div className="space-y-2">
+                    <p className="text-gray-900 font-black uppercase text-[10px] tracking-[0.3em] animate-pulse">Radar Syncing...</p>
+                    <p className="text-gray-400 font-bold uppercase text-[8px] tracking-widest">Enrolling Encrypted Token</p>
+                </div>
               </motion.div>
             )}
 
             {step === "success" && (
-              <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 space-y-4">
-                <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white mx-auto shadow-lg">
+              <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6 space-y-6">
+                <div className="w-20 h-20 bg-emerald-500 rounded-full flex items-center justify-center text-white mx-auto shadow-2xl shadow-emerald-500/20">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase">Success!</h3>
-                  <p className="text-sm text-gray-500 font-medium">Ticket has been added to your account</p>
+                
+                <div className="space-y-4">
+                    <div className="space-y-1">
+                        <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">Asset Acquired</h3>
+                        <p className="text-[#CC1F1F] font-black uppercase text-[9px] tracking-[0.2em] italic">Verified Operational Asset</p>
+                    </div>
+
+                    <div className="p-4 bg-white rounded-2xl border border-dashed border-gray-200 space-y-3">
+                        <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest">
+                            <span className="text-gray-400">Assigned Fleet</span>
+                            <span className="text-gray-900">{balance >= 0 ? "AB-3-A7721" : "Syncing..."}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest">
+                            <span className="text-gray-400">Network Path</span>
+                            <span className="text-[#CC1F1F]">{routeData.name}</span>
+                        </div>
+                    </div>
                 </div>
               </motion.div>
             )}
