@@ -43,6 +43,23 @@ export interface TicketData {
   driverName: string; // Driver Identity
 }
 
+
+export const FLEET_REGISTRY = {
+  "Megenagna → Piassa": [
+    { plate: "AB-3-A7721", driver: "Solomon G." },
+    { plate: "AB-2-B1104", driver: "Abebe K." },
+    { plate: "AB-1-X9920", driver: "Tadesse W." }
+  ],
+  "Bole → Mexico": [
+    { plate: "AB-4-M0021", driver: "Kassa T." },
+    { plate: "AB-5-M4412", driver: "Zewdu H." }
+  ],
+  "Ayat → Tor Hailoch": [
+    { plate: "AB-2-Y8831", driver: "Mekonnen L." },
+    { plate: "AB-1-Y4401", driver: "Henok R." }
+  ]
+};
+
 interface TenantContextProps {
   tenant: TenantType;
   theme: TenantTheme;
@@ -56,6 +73,7 @@ interface TenantContextProps {
   addTicket: (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => void;
   validateTicket: (id: string) => boolean;
   issueManualTicket: (route: string, type: string, price: number) => void;
+  bulkIssueTickets: (route: string, type: string, price: number, plateNumber: string, driverName: string, count: number) => void;
   adminTheme: "light" | "zinc";
   setAdminTheme: (theme: "light" | "zinc") => void;
 }
@@ -122,9 +140,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     setTransactions((prev) => [newTx, ...prev]);
   };
 
-  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status" | "plateNumber" | "driverName">) => {
+  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => {
     const randomHex = () => Math.random().toString(16).toUpperCase().substr(2, 4);
-    const randomPlate = () => `AB-${Math.floor(Math.random() * 5)}-A${Math.floor(1000 + Math.random() * 9000)}`;
     
     const newTicket: TicketData = {
       ...ticket,
@@ -133,8 +150,6 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       nfcId: `NF-${randomHex()}-${randomHex()}`,
       securityCode: Math.floor(100000 + Math.random() * 900000).toString().replace(/(\d{3})(\d{3})/, "$1 $2"),
       status: "Active",
-      plateNumber: randomPlate(),
-      driverName: "Driver: Solomon G."
     };
     setTickets((prev) => [newTicket, ...prev]);
   };
@@ -152,8 +167,38 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   };
 
   const issueManualTicket = (route: string, type: string, price: number) => {
-    addTicket({ route, type, price, expiry: "Station Issue · 4h" });
+    const randomPlate = () => `AB-${Math.floor(Math.random() * 5)}-A${Math.floor(1000 + Math.random() * 9000)}`;
+    addTicket({ 
+        route, type, price, 
+        expiry: "Station Issue · 4h",
+        plateNumber: randomPlate(),
+        driverName: "Driver: Solomon G." 
+    });
     addTransaction({ type: "Station Cash Sale", amount: price, status: "Success" });
+  };
+
+  const bulkIssueTickets = (route: string, type: string, price: number, plateNumber: string, driverName: string, count: number) => {
+    const newTickets: TicketData[] = [];
+    const randomHex = () => Math.random().toString(16).toUpperCase().substr(2, 4);
+
+    for (let i = 0; i < count; i++) {
+        newTickets.push({
+            id: `ANB-24-${randomHex()}-${randomHex()}`,
+            route,
+            type,
+            price,
+            expiry: "Station Bulk Issue · 8h",
+            qrCode: `QR-${Math.random().toString(36).toUpperCase().substr(2, 8)}`,
+            nfcId: `NF-${randomHex()}-${randomHex()}`,
+            securityCode: Math.floor(100000 + Math.random() * 900000).toString().replace(/(\d{3})(\d{3})/, "$1 $2"),
+            status: "Active",
+            plateNumber,
+            driverName: `Driver: ${driverName}`
+        });
+    }
+
+    setTickets((prev) => [...newTickets, ...prev]);
+    addTransaction({ type: `Bulk Issue (${count}x)`, amount: price * count, status: "Success" });
   };
 
   return (
@@ -164,6 +209,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
         transactions, addTransaction,
         tickets, addTicket,
         validateTicket, issueManualTicket,
+        bulkIssueTickets,
         adminTheme, setAdminTheme
       }}
     >

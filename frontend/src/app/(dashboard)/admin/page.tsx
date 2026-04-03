@@ -1,6 +1,6 @@
 "use client";
 
-import { useTenant } from "@/context/TenantContext";
+import { useTenant, FLEET_REGISTRY } from "@/context/TenantContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { StatsCards } from "@/components/StatsCards";
 import { RouteManager } from "@/components/RouteManager";
@@ -25,14 +25,34 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
 export default function Admin() {
-  const { theme, adminTheme, validateTicket, issueManualTicket, tickets } = useTenant();
+  const { theme, adminTheme, validateTicket, bulkIssueTickets, tickets } = useTenant();
   const isDark = adminTheme === "zinc";
 
   const [validateInput, setValidateInput] = useState("");
   const [validationResult, setValidationResult] = useState<null | { success: boolean, msg: string, ticket?: any }>(null);
   
-  const [posRoute, setPosRoute] = useState("Megenagna → Piassa");
+  // -- STATION POS STATE --
+  const [posRoute, setPosRoute] = useState(Object.keys(FLEET_REGISTRY)[0]);
+  const [posBus, setPosBus] = useState(FLEET_REGISTRY[posRoute as keyof typeof FLEET_REGISTRY][0].plate);
+  const [posQuantity, setPosQuantity] = useState(1);
   const [posSuccess, setPosSuccess] = useState(false);
+
+  // Auto-sync bus when route changes
+  const handleRouteLimit = (route: string) => {
+    setPosRoute(route);
+    const buses = (FLEET_REGISTRY as any)[route];
+    if (buses && buses.length > 0) {
+      setPosBus(buses[0].plate);
+    }
+  };
+
+  const selectedDriver = (FLEET_REGISTRY as any)[posRoute]?.find((b: any) => b.plate === posBus)?.driver || "N/A";
+
+  const handleBulkIssue = () => {
+    bulkIssueTickets(posRoute, "Station Issue", 12.00, posBus, selectedDriver, posQuantity);
+    setPosSuccess(true);
+    setTimeout(() => setPosSuccess(false), 3000);
+  };
 
   const handleValidate = (id?: string) => {
     const target = id || validateInput;
@@ -50,12 +70,6 @@ export default function Admin() {
     
     setTimeout(() => setValidationResult(null), 6000); // Longer visibility for metadata
     setValidateInput("");
-  };
-
-  const handleManualIssue = () => {
-    issueManualTicket(posRoute, "Station Issue", 12.00);
-    setPosSuccess(true);
-    setTimeout(() => setPosSuccess(false), 2000);
   };
 
   const handleMockNfc = () => {
@@ -136,21 +150,61 @@ export default function Admin() {
                             </div>
                             <CardTitle className={`text-sm font-black uppercase tracking-widest ${isDark ? "text-white" : "text-slate-800"}`}>Station POS</CardTitle>
                         </div>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Manual Ticket Issuance</p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Multiple Ticket Issuance</p>
                     </CardHeader>
                     <CardContent className="p-8 pt-4 space-y-6">
-                        <div className="space-y-2">
-                            <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Route Path</label>
-                            <Input 
-                                value={posRoute}
-                                onChange={(e) => setPosRoute(e.target.value)}
-                                className={`h-12 rounded-2xl font-bold transition-all ${
-                                    isDark ? "bg-zinc-800 border-zinc-700 text-white focus:ring-zinc-700" : "bg-slate-50 border-slate-100"
-                                }`}
-                            />
+                        <div className="grid grid-cols-1 gap-4">
+                            <div className="space-y-2">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Route Path</label>
+                                <select 
+                                    value={posRoute}
+                                    onChange={(e) => handleRouteLimit(e.target.value)}
+                                    className={`w-full h-12 px-4 rounded-2xl font-bold transition-all outline-none border ${
+                                        isDark ? "bg-zinc-800 border-zinc-700 text-white" : "bg-slate-50 border-slate-100"
+                                    }`}
+                                >
+                                    {Object.keys(FLEET_REGISTRY).map(r => <option key={r} value={r}>{r}</option>)}
+                                </select>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Bus Targa</label>
+                                    <select 
+                                        value={posBus}
+                                        onChange={(e) => setPosBus(e.target.value)}
+                                        className={`w-full h-12 px-4 rounded-2xl font-bold outline-none border ${
+                                            isDark ? "bg-zinc-800 border-zinc-700 text-white" : "bg-slate-50 border-slate-100"
+                                        }`}
+                                    >
+                                        {(FLEET_REGISTRY as any)[posRoute]?.map((b: any) => <option key={b.plate} value={b.plate}>{b.plate}</option>)}
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 ml-1">Quantity</label>
+                                    <Input 
+                                        type="number"
+                                        min={1}
+                                        max={50}
+                                        value={posQuantity}
+                                        onChange={(e) => setPosQuantity(parseInt(e.target.value) || 1)}
+                                        className={`h-12 rounded-2xl font-bold ${
+                                            isDark ? "bg-zinc-800 border-zinc-700 text-white" : "bg-slate-50 border-slate-100"
+                                        }`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={`p-4 rounded-2xl border border-dashed transition-all ${
+                                isDark ? "bg-zinc-950 border-zinc-800" : "bg-slate-50 border-slate-200"
+                            }`}>
+                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Assigned Duty Officer</p>
+                                <p className={`text-xs font-black uppercase ${isDark ? "text-emerald-500" : "text-[#CC1F1F]"}`}>{selectedDriver}</p>
+                            </div>
                         </div>
+
                         <Button 
-                            onClick={handleManualIssue}
+                            onClick={handleBulkIssue}
                             disabled={posSuccess}
                             className={`w-full h-14 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl transition-all ${
                                 posSuccess ? "bg-emerald-500 hover:bg-emerald-500" : ""
@@ -158,8 +212,10 @@ export default function Admin() {
                             style={{ backgroundColor: posSuccess ? undefined : theme.primary }}
                         >
                             {posSuccess ? (
-                                <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Ticket Issued</span>
-                            ) : "Issue Manual Ticket (Cash)"}
+                                <span className="flex items-center gap-2 animate-in zoom-in duration-300">
+                                    <CheckCircle2 className="w-4 h-4" /> Batch Issued Successfully
+                                </span>
+                            ) : `Issue ${posQuantity} Ticket${posQuantity > 1 ? 's' : ''} (Manual)`}
                         </Button>
                     </CardContent>
                 </Card>
