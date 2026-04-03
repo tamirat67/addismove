@@ -24,8 +24,8 @@ export default function Ticket() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-12 lg:pb-16 flex-1">
-      <div className="max-w-md mx-auto w-full px-4 pt-4 space-y-6 animate-in zoom-in-95 duration-500 fade-in pb-10">
+    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-32 lg:pb-16 flex-1">
+      <div className="max-w-md mx-auto w-full px-4 pt-4 space-y-6 animate-in zoom-in-95 duration-500 fade-in">
       <div className="flex items-center justify-between mb-4">
         <Link href="/results" className="text-gray-500 hover:text-black">
           <ArrowLeft className="w-5 h-5" />

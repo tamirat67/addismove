@@ -85,8 +85,8 @@ export default function RoutesDirectory() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto min-h-[400px]">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto min-h-[400px] pb-4">
+            <table className="w-full text-left border-collapse min-w-[600px]">
               <thead>
                 <tr className="border-b border-slate-50 text-[10px] font-black uppercase tracking-widest text-slate-400">
                   <th className="px-6 py-4">#</th>

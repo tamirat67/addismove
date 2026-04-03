@@ -50,26 +50,46 @@ export default function Results() {
     return () => clearTimeout(timer);
   }, []);
 
+  const [viewMode, setViewMode] = useState<"list" | "map">("list");
+
   return (
-    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-12 lg:pb-16 flex-1">
-      <div className="w-full pb-20 lg:pb-0 h-full flex flex-col">
-      <div className="flex items-center gap-4 mb-6 px-1 lg:px-0">
-        <Link
-          href="/"
-          className="p-2 bg-white shadow-sm border border-slate-100 rounded-xl transition-all hover:border-[#CC1F1F]/30"
-          style={{ color: "#CC1F1F" }}
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <div>
-          <h2 className="text-xl lg:text-3xl font-black uppercase tracking-tight" style={{ color: "#CC1F1F" }}>
-            Available Routes
-          </h2>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-[10px] lg:text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">Megenagna</span>
-            <ArrowLeft className="w-3 h-3 text-slate-300 rotate-180" />
-            <span className="text-[10px] lg:text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">Piassa</span>
+    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-32 lg:pb-16 flex-1">
+      <div className="w-full h-full flex flex-col">
+      <div className="flex items-center justify-between gap-4 mb-6 px-1 lg:px-0">
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            className="p-2 bg-white shadow-sm border border-slate-100 rounded-xl transition-all hover:border-[#CC1F1F]/30"
+            style={{ color: "#CC1F1F" }}
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <div>
+            <h2 className="text-xl lg:text-3xl font-black uppercase tracking-tight" style={{ color: "#CC1F1F" }}>
+              Available Routes
+            </h2>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[10px] lg:text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">Megenagna</span>
+              <ArrowLeft className="w-3 h-3 text-slate-300 rotate-180" />
+              <span className="text-[10px] lg:text-xs text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-0.5 rounded-md">Piassa</span>
+            </div>
           </div>
+        </div>
+
+        {/* Mobile View Toggle */}
+        <div className="lg:hidden flex bg-slate-100 p-1 rounded-xl shadow-inner">
+            <button 
+                onClick={() => setViewMode("list")}
+                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "list" ? "bg-white text-[#CC1F1F] shadow-sm" : "text-slate-400"}`}
+            >
+                List
+            </button>
+            <button 
+                onClick={() => setViewMode("map")}
+                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${viewMode === "map" ? "bg-white text-[#CC1F1F] shadow-sm" : "text-slate-400"}`}
+            >
+                Map
+            </button>
         </div>
       </div>
 
@@ -102,7 +122,7 @@ export default function Results() {
             className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
             {/* Left Column: Route List */}
-            <div className="lg:col-span-5 space-y-6">
+            <div className={`lg:col-span-5 space-y-6 ${viewMode === "map" ? "hidden lg:block" : "block"}`}>
               {/* Filters */}
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                 {["Fastest", "Cheapest", "Balanced"].map((f) => (
@@ -148,7 +168,7 @@ export default function Results() {
                         <div className="flex justify-between items-start mb-6">
                           <div>
                             <h3 className="font-black flex items-center gap-2 text-xl tracking-tight" style={{ color: "#CC1F1F" }}>
-                              {route.name}
+                              {route.id}: {route.name}
                             </h3>
                             <div
                               className="flex items-center gap-2 mt-2 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md inline-block"
@@ -174,7 +194,7 @@ export default function Results() {
                             className="text-white rounded-xl shadow-lg px-8 h-10 font-black uppercase tracking-widest text-[10px] hover:opacity-90"
                             style={{ backgroundColor: "#CC1F1F" }}
                           >
-                            Book Pass
+                            Book
                           </Button>
                         </div>
                       </CardContent>
@@ -184,21 +204,21 @@ export default function Results() {
               </div>
             </div>
 
-            {/* Right Column: Route Map (Desktop Only) */}
-            <div className="hidden lg:block lg:col-span-7 sticky top-24">
-              <div className="w-full h-[600px] bg-slate-900 rounded-[3rem] overflow-hidden shadow-2xl relative border-4 border-white group">
+            {/* Right Column: Route Map (Responsive Toggle) */}
+            <div className={`lg:col-span-7 sticky top-24 ${viewMode === "list" ? "hidden lg:block" : "block"}`}>
+              <div className="w-full h-[500px] lg:h-[600px] bg-slate-900 rounded-[3rem] overflow-hidden shadow-2xl relative border-4 border-white group">
                 <LiveMap />
-                <div className="absolute top-6 left-6 right-6 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="absolute top-6 left-6 right-6 flex gap-4 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500">
                   <div className="bg-white/95 backdrop-blur shadow-lg border border-white p-4 rounded-2xl flex-1">
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Departure</p>
                     <p className="font-bold text-slate-800 text-sm flex items-center gap-2">
-                      <MapPin className="w-4 h-4" style={{ color: "#CC1F1F" }} /> Megenagna Terminal
+                      <MapPin className="w-4 h-4" style={{ color: "#CC1F1F" }} /> Megenagna
                     </p>
                   </div>
                   <div className="bg-white/95 backdrop-blur shadow-lg border border-white p-4 rounded-2xl flex-1">
                     <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Arrival</p>
                     <p className="font-bold text-slate-800 text-sm flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-rose-500" /> Piassa Hub
+                      <MapPin className="w-4 h-4 text-rose-500" /> Piassa
                     </p>
                   </div>
                 </div>
