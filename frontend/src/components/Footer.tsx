@@ -124,7 +124,7 @@ export function Footer() {
                 <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] sm:text-[12px] font-black uppercase tracking-[0.3em]">
                     <span className="text-white/30">Powered By</span>
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FFD600] to-amber-400 drop-shadow-[0_0_10px_rgba(255,214,0,0.4)]">
-                        Gemeda Tech Soln
+                        TangaTech Innovations
                     </span>
                     <span className="text-white/30">@ 2026 · All Rights Reserved</span>
                 </div>
