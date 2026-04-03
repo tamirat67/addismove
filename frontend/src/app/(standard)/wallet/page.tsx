@@ -38,41 +38,60 @@ export default function Wallet() {
       <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Left Column: Core Finance (5 columns) */}
         <div className="lg:col-span-5 space-y-8">
-          {/* Balance Card - Cinematic Red */}
-          <Card className="text-white overflow-hidden shadow-2xl border-0 relative rounded-[3rem]" 
-                style={{ background: "linear-gradient(135deg, #CC1F1F 0%, #991B1B 100%)" }}>
-            <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            <div className="absolute -left-10 -bottom-10 w-48 h-48 bg-[#FFD600]/10 rounded-full blur-3xl"></div>
-            <CardContent className="p-10 relative z-10">
-              <div className="flex justify-between items-start mb-12">
-                <div className="space-y-1">
-                  <span className="text-white/60 text-[10px] font-black uppercase tracking-widest">Official Transit Account</span>
-                  <p className="text-base font-black tracking-tight uppercase">Current Balance</p>
-                </div>
-                <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10 shadow-inner">
-                  <CreditCard className="w-7 h-7 text-white" />
-                </div>
-              </div>
+          {/* Balance Card - Standardized 'Smart' Card Aspect Ratio */}
+          <motion.div
+            whileHover={{ y: -5, scale: 1.01 }}
+            className="w-full"
+          >
+            <Card className="text-white overflow-hidden shadow-2xl border-0 relative rounded-[2rem] aspect-[1.586/1] flex flex-col justify-between" 
+                  style={{ background: "linear-gradient(135deg, #CC1F1F 0%, #7F1D1D 100%)" }}>
               
-              <div className="space-y-2">
-                <motion.h2 
-                  key={balance}
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="text-6xl lg:text-7xl font-black tracking-tighter"
-                >
-                  {balance.toFixed(2)} <span className="text-2xl lg:text-3xl font-bold opacity-60 ml-1">ETB</span>
-                </motion.h2>
-              </div>
+              {/* Cinematic Background Patterns */}
+              <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/5 rounded-full blur-[100px]"></div>
+              <div className="absolute -left-10 -bottom-10 w-64 h-64 bg-[#FFD600]/10 rounded-full blur-[80px]"></div>
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none"></div>
 
-              <div className="mt-12 flex gap-4">
-                <TopUpDialog />
-                <button className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-md font-black text-[11px] uppercase tracking-widest h-14 rounded-2xl border border-white/20 text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg">
-                  <Send className="w-4 h-4" /> Transfer
-                </button>
-              </div>
-            </CardContent>
-          </Card>
+              <CardContent className="p-6 lg:p-8 h-full flex flex-col justify-between relative z-10">
+                {/* Card Top: Branding & Chip */}
+                <div className="flex justify-between items-start">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="w-8 h-1 bg-[#FFD600] rounded-full"></div>
+                        <span className="text-white/70 text-[8px] font-black uppercase tracking-[0.3em]">Anbessa Pro Pass</span>
+                    </div>
+                    <p className="text-xs font-black tracking-widest uppercase opacity-40">Digital Assets</p>
+                  </div>
+                  {/* Metallic Chip Effect */}
+                  <div className="w-10 h-8 bg-gradient-to-br from-slate-400 via-slate-200 to-slate-500 rounded-lg shadow-inner flex flex-col justify-around p-1.5 opacity-80">
+                      <div className="w-full h-0.5 bg-black/10 rounded-full"></div>
+                      <div className="w-full h-0.5 bg-black/10 rounded-full"></div>
+                      <div className="w-full h-0.5 bg-black/10 rounded-full"></div>
+                  </div>
+                </div>
+                
+                {/* Card Middle: Large Balance */}
+                <div className="py-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-50 block mb-1">Available Funds</span>
+                  <motion.h2 
+                    key={balance}
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="text-4xl lg:text-5xl font-black tracking-tighter flex items-baseline gap-2"
+                  >
+                    {balance.toFixed(2)} <span className="text-sm lg:text-base font-bold opacity-40 uppercase tracking-widest">ETB</span>
+                  </motion.h2>
+                </div>
+
+                {/* Card Bottom: Quick Actions */}
+                <div className="flex gap-3 mt-4">
+                  <TopUpDialog />
+                  <button className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-md font-black text-[10px] uppercase tracking-widest h-12 rounded-xl border border-white/20 text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg">
+                    <Send className="w-3.5 h-3.5" /> Transfer
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Branded Reward Section */}
           <div className="rounded-[2rem] p-8 border-2 border-dashed border-[#FFD600]/30 bg-[#FFD600]/5 group hover:bg-[#FFD600]/10 transition-colors">
