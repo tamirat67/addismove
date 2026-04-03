@@ -78,18 +78,22 @@ export default function Home() {
             className="w-full max-w-2xl px-2"
           >
             <div 
-                className="backdrop-blur-md border border-white/20 rounded-[2.5rem] shadow-2xl overflow-hidden"
-                style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+                className="backdrop-blur-2xl bg-white/10 border border-white/30 rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] overflow-hidden relative"
+                style={{ WebkitBackdropFilter: "blur(24px)" }}
             >
-              <div className="px-6 lg:px-8 py-3 lg:py-4 flex items-center justify-between border-b border-white/10" style={{ background: "rgba(255, 255, 255, 0.03)" }}>
+              {/* Subtle glass gleam */}
+              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+              
+              <div className="px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 bg-white/5 gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-1.5 bg-[#CC1F1F]/60 rounded-lg border border-white/10 shadow-sm">
-                        <Bus className="w-4 h-4 text-white" />
+                    <div className="p-2 bg-[#CC1F1F] rounded-xl border border-white/20 shadow-lg">
+                        <Bus className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-white font-black uppercase tracking-widest text-[10px] drop-shadow-sm">Anbessa Pro</span>
+                    <span className="text-white font-black uppercase tracking-[0.2em] text-[11px] drop-shadow-md tracking-widest">Anbessa Pro</span>
                 </div>
-                <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/50 uppercase tracking-widest">
-                    Live Status: <span className="text-emerald-400">Normal Operations</span>
+                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-black text-white/80 uppercase tracking-widest bg-black/20 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md w-fit">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></div>
+                    Live Status: <span className="text-emerald-400 drop-shadow-sm ml-1">Normal Operations</span>
                 </div>
               </div>
 
