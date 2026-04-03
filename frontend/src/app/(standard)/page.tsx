@@ -44,7 +44,7 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* 1. HERO SECTION (COMPACT & STANDARDIZED) */}
-      <section className="relative h-[400px] lg:h-[500px] w-full flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[500px] lg:min-h-[600px] w-full flex items-center justify-center py-20">
         {/* Background Image with Parallax-light effect */}
         <motion.div 
           initial={{ scale: 1.1 }}
@@ -66,12 +66,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-10"
+            className="text-center mb-6 lg:mb-10"
           >
             <p className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[10px] lg:text-xs mb-3">
               One App · Bus Rapid · Smart Travel
             </p>
-            <h1 className="text-4xl lg:text-7xl font-black text-white tracking-tighter leading-none uppercase">
+            <h1 className="text-3xl lg:text-6xl font-black text-white tracking-tighter leading-none uppercase">
               Home <span style={{ color: "#FFD600" }}>Dashboard</span>
             </h1>
           </motion.div>
@@ -83,21 +83,21 @@ export default function Home() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="w-full max-w-2xl"
           >
-            <Card className="bg-white/5 backdrop-blur-3xl border-0 shadow-2xl rounded-[2.5rem] overflow-hidden border border-white/10">
+            <Card className="bg-white/5 backdrop-blur-3xl border-0 shadow-2xl rounded-[2.5rem] border border-white/10">
               {/* Branded Card Header (Translucent) */}
-              <div className="px-8 py-5 flex items-center justify-between bg-white/10 backdrop-blur-md border-b border-white/5">
+              <div className="px-6 lg:px-8 py-4 lg:py-5 flex items-center justify-between bg-white/10 backdrop-blur-md border-b border-white/5">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-[#CC1F1F]/40 rounded-lg backdrop-blur-sm border border-white/10">
                         <Bus className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-white font-black uppercase tracking-widest text-sm">Anbessa Pro</span>
+                    <span className="text-white font-black uppercase tracking-widest text-xs lg:text-sm">Anbessa Pro</span>
                 </div>
                 <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/50 uppercase tracking-widest">
                     Live Status Update: <span className="text-emerald-400 animate-pulse">Normal Service</span>
                 </div>
               </div>
 
-              <CardContent className="p-6 lg:p-10 space-y-6">
+              <CardContent className="p-5 lg:p-10 space-y-6">
                 <div className="space-y-4 relative">
                   <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-white/10 rounded-full z-0"></div>
 
