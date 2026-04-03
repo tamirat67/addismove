@@ -18,7 +18,8 @@ export default function RoutesDirectory() {
   );
 
   return (
-    <div className="w-full space-y-8 animate-in fade-in duration-700 pb-20">
+    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-12 lg:pb-16 flex-1">
+      <div className="w-full space-y-8 animate-in fade-in duration-700 pb-20">
       {/* Header Section */}
       <div className="flex flex-col gap-4">
         <h1 className="text-4xl lg:text-5xl font-black tracking-tighter text-slate-900 uppercase">
@@ -182,6 +183,7 @@ export default function RoutesDirectory() {
              </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

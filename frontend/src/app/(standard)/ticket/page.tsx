@@ -24,7 +24,8 @@ export default function Ticket() {
   }
 
   return (
-    <div className="max-w-md mx-auto w-full px-4 pt-4 space-y-6 animate-in zoom-in-95 duration-500 fade-in pb-10">
+    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-12 lg:pb-16 flex-1">
+      <div className="max-w-md mx-auto w-full px-4 pt-4 space-y-6 animate-in zoom-in-95 duration-500 fade-in pb-10">
       <div className="flex items-center justify-between mb-4">
         <Link href="/results" className="text-gray-500 hover:text-black">
           <ArrowLeft className="w-5 h-5" />
@@ -86,6 +87,7 @@ export default function Ticket() {
 
       <div className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-widest flex items-center justify-center gap-2 mt-4 bg-white py-4 rounded-xl shadow-sm border border-gray-50">
         <RefreshCw className="w-3.5 h-3.5 animate-spin-slow" /> Security Refresh in 10s
+      </div>
       </div>
     </div>
   );

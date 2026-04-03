@@ -51,7 +51,8 @@ export default function Results() {
   }, []);
 
   return (
-    <div className="w-full pb-20 lg:pb-0 h-full flex flex-col">
+    <div className="max-w-6xl mx-auto w-full px-4 pt-4 lg:pt-8 pb-12 lg:pb-16 flex-1">
+      <div className="w-full pb-20 lg:pb-0 h-full flex flex-col">
       <div className="flex items-center gap-4 mb-6 px-1 lg:px-0">
         <Link
           href="/"
@@ -212,6 +213,7 @@ export default function Results() {
         onClose={() => setSelectedRoute(null)}
         routeData={selectedRoute || { name: "", type: "", price: 0, duration: "" }}
       />
+      </div>
     </div>
   );
 }

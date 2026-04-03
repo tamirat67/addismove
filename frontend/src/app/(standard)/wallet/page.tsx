@@ -27,7 +27,7 @@ export default function Wallet() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Left Column: Core Finance (5 columns) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Balance Card */}
