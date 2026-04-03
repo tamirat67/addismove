@@ -9,39 +9,28 @@ export function LiveMap() {
   const { tenant, theme } = useTenant();
 
   return (
-    <Card className="border-0 shadow-lg shadow-black/[0.03] rounded-3xl overflow-hidden bg-slate-900 aspect-square lg:aspect-auto lg:h-[480px] relative group h-full">
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+    <Card className="border shadow-sm border-gray-200 rounded-3xl overflow-hidden bg-gray-50 min-h-[400px] lg:h-[480px] relative w-full group">
+      {/* Mock Map Grid */}
+      <div className="absolute inset-0 pointer-events-none opacity-60">
+        <div style={{ backgroundImage: "linear-gradient(#e5e7eb 1px, transparent 1px), linear-gradient(90deg, #e5e7eb 1px, transparent 1px)", backgroundSize: "24px 24px" }} className="w-full h-full"></div>
+      </div>
       
       {/* Map Header */}
-      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl">
+      <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-gray-200 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-          <span className="text-[10px] font-black text-white uppercase tracking-widest">
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-sm shadow-emerald-200"></div>
+          <span className="text-xs font-black text-gray-800 uppercase tracking-widest">
             Live Fleet Radar
           </span>
         </div>
         <div className="flex gap-2">
-          <div className="px-2 py-1 bg-white/10 rounded-lg text-[8px] font-bold text-white uppercase border border-white/5">
+          <div className="px-2 py-1 bg-gray-100 rounded-lg text-[10px] font-bold text-gray-600 uppercase border border-gray-200">
             {tenant === "anbessa" ? "Hub: Piassa" : "Control: Stadium"}
           </div>
         </div>
       </div>
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        {/* Mock Map Grid */}
-        <div className="w-full h-full opacity-30 pointer-events-none">
-          <div className="absolute inset-0 grid grid-cols-8 grid-rows-8 border border-white/5"></div>
-          <svg className="w-full h-full opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <path 
-              d="M10,10 Q50,40 90,90" 
-              stroke={theme.primary} 
-              strokeWidth="0.5" 
-              fill="none" 
-              strokeDasharray="2 2" 
-            />
-          </svg>
-        </div>
-
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         {/* Vehicle Markers */}
         <AnimatePresence>
           {[1, 2, 3, 4, 5].map((i) => (
@@ -64,11 +53,11 @@ export function LiveMap() {
             >
               <div className="relative group/marker">
                 <div 
-                  className="w-12 h-12 rounded-full blur-xl absolute -inset-2 opacity-20 transition-opacity group-hover/marker:opacity-40"
+                  className="w-12 h-12 rounded-full blur-xl absolute -inset-2 opacity-30 transition-opacity group-hover/marker:opacity-50"
                   style={{ backgroundColor: theme.primary }}
                 ></div>
                 <div 
-                  className="w-8 h-8 rounded-xl flex items-center justify-center relative border border-white/20 shadow-2xl transition-transform group-hover/marker:scale-110"
+                  className="w-8 h-8 rounded-full flex items-center justify-center relative border-2 border-white shadow-md transition-transform group-hover/marker:scale-110"
                   style={{ backgroundColor: theme.primary }}
                 >
                   {tenant === "anbessa" ? (
@@ -77,7 +66,7 @@ export function LiveMap() {
                     <Train className="w-4 h-4 text-white" />
                   )}
                   {/* Direction Arrow */}
-                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[6px] border-b-white/80"></div>
+                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-b-[6px] rounded-sm" style={{ borderBottomColor: theme.primary }}></div>
                 </div>
               </div>
             </motion.div>
@@ -87,10 +76,10 @@ export function LiveMap() {
 
       {/* Map Actions */}
       <div className="absolute bottom-4 left-4 right-4 z-10 flex gap-2">
-        <button className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl text-[10px] font-black text-white uppercase tracking-widest transition-all border border-white/5 shadow-lg active:scale-95">
+        <button className="flex-1 py-3 bg-white/95 hover:bg-white backdrop-blur-md rounded-xl text-xs font-bold text-gray-700 uppercase tracking-widest transition-all border border-gray-200 shadow-sm active:scale-95">
           Recenter
         </button>
-        <button className="flex-1 py-2.5 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl text-[10px] font-black text-white uppercase tracking-widest transition-all border border-white/5 shadow-lg active:scale-95">
+        <button className="flex-1 py-3 bg-white/95 hover:bg-white backdrop-blur-md rounded-xl text-xs font-bold text-gray-700 uppercase tracking-widest transition-all border border-gray-200 shadow-sm active:scale-95">
           Filters
         </button>
       </div>
