@@ -39,6 +39,8 @@ export interface TicketData {
   nfcId: string; // NFC Token ID
   securityCode: string; // 6-digit Manual OTP
   status: "Active" | "Expiring" | "Used";
+  plateNumber: string; // Bus Plate (Targa)
+  driverName: string; // Driver Identity
 }
 
 interface TenantContextProps {
@@ -90,7 +92,9 @@ export function TenantProvider({ children }: { children: ReactNode }) {
       qrCode: "QR-882109-XJ",
       nfcId: "NF-8B2-C91",
       securityCode: "882 109",
-      status: "Active"
+      status: "Active",
+      plateNumber: "AB-3-A7721",
+      driverName: "Driver: Kassa T."
     }
   ]);
 
@@ -118,15 +122,19 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     setTransactions((prev) => [newTx, ...prev]);
   };
 
-  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status">) => {
+  const addTicket = (ticket: Omit<TicketData, "id" | "qrCode" | "nfcId" | "securityCode" | "status" | "plateNumber" | "driverName">) => {
     const randomHex = () => Math.random().toString(16).toUpperCase().substr(2, 4);
+    const randomPlate = () => `AB-${Math.floor(Math.random() * 5)}-A${Math.floor(1000 + Math.random() * 9000)}`;
+    
     const newTicket: TicketData = {
       ...ticket,
       id: `ANB-24-${randomHex()}-${randomHex()}`,
       qrCode: `QR-${Math.random().toString(36).toUpperCase().substr(2, 8)}`,
       nfcId: `NF-${randomHex()}-${randomHex()}`,
       securityCode: Math.floor(100000 + Math.random() * 900000).toString().replace(/(\d{3})(\d{3})/, "$1 $2"),
-      status: "Active"
+      status: "Active",
+      plateNumber: randomPlate(),
+      driverName: "Driver: Solomon G."
     };
     setTickets((prev) => [newTicket, ...prev]);
   };

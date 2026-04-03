@@ -29,7 +29,7 @@ export default function Admin() {
   const isDark = adminTheme === "zinc";
 
   const [validateInput, setValidateInput] = useState("");
-  const [validationResult, setValidationResult] = useState<null | { success: boolean, msg: string }>(null);
+  const [validationResult, setValidationResult] = useState<null | { success: boolean, msg: string, ticket?: any }>(null);
   
   const [posRoute, setPosRoute] = useState("Megenagna → Piassa");
   const [posSuccess, setPosSuccess] = useState(false);
@@ -38,13 +38,17 @@ export default function Admin() {
     const target = id || validateInput;
     if (!target) return;
     
+    // Find ticket first for display
+    const ticket = tickets.find(t => t.id === target || t.securityCode === target || t.nfcId === target);
     const success = validateTicket(target);
+    
     setValidationResult({
         success,
-        msg: success ? "Pass Validated. Welcome Aboard!" : "Invalid or Already Used Pass."
+        msg: success ? "Pass Validated. Welcome Aboard!" : "Invalid or Already Used Pass.",
+        ticket: success ? ticket : undefined
     });
     
-    setTimeout(() => setValidationResult(null), 3000);
+    setTimeout(() => setValidationResult(null), 6000); // Longer visibility for metadata
     setValidateInput("");
   };
 
@@ -236,11 +240,36 @@ export default function Admin() {
                         </div>
 
                         {validationResult && (
-                             <p className={`text-[10px] font-black text-center uppercase tracking-widest animate-pulse ${
-                                validationResult.success ? "text-emerald-500" : "text-rose-500"
-                             }`}>
-                                {validationResult.msg}
-                             </p>
+                             <div className="space-y-4">
+                                <p className={`text-[10px] font-black text-center uppercase tracking-widest animate-pulse ${
+                                    validationResult.success ? "text-emerald-500" : "text-rose-500"
+                                }`}>
+                                   {validationResult.msg}
+                                </p>
+                                
+                                {validationResult.success && validationResult.ticket && (
+                                    <motion.div 
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className={`p-4 rounded-2xl border flex flex-col gap-2 ${
+                                            isDark ? "bg-zinc-950 border-zinc-800" : "bg-slate-50 border-slate-100"
+                                        }`}
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Bus Targa</span>
+                                            <span className="text-xs font-black text-emerald-500 uppercase">{validationResult.ticket.plateNumber}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Duty Officer</span>
+                                            <span className={`text-[10px] font-black uppercase ${isDark ? "text-white" : "text-slate-900"}`}>{validationResult.ticket.driverName.replace('Driver: ', '')}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center border-t border-dashed mt-1 pt-2 transition-colors border-slate-200 dark:border-zinc-800">
+                                            <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Network Path</span>
+                                            <span className={`text-[10px] font-black uppercase truncate max-w-[120px] ${isDark ? "text-zinc-400" : "text-slate-600"}`}>{validationResult.ticket.route}</span>
+                                        </div>
+                                    </motion.div>
+                                )}
+                             </div>
                         )}
                     </CardContent>
                 </Card>
