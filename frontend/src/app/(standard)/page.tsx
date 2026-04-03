@@ -76,16 +76,16 @@ export default function Home() {
             </h1>
           </motion.div>
 
-          {/* SMART BOOKING CARD (TRANSPARENT / GLASS MORPHISM) */}
+          {/* SMART BOOKING CARD (FULLY TRANSPARENT / GLASS MORPHISM) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2, duration: 0.8 }}
             className="w-full max-w-2xl"
           >
-            <Card className="bg-white/5 backdrop-blur-3xl border-0 shadow-2xl rounded-[2.5rem] border border-white/10">
-              {/* Branded Card Header (Translucent) */}
-              <div className="px-6 lg:px-8 py-4 lg:py-5 flex items-center justify-between bg-white/10 backdrop-blur-md border-b border-white/5">
+            <Card className="bg-transparent backdrop-blur-xl border-0 shadow-2xl rounded-[2.5rem] border border-white/20">
+              {/* Branded Card Header (Ultra-Translucent) */}
+              <div className="px-6 lg:px-8 py-4 lg:py-5 flex items-center justify-between bg-white/10 backdrop-blur-lg border-b border-white/10">
                 <div className="flex items-center gap-3">
                     <div className="p-2 bg-[#CC1F1F]/40 rounded-lg backdrop-blur-sm border border-white/10">
                         <Bus className="w-5 h-5 text-white" />
@@ -99,16 +99,16 @@ export default function Home() {
 
               <CardContent className="p-5 lg:p-10 space-y-6">
                 <div className="space-y-4 relative">
-                  <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-white/10 rounded-full z-0"></div>
+                  <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-white/5 rounded-full z-0"></div>
 
-                  {/* FROM INPUT (TRANSPARENT) */}
+                  {/* FROM INPUT (FULLY TRANSPARENT) */}
                   <div className="relative z-10 group">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/30 bg-white/10 group-focus-within:border-[#FFD600] transition-colors shadow-sm"></div>
                     <Input
                       placeholder="From: Departure Station"
                       value={from}
                       onChange={(e) => handleFromChange(e.target.value)}
-                      className="pl-12 h-16 bg-white/5 border-white/10 focus-visible:ring-2 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/30 transition-all focus-visible:bg-white/10 border-2 backdrop-blur-sm"
+                      className="pl-12 h-16 bg-transparent border-white/20 focus-visible:ring-2 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/20 transition-all focus-visible:bg-white/5 border-2 backdrop-blur-xs"
                     />
                     <AnimatePresence>
                       {fromSuggestions.length > 0 && (
@@ -123,14 +123,14 @@ export default function Home() {
                     </AnimatePresence>
                   </div>
 
-                  {/* TO INPUT (TRANSPARENT) */}
+                  {/* TO INPUT (FULLY TRANSPARENT) */}
                   <div className="relative z-10 group">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-sm group-focus-within:bg-[#CC1F1F] bg-white/20 transition-colors shadow-sm"></div>
                     <Input
                       placeholder="To: Destination Station"
                       value={to}
                       onChange={(e) => handleToChange(e.target.value)}
-                      className="pl-12 h-16 bg-white/5 border-white/10 focus-visible:ring-2 focus-visible:ring-[#CC1F1F]/20 rounded-2xl text-white text-lg font-bold placeholder:text-white/30 transition-all focus-visible:bg-white/10 border-2 backdrop-blur-sm"
+                      className="pl-12 h-16 bg-transparent border-white/20 focus-visible:ring-2 focus-visible:ring-[#CC1F1F]/20 rounded-2xl text-white text-lg font-bold placeholder:text-white/20 transition-all focus-visible:bg-white/5 border-2 backdrop-blur-xs"
                     />
                     <AnimatePresence>
                       {toSuggestions.length > 0 && (
@@ -149,7 +149,7 @@ export default function Home() {
                 <Link href="/results" className="block pt-2">
                   <Button
                     className="w-full text-white shadow-xl text-sm lg:text-base font-black uppercase tracking-widest h-16 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 hover:opacity-90 border border-white/10 backdrop-blur-sm"
-                    style={{ backgroundColor: "rgba(204, 31, 31, 0.6)" }} // Transparent Red
+                    style={{ backgroundColor: "rgba(204, 31, 31, 0.4)" }} // Even more transparent Red
                   >
                     <Search className="w-6 h-6" /> Search Live Routes
                   </Button>
