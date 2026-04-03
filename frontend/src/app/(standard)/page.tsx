@@ -43,59 +43,58 @@ export default function Home() {
 
   return (
     <div className="flex flex-col w-full">
-      {/* 1. HERO SECTION (STANDARDIZED COMPACT & PURE TRANSPARENCY) */}
-      <section className="relative h-[480px] lg:h-[520px] w-full flex items-center justify-center overflow-hidden">
-        {/* Background Image with Parallax-light effect */}
-        <motion.div 
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 10, ease: "easeOut" }}
-          className="absolute inset-0 z-0"
-        >
+      {/* 1. HERO SECTION (ULTRA-CLEAN TRANSPARENCY) */}
+      <section className="relative h-[480px] lg:h-[520px] w-full flex items-center justify-center overflow-hidden bg-black/5">
+        {/* Background Image with pure clarity */}
+        <div className="absolute inset-0 z-0">
           <img 
             src="/hero.png" 
             alt="Anbessa Bus" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
-        </motion.div>
+          {/* Subtle vignette rather than heavy masking */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
+        </div>
 
         {/* Content Container */}
         <div className="relative z-10 max-w-6xl mx-auto w-full px-4 flex flex-col items-center">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-6 lg:mb-8"
           >
-            <p className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[9px] lg:text-xs mb-2">
+            <p className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[9px] lg:text-xs mb-2 drop-shadow-md">
               One App · Bus Rapid · Smart Travel
             </p>
-            <h1 className="text-3xl lg:text-6xl font-black text-white tracking-tighter leading-none uppercase">
+            <h1 className="text-3xl lg:text-5xl font-black text-white tracking-tighter leading-none uppercase drop-shadow-xl">
               Home <span style={{ color: "#FFD600" }}>Dashboard</span>
             </h1>
           </motion.div>
 
-          {/* SMART BOOKING CARD (CUSTOM PURE GLASS / ZERO BACKGROUND) */}
+          {/* SMART BOOKING CARD (ABSOLUTE 100% CLEAR GLASS) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-2xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="w-full max-w-2xl px-2"
           >
-            <div className="!bg-transparent backdrop-blur-xl border-2 border-white/20 rounded-[2.5rem] shadow-2xl overflow-hidden">
+            <div 
+                className="backdrop-blur-sm border-2 border-white/20 rounded-[2.5rem] shadow-2xl overflow-hidden"
+                style={{ backgroundColor: "transparent" }}
+            >
               {/* Branded Card Header (Strictly Zero BG) */}
-              <div className="px-6 lg:px-8 py-4 lg:py-5 flex items-center justify-between border-b border-white/10 !bg-transparent">
+              <div className="px-6 lg:px-8 py-3 lg:py-4 flex items-center justify-between border-b border-white/10" style={{ background: "transparent" }}>
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-[#CC1F1F]/60 rounded-lg backdrop-blur-sm border border-white/10">
-                        <Bus className="w-5 h-5 text-white" />
+                    <div className="p-1.5 bg-[#CC1F1F]/60 rounded-lg border border-white/10">
+                        <Bus className="w-4 h-4 text-white" />
                     </div>
-                    <span className="text-white font-black uppercase tracking-widest text-xs lg:text-sm">Anbessa Pro</span>
+                    <span className="text-white font-black uppercase tracking-widest text-[9px] lg:text-xs drop-shadow-sm">Anbessa Pro</span>
                 </div>
                 <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/60 uppercase tracking-widest">
                     Live Status: <span className="text-emerald-400">Normal Operations</span>
                 </div>
               </div>
 
-              <div className="p-6 lg:p-10 space-y-6 !bg-transparent">
+              <div className="p-6 lg:p-10 space-y-6" style={{ background: "transparent" }}>
                 <div className="space-y-4 relative">
                   <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-white/10 rounded-full z-0"></div>
 
@@ -106,7 +105,7 @@ export default function Home() {
                       placeholder="From: Departure Station"
                       value={from}
                       onChange={(e) => handleFromChange(e.target.value)}
-                      className="pl-12 h-16 !bg-transparent border-white/20 focus-visible:ring-1 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-filter-none"
+                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-filter-none"
                     />
                     <AnimatePresence>
                       {fromSuggestions.length > 0 && (
@@ -128,7 +127,7 @@ export default function Home() {
                       placeholder="To: Destination Station"
                       value={to}
                       onChange={(e) => handleToChange(e.target.value)}
-                      className="pl-12 h-16 !bg-transparent border-white/20 focus-visible:ring-1 focus-visible:ring-[#CC1F1F]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-filter-none"
+                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#CC1F1F]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-filter-none"
                     />
                     <AnimatePresence>
                       {toSuggestions.length > 0 && (
@@ -147,9 +146,9 @@ export default function Home() {
                 <Link href="/results" className="block pt-2">
                   <Button
                     className="w-full text-white shadow-xl text-base font-black uppercase tracking-widest h-16 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 hover:opacity-90 border border-white/10"
-                    style={{ backgroundColor: "rgba(204, 31, 31, 0.4)" }}
+                    style={{ backgroundColor: "rgba(204, 31, 31, 0.5)" }}
                   >
-                    <Search className="w-6 h-6" /> Search Routes
+                    <Search className="w-6 h-6" /> Search Live Routes
                   </Button>
                 </Link>
               </div>
