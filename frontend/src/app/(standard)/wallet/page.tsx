@@ -11,7 +11,7 @@ export default function Wallet() {
   const { balance, transactions } = useTenant();
 
   return (
-    <div className="w-full px-4 lg:px-8 pb-32 lg:pb-12 animate-in fade-in duration-500 max-w-7xl mx-auto">
+    <div className="w-full px-4 lg:px-8 pt-6 lg:pt-10 pb-32 lg:pb-12 animate-in fade-in duration-500 max-w-7xl mx-auto">
       
       <div className="flex flex-col lg:flex-row lg:items-end justify-between px-1 mb-10 gap-6 lg:gap-0">
         <div>
