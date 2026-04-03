@@ -11,27 +11,27 @@ export function StatsCards() {
   const stats = [
     {
       label: "Active Passengers",
-      value: tenant === "anbessa" ? "1,204" : "842",
+      value: "1,204",
       icon: Users,
       trend: "+12.5%",
       subtext: "vs last hour",
-      color: theme.primary,
+      color: "#CC1F1F",
     },
     {
       label: "Today's Revenue",
-      value: tenant === "anbessa" ? "45,200 ETB" : "32,800 ETB",
+      value: "45,200 ETB",
       icon: TrendingUp,
       trend: "+8.2%",
       subtext: "vs yesterday",
-      color: theme.secondary,
+      color: "#FFD600",
     },
     {
       label: "Fleet Status",
-      value: tenant === "anbessa" ? "92%" : "98%",
+      value: "92%",
       icon: Activity,
       trend: "Optimal",
-      subtext: tenant === "anbessa" ? "42/45 active" : "11/12 active",
-      color: "#10b981", // Success Green
+      subtext: "42/45 active",
+      color: "#10b981",
     },
   ];
 

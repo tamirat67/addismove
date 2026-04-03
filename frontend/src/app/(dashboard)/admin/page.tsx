@@ -35,7 +35,7 @@ export default function Admin() {
               </p>
               <span className="w-1 h-1 rounded-full bg-slate-300"></span>
               <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">
-                Network: {tenant === "anbessa" ? "Bus Rapid" : "Light Rail"}
+                Network: Anbessa Bus
               </p>
             </div>
           </motion.div>

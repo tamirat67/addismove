@@ -31,7 +31,7 @@ export default function Wallet() {
         {/* Left Column: Core Finance (5 columns) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Balance Card */}
-          <Card className="bg-[#060267] text-white overflow-hidden shadow-2xl shadow-blue-900/20 border-0 relative rounded-[2.5rem]">
+          <Card className="text-white overflow-hidden shadow-2xl border-0 relative rounded-[2.5rem]" style={{ backgroundColor: "#CC1F1F" }}>
             <div className="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
             <div className="absolute -left-10 -bottom-10 w-32 h-32 bg-blue-400/20 rounded-full blur-2xl transition-transform duration-1000 hover:scale-110"></div>
             <CardContent className="p-8 relative z-10">
@@ -58,7 +58,7 @@ export default function Wallet() {
 
               <div className="mt-10 flex gap-4">
                 <TopUpDialog />
-                <button className="flex-1 bg-white hover:bg-slate-100 text-[#060267] font-black text-[11px] uppercase tracking-widest h-12 rounded-[1.25rem] shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                <button className="flex-1 bg-white hover:bg-slate-100 font-black text-[11px] uppercase tracking-widest h-12 rounded-[1.25rem] shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2" style={{ color: "#CC1F1F" }}>
                   <Send className="w-4 h-4" /> Transfer
                 </button>
               </div>
@@ -66,10 +66,10 @@ export default function Wallet() {
           </Card>
 
           {/* Quick Stats or Promo Space */}
-          <div className="hidden lg:block bg-gradient-to-br from-[#92c01f]/10 to-transparent border border-[#92c01f]/20 rounded-3xl p-6">
-            <h4 className="text-[10px] font-black text-[#92c01f] uppercase tracking-widest mb-2">Rewards Active</h4>
+          <div className="hidden lg:block rounded-3xl p-6" style={{ background: "linear-gradient(135deg, #FFD60015, transparent)", border: "1px solid #FFD60030" }}>
+            <h4 className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: "#CC1F1F" }}>Rewards Active</h4>
             <p className="text-sm font-bold text-slate-700 leading-snug">
-              You are earning 2x points on every LRT Rail pass purchased this week!
+              Earn 2x points on every Anbessa Bus pass purchased this week!
             </p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export default function Wallet() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <h3 className="text-[10px] hidden sm:block font-black text-slate-400 uppercase tracking-[0.2em] px-2">Activity Log</h3>
               <TabsList className="bg-white border border-slate-100 shadow-sm p-1.5 rounded-2xl w-full sm:w-auto">
-                <TabsTrigger value="all" className="rounded-xl px-6 py-2.5 data-[state=active]:bg-[#060267] data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">All</TabsTrigger>
+                <TabsTrigger value="all" className="rounded-xl px-6 py-2.5 data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm" style={{ ['--tw-data-state-active-bg' as string]: '#CC1F1F' }}>All</TabsTrigger>
                 <TabsTrigger value="recharges" className="rounded-xl px-6 py-2.5 data-[state=active]:bg-emerald-500 data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">Recharges</TabsTrigger>
                 <TabsTrigger value="spends" className="rounded-xl px-6 py-2.5 data-[state=active]:bg-rose-500 data-[state=active]:text-white font-black text-[10px] uppercase tracking-widest transition-all shadow-sm">Spends</TabsTrigger>
               </TabsList>
@@ -134,7 +134,7 @@ function TransactionRow({ tx, index }: { tx: any, index: number }) {
               {tx.amount > 0 ? <ArrowDownLeft className="w-5 h-5 lg:w-6 lg:h-6" /> : <ArrowUpRight className="w-5 h-5 lg:w-6 lg:h-6" />}
             </div>
             <div>
-              <p className="font-black text-slate-800 text-sm lg:text-base leading-tight group-hover:text-[#060267] transition-colors">{tx.type}</p>
+              <p className="font-black text-sm lg:text-base tracking-tight transition-all group-hover:text-[color:#CC1F1F]">{tx.type}</p>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1 lg:mt-1.5">{tx.date}</p>
             </div>
           </div>

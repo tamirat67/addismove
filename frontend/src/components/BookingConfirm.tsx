@@ -7,17 +7,14 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { 
-  CreditCard, 
-  CheckCircle2, 
-  AlertCircle, 
+import {
+  CreditCard,
+  CheckCircle2,
+  AlertCircle,
   Loader2,
   Bus,
-  Train,
-  Shuffle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -40,24 +37,11 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
 
   const handleConfirm = () => {
     setStep("processing");
-    
     setTimeout(() => {
       const success = deductBalance(routeData.price);
-      
       if (success) {
-        addTransaction({
-          type: "Ticket Purchase",
-          amount: -routeData.price,
-          status: "Success",
-        });
-        
-        addTicket({
-          route: routeData.name,
-          type: routeData.type,
-          price: routeData.price,
-          expiry: "Today, 6:00 PM",
-        });
-        
+        addTransaction({ type: "Ticket Purchase", amount: -routeData.price, status: "Success" });
+        addTicket({ route: routeData.name, type: routeData.type, price: routeData.price, expiry: "Today, 6:00 PM" });
         setStep("success");
       } else {
         setStep("error");
@@ -65,33 +49,31 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
     }, 1500);
   };
 
-  const Icon = routeData.type === "Combined" ? Shuffle : routeData.type === "Train" ? Train : Bus;
-
   return (
-    <Dialog open={isOpen} onOpenChange={(val) => { if(!val) onClose(); if(!val) setStep("confirm"); }}>
+    <Dialog open={isOpen} onOpenChange={(val) => { if (!val) { onClose(); setStep("confirm"); } }}>
       <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
-        <div className="bg-[#060267] p-6 text-white text-center">
+        {/* Red header with yellow stripe — Anbessa Bus livery */}
+        <div className="h-1.5 w-full" style={{ backgroundColor: "#FFD600" }} />
+        <div className="p-6 text-white text-center" style={{ backgroundColor: "#CC1F1F" }}>
           <DialogHeader>
-            <DialogTitle className="text-white text-xl font-bold mx-auto">
+            <DialogTitle className="text-white text-xl font-bold mx-auto flex items-center justify-center gap-3">
+              <div className="p-1.5 rounded-lg" style={{ backgroundColor: "#FFD600" }}>
+                <Bus className="w-5 h-5" style={{ color: "#CC1F1F" }} />
+              </div>
               {step === "success" ? "Booking Confirmed!" : "Confirm Booking"}
             </DialogTitle>
           </DialogHeader>
         </div>
+        <div className="h-1" style={{ backgroundColor: "#FFD600" }} />
 
         <div className="p-6 bg-slate-50 min-h-[300px] flex flex-col justify-between">
           <AnimatePresence mode="wait">
             {step === "confirm" && (
-              <motion.div
-                key="confirm"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="space-y-6"
-              >
+              <motion.div key="confirm" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="space-y-6">
                 <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                  <div className="flex items-center gap-3 mb-4 text-[#060267]">
-                    <div className="p-2 bg-[#060267]/10 rounded-lg">
-                      <Icon className="w-5 h-5" />
+                  <div className="flex items-center gap-3 mb-4" style={{ color: "#CC1F1F" }}>
+                    <div className="p-2 rounded-lg" style={{ backgroundColor: "#CC1F1F15" }}>
+                      <Bus className="w-5 h-5" />
                     </div>
                     <span className="font-bold">{routeData.name}</span>
                   </div>
@@ -102,7 +84,7 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
                     </div>
                     <div className="flex justify-between text-gray-500">
                       <span>Fare Price</span>
-                      <span className="font-bold text-[#060267]">{routeData.price} ETB</span>
+                      <span className="font-bold" style={{ color: "#CC1F1F" }}>{routeData.price} ETB</span>
                     </div>
                   </div>
                 </div>
@@ -126,24 +108,14 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
             )}
 
             {step === "processing" && (
-              <motion.div
-                key="processing"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-center py-12 space-y-4"
-              >
-                <Loader2 className="w-12 h-12 animate-spin text-[#060267] mx-auto" />
+              <motion.div key="processing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12 space-y-4">
+                <Loader2 className="w-12 h-12 animate-spin mx-auto" style={{ color: "#CC1F1F" }} />
                 <p className="text-gray-500 font-bold uppercase text-xs tracking-widest">Processing Payment...</p>
               </motion.div>
             )}
 
             {step === "success" && (
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-8 space-y-4"
-              >
+              <motion.div key="success" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 space-y-4">
                 <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white mx-auto shadow-lg">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
@@ -155,13 +127,8 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
             )}
 
             {step === "error" && (
-              <motion.div
-                key="error"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-8 space-y-4"
-              >
-                <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center text-white mx-auto">
+              <motion.div key="error" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8 space-y-4">
+                <div className="w-20 h-20 rounded-full flex items-center justify-center text-white mx-auto" style={{ backgroundColor: "#CC1F1F" }}>
                   <AlertCircle className="w-10 h-10" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Payment Failed</h3>
@@ -174,8 +141,9 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
             {step === "confirm" && (
               <>
                 <Button variant="outline" className="flex-1 h-12 rounded-xl" onClick={onClose}>Cancel</Button>
-                <Button 
-                  className="flex-[2] h-12 bg-[#060267] hover:bg-[#060267]/90 text-white font-bold rounded-xl shadow-md"
+                <Button
+                  className="flex-[2] h-12 text-white font-bold rounded-xl shadow-md hover:opacity-90"
+                  style={{ backgroundColor: "#CC1F1F" }}
                   disabled={balance < routeData.price}
                   onClick={handleConfirm}
                 >
@@ -184,16 +152,18 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
               </>
             )}
             {step === "success" && (
-              <Button 
-                className="w-full h-12 bg-gray-900 hover:bg-black text-white font-bold rounded-xl shadow-md"
+              <Button
+                className="w-full h-12 text-white font-bold rounded-xl shadow-md"
+                style={{ backgroundColor: "#CC1F1F" }}
                 onClick={() => { onClose(); router.push("/ticket"); }}
               >
                 View Digital Ticket
               </Button>
             )}
             {step === "error" && (
-              <Button 
-                className="w-full h-12 bg-gray-900 text-white font-bold rounded-xl"
+              <Button
+                className="w-full h-12 text-white font-bold rounded-xl"
+                style={{ backgroundColor: "#CC1F1F" }}
                 onClick={() => setStep("confirm")}
               >
                 Try Again

@@ -6,7 +6,6 @@ import {
   LayoutDashboard, 
   Map as MapIcon, 
   Bus, 
-  Train, 
   History, 
   Settings, 
   Menu, 
@@ -65,15 +64,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 className="w-10 h-10 rounded-2xl flex items-center justify-center transition-transform group-hover:rotate-12"
                 style={{ backgroundColor: theme.primary }}
               >
-                {tenant === "anbessa" ? (
-                  <Bus className="w-6 h-6 text-white" />
-                ) : (
-                  <Train className="w-6 h-6 text-white" />
-                )}
+                <Bus className="w-6 h-6 text-white" />
               </div>
               {isOpen && (
                 <span className="font-black text-xl tracking-tight uppercase" style={{ color: theme.text }}>
-                  {tenant === "anbessa" ? "Anbessa" : "LRT"}
+                  Anbessa Bus
                 </span>
               )}
             </Link>
@@ -88,7 +83,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <div className="space-y-1.5 flex-1 overflow-y-auto custom-scrollbar pr-1">
             <NavItem icon={LayoutDashboard} label="Dashboard" active />
             <NavItem icon={MapIcon} label="Fleet Map" />
-            <NavItem icon={tenant === "anbessa" ? Bus : Train} label={tenant === "anbessa" ? "Bus Fleet" : "Train Fleet"} />
+            <NavItem icon={Bus} label="Bus Fleet" />
             <NavItem icon={History} label="Operations" />
             <NavItem icon={Settings} label="Settings" />
           </div>

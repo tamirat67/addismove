@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTenant } from "@/context/TenantContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Bus, Train, MoreVertical, MapPin } from "lucide-react";
+import { Bus, MoreVertical, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const mockRoutes = {
@@ -12,10 +12,8 @@ const mockRoutes = {
     { id: "a1", name: "Megenagna - Piassa", status: true, vehicles: 12 },
     { id: "a2", name: "Ayat - Bole", status: true, vehicles: 8 },
     { id: "a3", name: "Kality - Stadium", status: false, vehicles: 0 },
-  ],
-  lrt: [
-    { id: "l1", name: "Ayat - Torhailoch (East-West)", status: true, trains: 10 },
-    { id: "l2", name: "Kality - Menelik II (North-South)", status: true, trains: 6 },
+    { id: "a4", name: "Lebu - Mexico", status: true, vehicles: 6 },
+    { id: "a5", name: "Shiro Meda - Merkato", status: true, vehicles: 9 },
   ],
 };
 
@@ -71,11 +69,7 @@ export function RouteManager() {
                           className="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm border border-white"
                           style={{ backgroundColor: `${theme.primary}10`, color: theme.primary }}
                         >
-                          {tenant === "anbessa" ? (
-                            <Bus className="w-5 h-5" />
-                          ) : (
-                            <Train className="w-5 h-5" />
-                          )}
+                          <Bus className="w-5 h-5" />
                         </div>
                         <div>
                           <p className="text-sm font-black text-slate-800 group-hover:text-black transition-colors">
@@ -97,7 +91,7 @@ export function RouteManager() {
                       <div className="flex items-center gap-2">
                         <MapPin className="w-3.5 h-3.5 text-slate-300" />
                         <span className="text-xs font-black text-slate-600">
-                          {'vehicles' in route ? `${route.vehicles} Vehicles` : ('trains' in route ? `${route.trains} Trains` : '')}
+                          {`${route.vehicles} Vehicles`}
                         </span>
                       </div>
                     </td>

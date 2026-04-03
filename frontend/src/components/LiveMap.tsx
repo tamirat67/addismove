@@ -2,7 +2,7 @@
 
 import { useTenant } from "@/context/TenantContext";
 import { Card } from "@/components/ui/card";
-import { Bus, Train, MapPin } from "lucide-react";
+import { Bus, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function LiveMap() {
@@ -35,7 +35,7 @@ export function LiveMap() {
         </div>
         <div className="flex gap-2">
           <div className="px-2 py-1 bg-gray-100 rounded-lg text-[10px] font-bold text-gray-600 uppercase border border-gray-200">
-            {tenant === "anbessa" ? "Hub: Piassa" : "Control: Stadium"}
+            Hub: Piassa
           </div>
         </div>
       </div>
@@ -70,11 +70,7 @@ export function LiveMap() {
                   className="w-11 h-11 rounded-full flex items-center justify-center relative border-[3px] border-white shadow-xl transition-transform group-hover/marker:scale-110"
                   style={{ backgroundColor: theme.primary }}
                 >
-                  {tenant === "anbessa" ? (
-                    <Bus className="w-6 h-6 text-white drop-shadow-sm" strokeWidth={2.5} />
-                  ) : (
-                    <Train className="w-6 h-6 text-white drop-shadow-sm" strokeWidth={2.5} />
-                  )}
+                  <Bus className="w-6 h-6 text-white drop-shadow-sm" strokeWidth={2.5} />
                   {/* Real-time Indicator Dot */}
                   <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-white rounded-full"></div>
                 </div>

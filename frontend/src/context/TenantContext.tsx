@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export type TenantType = "anbessa" | "lrt";
+export type TenantType = "anbessa";
 
 interface TenantTheme {
   primary: string;
@@ -13,16 +13,10 @@ interface TenantTheme {
 
 const themes: Record<TenantType, TenantTheme> = {
   anbessa: {
-    primary: "#D32F2F", // Anbessa Crimson Red
+    primary: "#CC1F1F", // Anbessa Red
     secondary: "#FFD600", // Anbessa Golden Yellow
     accent: "#FFAB00", // Amber Accent
     text: "#212121", // Onyx
-  },
-  lrt: {
-    primary: "#00796B", // ERC Teal/Green
-    secondary: "#01579B", // Rail Deep Blue
-    accent: "#FBC02D", // Ethiopia Star Yellow
-    text: "#1A237E", // Midnight Blue
   },
 };
 
@@ -38,7 +32,7 @@ export interface Transaction {
 export interface TicketData {
   id: string;
   route: string;
-  type: string; // Bus, Train, Combined
+  type: string; // Bus, Express, AllDay
   price: number;
   expiry: string;
   qrCode: string;
