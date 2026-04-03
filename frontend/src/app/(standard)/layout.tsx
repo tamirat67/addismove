@@ -14,9 +14,9 @@ export default function StandardLayout({
         {children}
 
         {/* Global Public Footer */}
-        <footer className="w-full py-6 mt-auto text-center" style={{ backgroundColor: "#CC1F1F", borderTop: "4px solid #FFD600" }}>
-          <p className="text-[10px] font-black uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.7)" }}>
-            <span style={{ color: "#FFD600" }}>Anbessa Bus</span> · Addis Ababa City Transport · ©2026
+        <footer className="w-full py-12 mt-auto text-center border-t border-[#CC1F1F10] bg-[#09090b]">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-500">
+            Powered By: Gemeda Tech Soln @ 2026
           </p>
         </footer>
       </main>
