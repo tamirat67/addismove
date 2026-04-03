@@ -6,6 +6,7 @@ import {
   LayoutDashboard, 
   Map as MapIcon, 
   Bus, 
+  BusFront,
   History, 
   Settings, 
   Menu, 
@@ -88,8 +89,26 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <NavItem icon={Settings} label="Settings" />
           </div>
 
-          <div className="mt-auto space-y-4 pt-4 border-t border-slate-100">
+          <div className="mt-auto space-y-3 pt-4 border-t border-slate-100">
             {isOpen && <TenantSwitcher />}
+
+            {/* Return to Public Site */}
+            <Link
+              href="/"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all group border border-[#CC1F1F]/20 hover:border-[#CC1F1F]/50 hover:bg-[#CC1F1F]/5 ${isOpen ? "" : "justify-center"}`}
+              title="Return to Public Site"
+            >
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform" style={{ backgroundColor: "#CC1F1F" }}>
+                <BusFront className="w-4 h-4 text-white" />
+              </div>
+              {isOpen && (
+                <div className="min-w-0">
+                  <p className="text-[11px] font-black uppercase tracking-widest" style={{ color: "#CC1F1F" }}>Public Site</p>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Return to Anbessa Bus</p>
+                </div>
+              )}
+            </Link>
+
             <div className={`p-4 rounded-2xl bg-slate-50 flex items-center ${isOpen ? "gap-4" : "justify-center"}`}>
               <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0 border-2 border-white shadow-sm overflow-hidden">
                 <User className="text-slate-400" />
