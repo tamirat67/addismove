@@ -6,8 +6,8 @@ import { TenantProvider } from "@/context/TenantContext";
 const font = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AddisMove",
-  description: "One App • Bus + Train • Smart Travel",
+  title: "Anbessa Bus",
+  description: "Addis Ababa City Bus • Tap & Ride • Smart Transit",
 };
 
 export default function RootLayout({
