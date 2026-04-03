@@ -4,19 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { BusFront, Wallet, Ticket, ShieldAlert } from "lucide-react";
-import { useState, useEffect } from "react";
 
 export function Navigation() {
   const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
   
   if (pathname.startsWith("/admin")) return null;
 
@@ -27,28 +17,24 @@ export function Navigation() {
   ];
 
   return (
-    <nav 
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled 
-          ? "bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-200 py-3" 
-          : "bg-white border-b border-transparent py-4"
-      }`}
-    >
-      <div className="flex justify-between items-center max-w-md mx-auto px-4 md:px-0">
+    <div className="fixed top-4 w-full z-50 flex justify-center px-4 pointer-events-none">
+      <nav className="pointer-events-auto flex items-center justify-between w-full max-w-md bg-black/50 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] rounded-3xl py-2 px-3">
+        {/* Brand */}
         <Link 
           href="/" 
-          className="font-black text-2xl tracking-tight flex items-center gap-2 group"
+          className="flex items-center gap-2 pl-1 group"
         >
-          <div className="bg-[#E63946] p-1.5 rounded-xl shadow-inner group-hover:bg-[#FFC107] group-hover:-translate-y-0.5 transition-all duration-300">
-            <BusFront className="w-5 h-5 text-white group-hover:text-gray-900 transition-colors" strokeWidth={2.5} />
+          <div className="bg-gradient-to-tr from-[#E63946] to-[#FFC107] p-1.5 rounded-xl shadow-lg ring-1 ring-white/20 group-hover:scale-105 transition-transform">
+            <BusFront className="w-4 h-4 text-white" strokeWidth={2.5} />
           </div>
-          <div className="flex items-center">
-            <span className="text-gray-900">Addis</span>
-            <span className="text-[#E63946]">Move</span>
+          <div className="flex flex-col leading-tight pr-2">
+            <span className="text-white font-black text-sm tracking-wider">Addis</span>
+            <span className="text-white/70 font-bold text-[10px] tracking-[0.2em] uppercase">Move</span>
           </div>
         </Link>
         
-        <div className="flex gap-1 bg-gray-100 p-1 rounded-full shadow-inner border border-gray-200/60">
+        {/* Links */}
+        <div className="flex gap-1 pl-2 border-l border-white/10">
           {navItems.map((item) => {
             const isActive = pathname === item.path;
             const Icon = item.icon;
@@ -57,28 +43,28 @@ export function Navigation() {
               <Link 
                 key={item.path} 
                 href={item.path} 
-                className={`relative px-3 py-1.5 rounded-full text-sm font-bold transition-colors flex items-center gap-1.5 ${
+                className={`relative px-3 py-2 rounded-2xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   isActive 
-                    ? "text-gray-900" 
-                    : "text-gray-500 hover:text-gray-800"
+                    ? "text-white" 
+                    : "text-white/50 hover:text-white/90 hover:bg-white/5"
                 }`}
               >
                 {isActive && (
                   <motion.div
-                    layoutId="nav-pill"
-                    className="absolute inset-0 bg-[#FFC107] shadow-sm rounded-full border border-yellow-300"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    layoutId="glass-nav-pill"
+                    className="absolute inset-0 bg-white/20 shadow-[inset_0_1px_3px_rgba(255,255,255,0.3)] rounded-2xl border border-white/10"
+                    transition={{ type: "spring", stiffness: 450, damping: 25 }}
                   />
                 )}
                 <span className="relative z-10 flex items-center gap-1.5">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-[#E63946]" : ""}`} strokeWidth={isActive ? 2.5 : 2} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-[#FFC107]" : ""}`} strokeWidth={isActive ? 2.5 : 2} />
                   <span className={`${isActive ? "block" : "hidden sm:block"}`}>{item.name}</span>
                 </span>
               </Link>
             );
           })}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
