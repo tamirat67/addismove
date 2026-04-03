@@ -41,7 +41,14 @@ export function BookingConfirm({ isOpen, onClose, routeData }: BookingConfirmPro
       const success = deductBalance(routeData.price);
       if (success) {
         addTransaction({ type: "Ticket Purchase", amount: -routeData.price, status: "Success" });
-        addTicket({ route: routeData.name, type: routeData.type, price: routeData.price, expiry: "Today, 6:00 PM" });
+        addTicket({ 
+          route: routeData.name, 
+          type: routeData.type, 
+          price: routeData.price, 
+          expiry: "Today, 6:00 PM",
+          plateNumber: "Assigning...",
+          driverName: "Pending Boarding"
+        });
         setStep("success");
       } else {
         setStep("error");
