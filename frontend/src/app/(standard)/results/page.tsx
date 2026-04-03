@@ -28,20 +28,25 @@ export default function Results() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("Fastest");
 
-  // Simulate finding routes based on the search "Megenagna" or "Piassa"
+  // Synchronized search for Megenagna → Piassa
   const searchResults = anbessaRoutes.filter(r => 
-    r.start.toLowerCase().includes("megenagna") || 
-    r.destination.toLowerCase().includes("piassa") ||
-    r.destination.toLowerCase().includes("piazza")
-  ).slice(0, 4).map((r, i) => ({
-    id: r.id,
-    name: `${r.start} – ${r.destination}`,
-    type: "Bus",
-    price: computePrice(r.distance),
-    duration: computeDuration(r.distance),
-    tag: i === 0 ? "Fastest" : i === 1 ? "Cheapest" : "Balanced",
-    steps: `🚌 Route ${r.id} · ${r.passBy === "-" ? "Direct" : "via " + r.passBy}`,
-  }));
+    (r.start.toLowerCase().includes("megenagna") || r.destination.toLowerCase().includes("megenagna")) &&
+    (r.start.toLowerCase().includes("piazza") || r.destination.toLowerCase().includes("piazza") || r.passBy.toLowerCase().includes("piazza") || r.passBy.toLowerCase().includes("piyysa"))
+  ).slice(0, 4).map((r, i) => {
+    // Standardize destination name for the UI
+    const isMegenagnaStart = r.start.toLowerCase().includes("megenagna");
+    const routeName = isMegenagnaStart ? `Megenagna → Piassa` : `Piassa → Megenagna`;
+    
+    return {
+      id: r.id,
+      name: routeName,
+      type: "Bus",
+      price: computePrice(r.distance === "N/A" ? "8.5 Km" : r.distance),
+      duration: computeDuration(r.distance === "N/A" ? "8.5 Km" : r.distance),
+      tag: i === 0 ? "Fastest" : i === 1 ? "Cheapest" : "Balanced",
+      steps: `🚌 Route ${r.id} · ${r.passBy === "-" ? "Direct" : "via " + r.passBy}`,
+    };
+  });
 
   const [selectedRoute, setSelectedRoute] = useState<typeof searchResults[0] | null>(null);
 
