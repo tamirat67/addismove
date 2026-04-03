@@ -15,14 +15,14 @@ const ROUTES = [
 ];
 
 const INITIAL_FLEET = [
-    { id: "ANB-F1", routeIdx: 0, speed: 0.000005, offset: 0.1, plate: "AB-2-0991", driver: "Abebe K.", load: 68 },
-    { id: "ANB-F2", routeIdx: 0, speed: 0.000004, offset: 0.6, plate: "AB-2-1204", driver: "Solomon T.", load: 42 },
-    { id: "ANB-F3", routeIdx: 1, speed: 0.000006, offset: 0.2, plate: "AB-3-A772", driver: "Kassa G.", load: 85 },
-    { id: "ANB-F4", routeIdx: 2, speed: 0.0000045, offset: 0.0, plate: "AB-4-B110", driver: "Abnet S.", load: 12 },
-    { id: "ANB-F5", routeIdx: 3, speed: 0.0000055, offset: 0.4, plate: "AB-1-X001", driver: "Mulu L.", load: 94 },
-    { id: "ANB-F6", routeIdx: 4, speed: 0.0000075, offset: 0.1, plate: "AB-3-Y224", driver: "Dawit M.", load: 30 },
-    { id: "ANB-F7", routeIdx: 1, speed: 0.000005, offset: 0.7, plate: "AB-2-9981", driver: "Kebede H.", load: 55 },
-    { id: "ANB-F8", routeIdx: 2, speed: 0.000004, offset: 0.5, plate: "AB-4-A220", driver: "Hagos F.", load: 72 },
+    { id: "ANB-F1", routeIdx: 0, speed: 0.000002, offset: 0.1, plate: "AB-2-0991", driver: "Abebe K.", load: 68 },
+    { id: "ANB-F2", routeIdx: 0, speed: 0.0000016, offset: 0.6, plate: "AB-2-1204", driver: "Solomon T.", load: 42 },
+    { id: "ANB-F3", routeIdx: 1, speed: 0.0000024, offset: 0.2, plate: "AB-3-A772", driver: "Kassa G.", load: 85 },
+    { id: "ANB-F4", routeIdx: 2, speed: 0.0000018, offset: 0.0, plate: "AB-4-B110", driver: "Abnet S.", load: 12 },
+    { id: "ANB-F5", routeIdx: 3, speed: 0.0000022, offset: 0.4, plate: "AB-1-X001", driver: "Mulu L.", load: 94 },
+    { id: "ANB-F6", routeIdx: 4, speed: 0.000003, offset: 0.1, plate: "AB-3-Y224", driver: "Dawit M.", load: 30 },
+    { id: "ANB-F7", routeIdx: 1, speed: 0.000002, offset: 0.7, plate: "AB-2-9981", driver: "Kebede H.", load: 55 },
+    { id: "ANB-F8", routeIdx: 2, speed: 0.0000016, offset: 0.5, plate: "AB-4-A220", driver: "Hagos F.", load: 72 },
 ];
 
 export function LiveMap() {
