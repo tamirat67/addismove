@@ -92,19 +92,45 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
         polyline.bindTooltip(`<strong>${route.name}</strong>`, { sticky: true });
       });
 
+      // Add terminal markers for routes
+      ROUTES_POLYLINES.forEach((route) => {
+        const startPoint = route.points[0];
+        const endPoint = route.points[route.points.length - 1];
+        
+        const terminalIcon = (label: string) => L.divIcon({
+          className: "",
+          html: `<div style="
+            background: ${route.color};
+            color: white;
+            font-size: 9px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1.5px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            white-space: nowrap;
+          ">${label}</div>`,
+          iconSize: [30, 16],
+          iconAnchor: [15, 8],
+        });
+
+        L.marker(startPoint, { icon: terminalIcon(route.name.split(" ")[0]) }).addTo(map);
+        L.marker(endPoint, { icon: terminalIcon(route.name.split(" ").at(-1) || "") }).addTo(map);
+      });
+
       // Add bus stop markers
       ADDIS_STOPS.forEach((stop) => {
         const stopIcon = L.divIcon({
           className: "",
           html: `<div style="
-            width: 10px; height: 10px;
+            width: 8px; height: 8px;
             background: white;
-            border: 2.5px solid #CC1F1F;
+            border: 2px solid #CC1F1F;
             border-radius: 50%;
-            box-shadow: 0 0 0 3px rgba(204,31,31,0.15);
+            box-shadow: 0 0 0 2px rgba(204,31,31,0.1);
           "></div>`,
-          iconSize: [10, 10],
-          iconAnchor: [5, 5],
+          iconSize: [8, 8],
+          iconAnchor: [4, 4],
         });
         L.marker([stop.lat, stop.lng], { icon: stopIcon })
           .addTo(map)
@@ -113,47 +139,38 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
 
       // Add live bus markers with animated icons
       displayBuses.forEach((bus) => {
+        const matchingRoute = ROUTES_POLYLINES.find(r => r.name.includes(bus.routeId || "NULL"));
+        const routeColor = matchingRoute ? matchingRoute.color : "#64748b";
         const loadColor = (bus.fuelLevel || 50) > 80 ? "#f43f5e" : (bus.fuelLevel || 50) > 50 ? "#FFD600" : "#10b981";
         const statusStr = bus.status?.toLowerCase() || "active";
         const busIcon = L.divIcon({
           className: "",
           html: `<div style="
             position: relative;
-            width: 36px; height: 36px;
+            width: 32px; height: 32px;
           ">
             ${statusStr === "active" ? `<div style="
               position: absolute; inset: -4px;
-              border-radius: 50%;
-              background: rgba(204,31,31,0.2);
+              border-radius: 8px;
+              background: ${routeColor}33;
               animation: ping 2s infinite;
             "></div>` : ""}
             <div style="
-              width: 36px; height: 36px;
-              background: ${statusStr === "active" ? "#CC1F1F" : "#94a3b8"};
-              border: 3px solid white;
-              border-radius: 10px;
+              width: 32px; height: 32px;
+              background: ${statusStr === "active" ? routeColor : "#94a3b8"};
+              border: 2px solid white;
+              border-radius: 8px;
               display: flex; align-items: center; justify-content: center;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+              box-shadow: 0 4px 8px rgba(0,0,0,0.3);
               cursor: pointer;
             ">
-              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" width="18" height="18">
-                <rect x="1" y="3" width="15" height="13" rx="2"/>
-                <path d="M16 8h4l3 3v5h-7V8z"/>
-                <circle cx="5.5" cy="18.5" r="2.5"/>
-                <circle cx="18.5" cy="18.5" r="2.5"/>
+              <svg viewBox="0 0 24 24" fill="white" width="20" height="20">
+                <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
               </svg>
             </div>
-            <div style="
-              position: absolute; bottom: -5px; right: -5px;
-              width: 14px; height: 14px;
-              background: ${loadColor};
-              border: 2px solid white;
-              border-radius: 50%;
-              box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-            "></div>
           </div>`,
-          iconSize: [36, 36],
-          iconAnchor: [18, 18],
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
         });
 
         L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon })

@@ -133,8 +133,8 @@ export function LiveMap() {
               style={{ 
                 left: `${bus.x}%`, 
                 top: `${bus.y}%`,
-                transform: `translate(-50%, -50%)`
-              }}
+                transform: `rotate(${bus.angle}deg) translate(-50%, -50%)`
+              } as any}
               className="absolute z-20 pointer-events-auto cursor-crosshair group/bus"
             >
                 {/* Radar Pulse for Lead Vehicle (ID: 1) */}
@@ -175,9 +175,11 @@ export function LiveMap() {
                         className={`w-7 h-7 rounded-lg flex items-center justify-center relative border shadow-lg transition-all duration-300 group-hover/bus:scale-125 ${
                             bus.info.routeIdx === 0 ? "bg-[#CC1F1F] border-red-400" : (isDark ? "bg-zinc-800 border-zinc-700" : "bg-white border-slate-200")
                         }`}
-                        style={{ transform: `rotate(${bus.angle}deg)` }}
+                        style={{ transform: `rotate(${bus.angle}deg)` } as any}
                     >
-                        <Bus className={`w-4 h-4 ${bus.info.routeIdx === 0 ? "text-white" : (isDark ? "text-zinc-400" : "text-slate-500")}`} strokeWidth={3} />
+                        <svg viewBox="0 0 24 24" fill={bus.info.routeIdx === 0 ? "white" : (isDark ? "#a1a1aa" : "#64748b")} width="18" height="18">
+                          <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+                        </svg>
                         
                         {/* Status Glow */}
                         <div className={`absolute -inset-1 blur-md opacity-20 rounded-full transition-opacity group-hover/bus:opacity-60`}
