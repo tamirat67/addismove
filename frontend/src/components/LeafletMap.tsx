@@ -165,6 +165,17 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
         const matchingRoute = ROUTES_POLYLINES.find(r => r.name.includes(bus.routeId || "NULL"));
         const routeColor = matchingRoute ? matchingRoute.color : "#64748b";
         
+        // Find nearest stop for location name
+        let nearestStop = "On Route";
+        let minBaseDist = Infinity;
+        ADDIS_STOPS.forEach(s => {
+          const d = Math.sqrt(Math.pow(s.lat - bus.gpsLat, 2) + Math.pow(s.lng - bus.gpsLng, 2));
+          if (d < minBaseDist && d < 0.005) { 
+            minBaseDist = d;
+            nearestStop = `Near ${s.name}`;
+          }
+        });
+        
         const busIcon = L.divIcon({
           className: "",
           html: `<div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
@@ -176,7 +187,23 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
         });
 
         L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon, zIndexOffset: 1000 })
-          .addTo(busLayerRef.current);
+          .addTo(busLayerRef.current)
+          .bindTooltip(`
+            <div style="padding: 4px 8px; font-family: system-ui;">
+              <p style="margin:0; font-weight:900; font-size:11px; text-transform:uppercase; color:#1e293b;">${nearestStop}</p>
+              <p style="margin:0; font-size:9px; color:#64748b; font-weight:600;">Bus: ${bus.plate} • ${bus.capacity || 80} Seats</p>
+            </div>
+          `, { direction: "top", offset: [0, -10], className: "leaflet-bus-tooltip" })
+          .bindPopup(`
+            <div style="font-family: system-ui; min-width: 180px; padding: 4px;">
+              <p style="font-weight:900; font-size:14px; margin:0 0 4px; text-transform:uppercase;">${bus.plate}</p>
+              <p style="font-size:11px; color:#64748b; margin:0 0 2px; font-weight:600;">Driver: ${bus.driverName}</p>
+              <p style="font-size:10px; color:#94a3b8; margin:0 0 8px;">Model: ${bus.model || "Standard"} | Capacity: ${bus.capacity || 80}</p>
+              <div style="flex:1; height:6px; background:#f1f5f9; border-radius:3px; overflow:hidden;">
+                <div style="width:${bus.fuelLevel || 50}%; height:100%; background:${routeColor}; border-radius:3px;"></div>
+              </div>
+            </div>
+          `);
       });
     };
     update();
@@ -207,6 +234,16 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           color: #64748b !important;
           margin: 4px !important;
           box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        }
+        .leaflet-bus-tooltip {
+          background: white !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 12px !important;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+          color: #1e293b !important;
+        }
+        .leaflet-bus-tooltip::before {
+          border-top-color: white !important;
         }
       `}</style>
       
