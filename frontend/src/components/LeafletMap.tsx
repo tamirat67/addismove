@@ -111,7 +111,11 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             iconSize: [22, 14],
             iconAnchor: [11, 7],
           });
-          L.marker([midLat, midLng], { icon: ghostIcon, interactive: false }).addTo(map);
+          L.marker([midLat, midLng], { 
+            icon: ghostIcon, 
+            interactive: false,
+            zIndexOffset: 0 
+          }).addTo(map);
         }
       });
 
@@ -143,8 +147,14 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           iconAnchor: [15, 8],
         });
 
-        L.marker(startPoint, { icon: terminalIcon(route.name.split(" ")[0]) }).addTo(map);
-        L.marker(endPoint, { icon: terminalIcon(route.name.split(" ").at(-1) || "") }).addTo(map);
+        L.marker(startPoint, { 
+          icon: terminalIcon(route.name.split(" ")[0]),
+          zIndexOffset: 500 
+        }).addTo(map);
+        L.marker(endPoint, { 
+          icon: terminalIcon(route.name.split(" ").at(-1) || ""),
+          zIndexOffset: 500 
+        }).addTo(map);
       });
 
       // Add bus stop markers
@@ -161,7 +171,10 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           iconSize: [8, 8],
           iconAnchor: [4, 4],
         });
-        L.marker([stop.lat, stop.lng], { icon: stopIcon })
+        L.marker([stop.lat, stop.lng], { 
+          icon: stopIcon,
+          zIndexOffset: 100
+        })
           .addTo(map)
           .bindTooltip(stop.name, { permanent: false, direction: "top", className: "leaflet-stop-tooltip" });
       });
@@ -200,7 +213,10 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           iconAnchor: [22, 22],
         });
 
-        L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon })
+        L.marker([bus.gpsLat, bus.gpsLng], { 
+          icon: busIcon,
+          zIndexOffset: 1000
+        })
           .addTo(map)
           .bindPopup(`
             <div style="font-family: system-ui; min-width: 180px; padding: 4px;">
