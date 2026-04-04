@@ -249,6 +249,28 @@ export function LiveMap() {
           </button>
       </div>
 
+      {/* Route Legend Overlay */}
+      <div className="absolute bottom-8 left-8 z-30 pointer-events-none">
+          <div className={`p-5 rounded-[2rem] border shadow-2xl backdrop-blur-xl space-y-3 transition-colors ${
+              isDark ? "bg-zinc-900/90 border-zinc-700 text-white" : "bg-white/95 border-slate-200 text-slate-800"
+          }`}>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">Active Network Lines</p>
+              <div className="flex flex-col gap-2.5">
+                  {ROUTES.map((route) => (
+                      <div key={route.id} className="flex items-center gap-3">
+                          <div className="flex items-center gap-1.5">
+                              <div className="w-5 h-1 rounded-full" style={{ backgroundColor: route.color }} />
+                              <svg viewBox="0 0 24 24" fill={route.color} width="11" height="11">
+                                  <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+                              </svg>
+                          </div>
+                          <span className="text-[10px] font-black uppercase tracking-tighter opacity-80">Line {route.id}</span>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </div>
+
       {/* SCANNING LINES */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.03] overflow-hidden">
           <motion.div 

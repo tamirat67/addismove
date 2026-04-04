@@ -127,14 +127,22 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           html: `<div style="
             background: ${route.color};
             color: white;
-            font-size: 9px;
+            font-size: 8px;
             font-weight: 900;
-            padding: 2px 6px;
-            border-radius: 4px;
+            padding: 3px 6px;
+            border-radius: 6px;
             border: 1.5px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 4px;
             white-space: nowrap;
-          ">${label}</div>`,
+          ">
+            <svg viewBox="0 0 24 24" fill="white" width="10" height="10">
+              <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+            </svg>
+            ${label}
+          </div>`,
           iconSize: [30, 16],
           iconAnchor: [15, 8],
         });
@@ -286,9 +294,14 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
         <div className="absolute bottom-4 right-4 z-[400] bg-white/95 backdrop-blur-md rounded-2xl border border-white/60 shadow-xl p-4 space-y-2">
           <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2">Route Legend</p>
           {ROUTES_POLYLINES.map(r => (
-            <div key={r.name} className="flex items-center gap-2">
-              <span className="w-5 h-1.5 rounded-full block" style={{ backgroundColor: r.color }} />
-              <span className="text-[9px] font-black text-slate-600 uppercase">{r.name}</span>
+            <div key={r.name} className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <span className="w-4 h-1 rounded-full block" style={{ backgroundColor: r.color }} />
+                <svg viewBox="0 0 24 24" fill={r.color} width="10" height="10">
+                  <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+                </svg>
+              </div>
+              <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter">{r.name}</span>
             </div>
           ))}
         </div>
@@ -309,13 +322,23 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
               </div>
               
               <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-200/50">
-                <div>
-                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">From</p>
-                  <p className="text-[10px] font-bold text-slate-700 truncate">Departure Station</p>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <svg viewBox="0 0 24 24" fill="#CC1F1F" width="10" height="10">
+                      <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+                    </svg>
+                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">From</p>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-700 truncate">Megenagna</p>
                 </div>
-                <div>
-                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">To</p>
-                  <p className="text-[10px] font-bold text-slate-700 truncate">Destination Station</p>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <svg viewBox="0 0 24 24" fill="#64748b" width="10" height="10">
+                      <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+                    </svg>
+                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">To</p>
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-700 truncate">Piassa</p>
                 </div>
               </div>
            </div>
