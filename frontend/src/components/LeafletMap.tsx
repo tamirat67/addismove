@@ -1,7 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTenant } from "@/context/TenantContext";
+import { 
+  Bus, MapPin, Navigation, Signal, Users, 
+  Settings2, Activity, ShieldCheck, Gauge,
+  ArrowRightLeft
+} from "lucide-react";
 
 // Real Addis Ababa bus stops (GPS coordinates)
 const ADDIS_STOPS = [
@@ -19,8 +24,6 @@ const ADDIS_STOPS = [
   { name: "4 Kilo", lat: 9.0375, lng: 38.7628 },
   { name: "Arat Kilo", lat: 9.0401, lng: 38.7570 },
 ];
-
-// FLEET_POSITIONS is now handled via props for real-time data integration
 
 const ROUTES_POLYLINES = [
   { name: "Megenagna → Piassa", color: "#CC1F1F", points: [[9.0298, 38.7612], [9.0359, 38.7473]] as [number, number][] },
@@ -45,20 +48,14 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
   const displayBuses = propBuses || contextBuses || [];
 
   useEffect(() => {
-    if (!mapRef.current) return;
+    let map: any;
 
-    const initMap = async () => {
-      // Guard against React StrictMode double-invoke and hot-reload re-runs
-      if (!mapRef.current) return;
-      if ((mapRef.current as any)._leaflet_id) return;
+    const init = async () => {
+      if (!mapRef.current || mapInstanceRef.current) return;
 
       const L = (await import("leaflet")).default;
-      // await import("leaflet/dist/leaflet.css"); // MOVED TO LAYOUT CDN TO FIX VERCEL OOM/LIGHTNINGCSS ERROR
-
-      // Second guard after async gap (in case of rapid unmount/remount)
-      if (!mapRef.current || (mapRef.current as any)._leaflet_id) return;
-
-      // Fix default marker icon paths (Next.js SSR issue)
+      
+      // Fix marker asset paths
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
@@ -66,281 +63,251 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
         shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
       });
 
-      const map = L.map(mapRef.current!, {
+      map = L.map(mapRef.current, {
         center: [9.0192, 38.7525],
         zoom: compact ? 12 : 13,
-        zoomControl: !compact,
+        zoomControl: false, // Custom controls instead
         scrollWheelZoom: true,
-        attributionControl: !compact,
       });
 
-      // OpenStreetMap tiles — FREE, no API key needed
+      // Layer 1: Tiles
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution: '© OpenStreetMap contributors',
         maxZoom: 19,
       }).addTo(map);
 
-      mapInstanceRef.current = map;
-
-      // Draw route polylines
+      // Layer 2: Routes
       ROUTES_POLYLINES.forEach((route) => {
-        const polyline = L.polyline(route.points, {
+        L.polyline(route.points, {
           color: route.color,
           weight: 4,
           opacity: 0.8,
-          dashArray: "8, 4",
+          dashArray: "8, 6",
         }).addTo(map);
-        polyline.bindTooltip(`<strong>${route.name}</strong>`, { sticky: true });
 
-        // Add directional bus "ghost" icons along the route
-        for (let j = 0; j < route.points.length - 1; j++) {
-          const p1 = route.points[j];
-          const p2 = route.points[j + 1];
-          const midLat = (p1[0] + p2[0]) / 2;
-          const midLng = (p1[1] + p2[1]) / 2;
-          const angle = Math.atan2(p2[0] - p1[0], p2[1] - p1[1]) * (180 / Math.PI);
-          
-          const ghostIcon = L.divIcon({
-            className: "",
-            html: `<div style="
-              width: 22px; height: 14px;
-              opacity: 0.35;
-              transform: rotate(${angle}deg);
-              display: flex; align-items: center; justify-content: center;
-            ">
-              <img src="/bus-icon.png" style="width: 22px; height: auto;" />
-            </div>`,
-            iconSize: [22, 14],
-            iconAnchor: [11, 7],
-          });
-          L.marker([midLat, midLng], { 
-            icon: ghostIcon, 
-            interactive: false,
-            zIndexOffset: 0 
-          }).addTo(map);
-        }
-      });
-
-      // Add terminal markers for routes
-      ROUTES_POLYLINES.forEach((route) => {
-        const startPoint = route.points[0];
-        const endPoint = route.points[route.points.length - 1];
-        
-        const terminalIcon = (label: string) => L.divIcon({
+        // Terminals
+        const termIcon = (label: string) => L.divIcon({
           className: "",
-          html: `<div style="
-            background: ${route.color};
-            color: white;
-            font-size: 8px;
-            font-weight: 900;
-            padding: 3px 6px;
-            border-radius: 6px;
-            border: 2px solid white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            white-space: nowrap;
-          ">
-            <img src="/bus-icon.png" style="width:18px; height:auto; filter: drop-shadow(0 0 1px white);" />
+          html: `<div style="background:${route.color}; color:white; font-size:9px; font-weight:900; padding:2px 8px; border-radius:12px; border:2px solid white; box-shadow:0 10px 20px rgba(0,0,0,0.15); display:flex; align-items:center; gap:6px;">
+            <img src="/bus-icon.png" style="width:14px; height:auto; filter:drop-shadow(0 0 1px white);" />
             ${label}
           </div>`,
-          iconSize: [30, 16],
-          iconAnchor: [15, 8],
+          iconSize: [80, 24],
+          iconAnchor: [40, 12]
         });
 
-        L.marker(startPoint, { 
-          icon: terminalIcon(route.name.split(" ")[0]),
-          zIndexOffset: 500 
-        }).addTo(map);
-        L.marker(endPoint, { 
-          icon: terminalIcon(route.name.split(" ").at(-1) || ""),
-          zIndexOffset: 500 
-        }).addTo(map);
+        L.marker(route.points[0], { icon: termIcon(route.name.split(" ")[0]) }).addTo(map);
+        L.marker(route.points[route.points.length - 1], { icon: termIcon(route.name.split(" ").at(-1) || "") }).addTo(map);
       });
 
-      // Add bus stop markers
+      // Layer 3: Stops
       ADDIS_STOPS.forEach((stop) => {
-        const stopIcon = L.divIcon({
-          className: "",
-          html: `<div style="
-            width: 8px; height: 8px;
-            background: white;
-            border: 2px solid #CC1F1F;
-            border-radius: 50%;
-            box-shadow: 0 0 0 2px rgba(204,31,31,0.1);
-          "></div>`,
-          iconSize: [8, 8],
-          iconAnchor: [4, 4],
-        });
-        L.marker([stop.lat, stop.lng], { 
-          icon: stopIcon,
-          zIndexOffset: 100
-        })
-          .addTo(map)
-          .bindTooltip(stop.name, { permanent: false, direction: "top", className: "leaflet-stop-tooltip" });
+        L.circleMarker([stop.lat, stop.lng], {
+          radius: 4,
+          fillColor: "white",
+          color: "#CC1F1F",
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 1
+        }).addTo(map).bindTooltip(stop.name, { direction: "top" });
       });
 
+      // Layer 4: Live Fleet
+      busLayerRef.current = L.layerGroup().addTo(map);
+      mapInstanceRef.current = map;
+      
+      // Initial render of markers
+      syncMarkers();
     };
-  }, []);
 
-  // Update live bus markers when data changes
-  useEffect(() => {
-    const updateMarkers = async () => {
-      if (!mapInstanceRef.current) return;
+    const syncMarkers = async () => {
+      if (!mapInstanceRef.current || !busLayerRef.current) return;
       const L = (await import("leaflet")).default;
-
-      if (!busLayerRef.current) {
-        busLayerRef.current = L.layerGroup().addTo(mapInstanceRef.current);
-      }
-
       busLayerRef.current.clearLayers();
 
       displayBuses.forEach((bus) => {
         const matchingRoute = ROUTES_POLYLINES.find(r => r.name.includes(bus.routeId || "NULL"));
         const routeColor = matchingRoute ? matchingRoute.color : "#64748b";
-        const loadColor = (bus.fuelLevel || 50) > 80 ? "#f43f5e" : (bus.fuelLevel || 50) > 50 ? "#FFD600" : "#10b981";
-        const statusStr = bus.status?.toLowerCase() || "active";
         
         const busIcon = L.divIcon({
           className: "",
-          html: `<div style="position: relative; width: 44px; height: 44px;">
-            ${statusStr === "active" ? `<div style="position: absolute; inset: -4px; border-radius: 12px; background: ${routeColor}33; animation: ping 2s infinite;"></div>` : ""}
-            <div style="width: 48px; height: 48px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-              <div style="position: absolute; inset: 4px; background: white; border: 2.5px solid ${routeColor}; border-radius: 50%; box-shadow: 0 0 15px ${routeColor}66, 0 4px 8px rgba(0,0,0,0.3);"></div>
-              <img src="/bus-icon.png" style="width: 32px; height: auto; position: relative; z-index: 10; transform: rotate(${bus.angle || 0}deg); filter: drop-shadow(0 0 2px white);" />
-            </div>
+          html: `<div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; inset: 4px; background: white; border: 2.5px solid ${routeColor}; border-radius: 50%; box-shadow: 0 0 15px ${routeColor}44, 0 4px 8px rgba(0,0,0,0.1);"></div>
+            <img src="/bus-icon.png" style="width: 32px; height: auto; position: relative; z-index: 10; transform: rotate(${bus.angle || 0}deg); filter: drop-shadow(0 0 2px white);" />
           </div>`,
           iconSize: [44, 44],
           iconAnchor: [22, 22],
         });
 
-        L.marker([bus.gpsLat, bus.gpsLng], { 
-          icon: busIcon,
-          zIndexOffset: 1000
-        })
-          .addTo(busLayerRef.current)
-          .bindPopup(`
-            <div style="font-family: system-ui; min-width: 180px; padding: 4px;">
-              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="background:#CC1F1F; color:white; font-weight:900; font-size:10px; padding:2px 8px; border-radius:20px; text-transform:uppercase; letter-spacing:0.1em;">${statusStr}</div>
-              </div>
-              <p style="font-weight:900; font-size:14px; margin:0 0 4px; text-transform:uppercase;">${bus.plate}</p>
-              <p style="font-size:11px; color:#64748b; margin:0 0 2px; font-weight:600;">${bus.driverName}</p>
-              <p style="font-size:10px; color:#94a3b8; margin:0 0 8px;">Line ${bus.routeId || "Unassigned"}</p>
-              <div style="display:flex; align-items:center; gap:6px;">
-                <div style="flex:1; height:6px; background:#f1f5f9; border-radius:3px; overflow:hidden;">
-                  <div style="width:${bus.fuelLevel || 50}%; height:100%; background:${loadColor}; border-radius:3px;"></div>
-                </div>
-                <span style="font-size:10px; font-weight:900; color:${loadColor};">${bus.fuelLevel || 50}%</span>
-              </div>
-            </div>
-          `, { maxWidth: 220, className: "leaflet-bus-popup" });
+        L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon, zIndexOffset: 1000 })
+          .addTo(busLayerRef.current);
       });
     };
 
-    updateMarkers();
+    init();
+
+    return () => {
+      if (map) {
+        map.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []);
+
+  // Update markers reactively
+  useEffect(() => {
+    const update = async () => {
+      if (!mapInstanceRef.current || !busLayerRef.current) return;
+      const L = (await import("leaflet")).default;
+      busLayerRef.current.clearLayers();
+      
+      displayBuses.forEach((bus) => {
+        const matchingRoute = ROUTES_POLYLINES.find(r => r.name.includes(bus.routeId || "NULL"));
+        const routeColor = matchingRoute ? matchingRoute.color : "#64748b";
+        
+        const busIcon = L.divIcon({
+          className: "",
+          html: `<div style="position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+            <div style="position: absolute; inset: 4px; background: white; border: 2.5px solid ${routeColor}; border-radius: 50%; box-shadow: 0 0 15px ${routeColor}44, 0 4px 8px rgba(0,0,0,0.1);"></div>
+            <img src="/bus-icon.png" style="width: 32px; height: auto; position: relative; z-index: 10; transform: rotate(${bus.angle || 0}deg); filter: drop-shadow(0 0 2px white);" />
+          </div>`,
+          iconSize: [44, 44],
+          iconAnchor: [22, 22],
+        });
+
+        L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon, zIndexOffset: 1000 })
+          .addTo(busLayerRef.current);
+      });
+    };
+    update();
   }, [displayBuses]);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-[2.5rem]" style={{ height }}>
-      <style>{`
-        @keyframes ping {
-          0% { transform: scale(1); opacity: 0.7; }
-          100% { transform: scale(2.5); opacity: 0; }
+    <div className="relative w-full h-full min-h-[500px] lg:min-h-[600px] rounded-[3rem] overflow-hidden border border-white/50 shadow-2xl bg-white">
+      {/* MAP ENGINE */}
+      <div 
+        ref={mapRef} 
+        className="absolute inset-0 z-0 bg-slate-50"
+      />
+
+      <style jsx global>{`
+        .leaflet-container {
+          background: #f8fafc !important;
+          width: 100%;
+          height: 100%;
         }
-        .leaflet-bus-popup .leaflet-popup-content-wrapper {
-          border-radius: 16px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-          border: 1px solid #f1f5f9;
-          padding: 0;
+        .leaflet-tile {
+          filter: saturate(1.2) contrast(1.1);
         }
-        .leaflet-bus-popup .leaflet-popup-content {
-          margin: 12px 16px;
-        }
-        .leaflet-stop-tooltip {
-          background: rgba(15,23,42,0.9) !important;
-          color: white !important;
-          font-size: 10px !important;
-          font-weight: 900 !important;
-          text-transform: uppercase !important;
-          letter-spacing: 0.1em !important;
-          border: none !important;
-          border-radius: 8px !important;
-          padding: 4px 10px !important;
-        }
-        .leaflet-stop-tooltip::before {
-          border-top-color: rgba(15,23,42,0.9) !important;
+        .leaflet-bar { border: none !important; }
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+          background: white !important;
+          border: 1px solid #e2e8f0 !important;
+          border-radius: 12px !important;
+          color: #64748b !important;
+          margin: 4px !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
         }
       `}</style>
-
-      <div ref={mapRef} className="w-full h-full z-10" />
-
-      {/* HUD Overlay */}
-      <div className="absolute top-4 left-4 z-[400] space-y-2 pointer-events-none">
-        <div className="px-4 py-2.5 bg-white/95 backdrop-blur-md rounded-2xl border border-white/60 shadow-xl flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+      
+      {/* UI OVERLAY: TOP LEFT HUD */}
+      <div className="absolute top-8 left-8 z-[1000] space-y-3 pointer-events-none">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/50 p-5 rounded-[2rem] shadow-2xl flex items-center gap-6 animate-in slide-in-from-left duration-700">
+          <div className="relative">
+            <div className="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center">
+              <Signal className="w-6 h-6 text-[#CC1F1F]" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 border-4 border-white rounded-full animate-pulse" />
+          </div>
           <div>
-            <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Live Network</p>
-            <p className="text-xs font-black text-slate-900 tracking-tight">Anbessa <span className="text-[#CC1F1F]">Fleet Radar</span></p>
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Live Network</span>
+              <span className="bg-emerald-100 text-emerald-600 text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Active</span>
+            </div>
+            <p className="text-sm font-black text-slate-900 uppercase tracking-tighter">
+              Anbessa <span className="text-[#CC1F1F]">Fleet Radar</span>
+            </p>
           </div>
         </div>
-        <div className="px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-xl border border-white/60 shadow-lg flex items-center gap-2">
-          <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tracking {displayBuses.filter((b: any) => b.status === "Active" || b.status === "active").length} Active Units</span>
+
+        <div className="bg-white/80 backdrop-blur-md border border-slate-100/50 px-5 py-2.5 rounded-2xl shadow-lg flex items-center gap-4 animate-in slide-in-from-left delay-300 duration-700">
+          <div className="w-2 h-2 rounded-full bg-slate-400" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+            Tracking {displayBuses.length} Active Units
+          </span>
         </div>
       </div>
 
-      {/* Legend */}
-      {!compact && (
-        <div className="absolute bottom-4 right-4 z-[400] bg-white/95 backdrop-blur-md rounded-2xl border border-white/60 shadow-xl p-4 space-y-2">
-          <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-2">Route Legend</p>
-          {ROUTES_POLYLINES.map(r => (
-            <div key={r.name} className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <span className="w-4 h-1 rounded-full block" style={{ backgroundColor: r.color }} />
-                <img src="/bus-icon.png" style={{ width: "16px", height: "auto", filter: `drop-shadow(0 0 1px ${r.color})` }} />
-              </div>
-              <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter">{r.name}</span>
+      {/* UI OVERLAY: TOP RIGHT METRICS */}
+      <div className="absolute top-8 right-8 z-[1000] animate-in slide-in-from-right duration-700 pointer-events-none">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/50 p-6 rounded-[2.5rem] shadow-2xl min-w-[240px]">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">System Active</span>
             </div>
-          ))}
+            <Settings2 className="w-4 h-4 text-slate-300" />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-8">
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Fleet Count</p>
+              <p className="text-2xl font-black text-slate-900 tracking-tighter">112</p>
+            </div>
+            <div className="space-y-1 text-right">
+              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Efficiency</p>
+              <p className="text-2xl font-black text-emerald-500 tracking-tighter">94.2%</p>
+            </div>
+          </div>
         </div>
-      )}
+      </div>
 
-      {/* Floating Service Status Card */}
-      <div className="absolute bottom-6 left-6 z-[1000] pointer-events-none">
-        <div className="bg-[#f5f5f5cc] backdrop-blur-md border border-white/40 shadow-2xl rounded-[1.5rem] p-5 w-64">
-           <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#CC1F1F]">Anbessa Pro</span>
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-           </div>
-           
-           <div className="space-y-3">
-              <div>
-                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-0.5">Live Status</p>
-                <p className="text-xs font-black text-slate-800 uppercase">Normal Operations</p>
+      {/* UI OVERLAY: BOTTOM LEFT STATUS */}
+      <div className="absolute bottom-8 left-8 z-[1000] animate-in slide-in-from-bottom duration-700 pointer-events-none">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/50 p-6 rounded-[2.5rem] shadow-2xl min-w-[300px]">
+          <div className="flex items-center gap-3 mb-4">
+            <Activity className="w-4 h-4 text-[#CC1F1F]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#CC1F1F]">Anbessa Pro</span>
+          </div>
+          
+          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Live Status</p>
+          <p className="text-lg font-black text-slate-900 uppercase tracking-tighter mb-6">Normal Operations</p>
+          
+          <div className="flex items-center justify-between py-4 border-t border-slate-100">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">From</span>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4 pt-2 border-t border-slate-200/50">
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <svg viewBox="0 0 24 24" fill="#CC1F1F" width="10" height="10">
-                      <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-                    </svg>
-                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">From</p>
-                  </div>
-                  <p className="text-[10px] font-bold text-slate-700 truncate">Megenagna</p>
-                </div>
-                <div className="flex flex-col">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <svg viewBox="0 0 24 24" fill="#64748b" width="10" height="10">
-                      <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-                    </svg>
-                    <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">To</p>
-                  </div>
-                  <p className="text-[10px] font-bold text-slate-700 truncate">Piassa</p>
-                </div>
+              <p className="text-xs font-black text-slate-800 uppercase">Megenagna</p>
+            </div>
+            <ArrowRightLeft className="w-4 h-4 text-slate-200" />
+            <div className="space-y-1 text-right">
+              <div className="flex items-center gap-2 justify-end">
+                <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">To</span>
+                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
               </div>
-           </div>
+              <p className="text-xs font-black text-slate-800 uppercase">Piassa</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* UI OVERLAY: BOTTOM RIGHT LEGEND */}
+      <div className="absolute bottom-8 right-8 z-[1000] animate-in slide-in-from-bottom duration-700 pointer-events-none">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/50 p-6 rounded-[2.5rem] shadow-2xl">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Route Legend</p>
+          <div className="space-y-3">
+            {ROUTES_POLYLINES.map((r) => (
+              <div key={r.name} className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                   <div className="w-6 h-1 rounded-full" style={{ background: r.color }} />
+                   <img src="/bus-icon.png" style={{ width: "16px", height: "auto" }} />
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-tighter text-slate-700">{r.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
