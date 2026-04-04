@@ -197,14 +197,11 @@ export function LiveMap() {
                         }`}></div>
                     </div>
 
-                    {/* Bus Icon */}
                     <div 
-                        className={`w-7 h-7 rounded-lg flex items-center justify-center relative border shadow-lg transition-all duration-300 group-hover/bus:scale-125 ${
-                            bus.info.routeIdx === 0 ? "bg-[#CC1F1F] border-red-400" : (isDark ? "bg-zinc-800 border-zinc-700" : "bg-white border-slate-200")
-                        }`}
+                        className="w-7 h-7 flex items-center justify-center relative transition-all duration-300 group-hover/bus:scale-125"
                         style={{ transform: `rotate(${bus.angle}deg)` } as any}
                     >
-                        <img src="/bus-icon.png" style={{ width: "20px", height: "auto" }} />
+                        <img src="/bus-icon.png" style={{ width: "24px", height: "auto", filter: `drop-shadow(0 2px 4px rgba(0,0,0,0.3))` }} />
                         
                         {/* Status Glow */}
                         <div className={`absolute -inset-1 blur-md opacity-20 rounded-full transition-opacity group-hover/bus:opacity-60`}

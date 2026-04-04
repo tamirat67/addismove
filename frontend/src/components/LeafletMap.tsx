@@ -199,14 +199,10 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             "></div>` : ""}
             <div style="
               width: 44px; height: 44px;
-              background: ${statusStr === "active" ? routeColor : "#94a3b8"};
-              border: 2px solid white;
-              border-radius: 12px;
               display: flex; align-items: center; justify-content: center;
-              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
               cursor: pointer;
             ">
-              <img src="/bus-icon.png" style="width:32px; height:auto; transform: rotate(${bus.angle || 0}deg);" />
+              <img src="/bus-icon.png" style="width:36px; height:auto; transform: rotate(${bus.angle || 0}deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
             </div>
           </div>`,
           iconSize: [44, 44],
