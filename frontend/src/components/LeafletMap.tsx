@@ -102,16 +102,14 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           const ghostIcon = L.divIcon({
             className: "",
             html: `<div style="
-              width: 14px; height: 14px;
-              opacity: 0.5;
+              width: 22px; height: 14px;
+              opacity: 0.4;
               transform: rotate(${angle}deg);
-            ">
-              <svg viewBox="0 0 24 24" fill="${route.color}">
-                <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-              </svg>
-            </div>`,
-            iconSize: [14, 14],
-            iconAnchor: [7, 7],
+              background: url('/bus-icon.png') no-repeat center center;
+              background-size: contain;
+            "></div>`,
+            iconSize: [22, 14],
+            iconAnchor: [11, 7],
           });
           L.marker([midLat, midLng], { icon: ghostIcon, interactive: false }).addTo(map);
         }
@@ -138,9 +136,7 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             gap: 4px;
             white-space: nowrap;
           ">
-            <svg viewBox="0 0 24 24" fill="white" width="10" height="10">
-              <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-            </svg>
+            <img src="/bus-icon.png" style="width:14px; height:auto; filter: drop-shadow(0 0 1px white);" />
             ${label}
           </div>`,
           iconSize: [30, 16],
@@ -180,30 +176,28 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           className: "",
           html: `<div style="
             position: relative;
-            width: 32px; height: 32px;
+            width: 44px; height: 44px;
           ">
             ${statusStr === "active" ? `<div style="
               position: absolute; inset: -4px;
-              border-radius: 8px;
+              border-radius: 12px;
               background: ${routeColor}33;
               animation: ping 2s infinite;
             "></div>` : ""}
             <div style="
-              width: 32px; height: 32px;
+              width: 44px; height: 44px;
               background: ${statusStr === "active" ? routeColor : "#94a3b8"};
               border: 2px solid white;
-              border-radius: 8px;
+              border-radius: 12px;
               display: flex; align-items: center; justify-content: center;
-              box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+              box-shadow: 0 4px 12px rgba(0,0,0,0.4);
               cursor: pointer;
             ">
-              <svg viewBox="0 0 24 24" fill="white" width="20" height="20">
-                <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-              </svg>
+              <img src="/bus-icon.png" style="width:32px; height:auto; transform: rotate(${bus.angle || 0}deg);" />
             </div>
           </div>`,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16],
+          iconSize: [44, 44],
+          iconAnchor: [22, 22],
         });
 
         L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon })
@@ -297,9 +291,7 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             <div key={r.name} className="flex items-center gap-3">
               <div className="flex items-center gap-1.5">
                 <span className="w-4 h-1 rounded-full block" style={{ backgroundColor: r.color }} />
-                <svg viewBox="0 0 24 24" fill={r.color} width="10" height="10">
-                  <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-                </svg>
+                <img src="/bus-icon.png" style={{ width: "16px", height: "auto", filter: `drop-shadow(0 0 1px ${r.color})` }} />
               </div>
               <span className="text-[9px] font-black text-slate-600 uppercase tracking-tighter">{r.name}</span>
             </div>

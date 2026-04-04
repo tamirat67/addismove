@@ -145,13 +145,11 @@ export function LiveMap() {
               left: `${flow.x}%`, 
               top: `${flow.y}%`,
               transform: `rotate(${flow.angle}deg) translate(-50%, -50%)`,
-              opacity: 0.2
+              opacity: 0.15
             } as any}
             className="absolute z-10"
           >
-            <svg viewBox="0 0 24 24" fill={flow.color} width="12" height="12">
-              <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-            </svg>
+            <img src="/bus-icon.png" style={{ width: "14px", height: "auto", filter: `drop-shadow(0 0 1px ${flow.color})` }} />
           </div>
         ))}
 
@@ -206,9 +204,7 @@ export function LiveMap() {
                         }`}
                         style={{ transform: `rotate(${bus.angle}deg)` } as any}
                     >
-                        <svg viewBox="0 0 24 24" fill={bus.info.routeIdx === 0 ? "white" : (isDark ? "#a1a1aa" : "#64748b")} width="18" height="18">
-                          <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-                        </svg>
+                        <img src="/bus-icon.png" style={{ width: "20px", height: "auto" }} />
                         
                         {/* Status Glow */}
                         <div className={`absolute -inset-1 blur-md opacity-20 rounded-full transition-opacity group-hover/bus:opacity-60`}
@@ -258,11 +254,9 @@ export function LiveMap() {
               <div className="flex flex-col gap-2.5">
                   {ROUTES.map((route) => (
                       <div key={route.id} className="flex items-center gap-3">
-                          <div className="flex items-center gap-1.5">
+                          <div className="flex items-center gap-1.5 font-bold">
                               <div className="w-5 h-1 rounded-full" style={{ backgroundColor: route.color }} />
-                              <svg viewBox="0 0 24 24" fill={route.color} width="11" height="11">
-                                  <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
-                              </svg>
+                              <img src="/bus-icon.png" style={{ width: "16px", height: "auto", filter: `drop-shadow(0 0 1px ${route.color})` }} />
                           </div>
                           <span className="text-[10px] font-black uppercase tracking-tighter opacity-80">Line {route.id}</span>
                       </div>
