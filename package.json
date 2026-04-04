@@ -8,8 +8,8 @@
     "backend"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "install": "npm install --include=dev && npm run prisma:generate --prefix backend"
+    "build": "npm run build --prefix frontend",
+    "install": "npm install --include=dev --ignore-scripts && npm run prisma:generate --prefix backend"
   },
   "keywords": [],
   "author": "",

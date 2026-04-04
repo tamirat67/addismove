@@ -20,16 +20,7 @@ const ADDIS_STOPS = [
   { name: "Arat Kilo", lat: 9.0401, lng: 38.7570 },
 ];
 
-const FLEET_POSITIONS = [
-  { id: "ANB-F1", lat: 9.0298, lng: 38.7612, plate: "AB-3-A7721", driver: "Solomon G.", load: 78, route: "Megenagna → Piassa", status: "active" },
-  { id: "ANB-F2", lat: 9.0190, lng: 38.7540, plate: "AB-2-B1104", driver: "Abebe K.", load: 45, route: "Megenagna → Piassa", status: "active" },
-  { id: "ANB-F3", lat: 8.9956, lng: 38.7892, plate: "AB-4-M0021", driver: "Kassa T.", load: 92, route: "Bole → Mexico", status: "active" },
-  { id: "ANB-F4", lat: 9.0050, lng: 38.7720, plate: "AB-5-M4412", driver: "Zewdu H.", load: 60, route: "Bole → Mexico", status: "active" },
-  { id: "ANB-F5", lat: 9.0420, lng: 38.8050, plate: "AB-2-Y8831", driver: "Mekonnen L.", load: 35, route: "Ayat → Tor Hailoch", status: "active" },
-  { id: "ANB-F6", lat: 9.0071, lng: 38.7580, plate: "AB-5-C9821", driver: "Dawit M.", load: 55, route: "Sarbet → Merkato", status: "active" },
-  { id: "ANB-F7", lat: 9.0000, lng: 38.7430, plate: "AB-3-D1102", driver: "Hagos F.", load: 20, route: "Sarbet → Merkato", status: "idle" },
-  { id: "ANB-F8", lat: 8.9770, lng: 38.7620, plate: "AB-1-X9020", driver: "Kebede H.", load: 68, route: "Saris → Piassa", status: "active" },
-];
+// FLEET_POSITIONS is now handled via props for real-time data integration
 
 const ROUTES_POLYLINES = [
   { name: "Megenagna → Piassa", color: "#CC1F1F", points: [[9.0298, 38.7612], [9.0359, 38.7473]] as [number, number][] },
@@ -41,13 +32,16 @@ const ROUTES_POLYLINES = [
 interface LeafletMapProps {
   height?: string;
   compact?: boolean;
+  buses?: any[];
 }
 
-export function LeafletMap({ height = "600px", compact = false }: LeafletMapProps) {
+export function LeafletMap({ height = "600px", compact = false, buses: propBuses }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
-  const { adminTheme } = useTenant();
+  const { adminTheme, buses: contextBuses } = useTenant();
   const isDark = adminTheme === "zinc";
+  
+  const displayBuses = propBuses || contextBuses || [];
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -118,15 +112,16 @@ export function LeafletMap({ height = "600px", compact = false }: LeafletMapProp
       });
 
       // Add live bus markers with animated icons
-      FLEET_POSITIONS.forEach((bus) => {
-        const loadColor = bus.load > 80 ? "#f43f5e" : bus.load > 50 ? "#FFD600" : "#10b981";
+      displayBuses.forEach((bus) => {
+        const loadColor = (bus.fuelLevel || 50) > 80 ? "#f43f5e" : (bus.fuelLevel || 50) > 50 ? "#FFD600" : "#10b981";
+        const statusStr = bus.status?.toLowerCase() || "active";
         const busIcon = L.divIcon({
           className: "",
           html: `<div style="
             position: relative;
             width: 36px; height: 36px;
           ">
-            ${bus.status === "active" ? `<div style="
+            ${statusStr === "active" ? `<div style="
               position: absolute; inset: -4px;
               border-radius: 50%;
               background: rgba(204,31,31,0.2);
@@ -134,7 +129,7 @@ export function LeafletMap({ height = "600px", compact = false }: LeafletMapProp
             "></div>` : ""}
             <div style="
               width: 36px; height: 36px;
-              background: ${bus.status === "active" ? "#CC1F1F" : "#94a3b8"};
+              background: ${statusStr === "active" ? "#CC1F1F" : "#94a3b8"};
               border: 3px solid white;
               border-radius: 10px;
               display: flex; align-items: center; justify-content: center;
@@ -161,23 +156,23 @@ export function LeafletMap({ height = "600px", compact = false }: LeafletMapProp
           iconAnchor: [18, 18],
         });
 
-        L.marker([bus.lat, bus.lng], { icon: busIcon })
+        L.marker([bus.gpsLat, bus.gpsLng], { icon: busIcon })
           .addTo(map)
           .bindPopup(`
             <div style="font-family: system-ui; min-width: 180px; padding: 4px;">
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <div style="background:#CC1F1F; color:white; font-weight:900; font-size:10px; padding:2px 8px; border-radius:20px; text-transform:uppercase; letter-spacing:0.1em;">${bus.status}</div>
+                <div style="background:#CC1F1F; color:white; font-weight:900; font-size:10px; padding:2px 8px; border-radius:20px; text-transform:uppercase; letter-spacing:0.1em;">${statusStr}</div>
               </div>
               <p style="font-weight:900; font-size:14px; margin:0 0 4px; text-transform:uppercase;">${bus.plate}</p>
-              <p style="font-size:11px; color:#64748b; margin:0 0 2px; font-weight:600;">${bus.driver}</p>
-              <p style="font-size:10px; color:#94a3b8; margin:0 0 8px;">${bus.route}</p>
+              <p style="font-size:11px; color:#64748b; margin:0 0 2px; font-weight:600;">${bus.driverName}</p>
+              <p style="font-size:10px; color:#94a3b8; margin:0 0 8px;">Line ${bus.routeId || "Unassigned"}</p>
               <div style="display:flex; align-items:center; gap:6px;">
                 <div style="flex:1; height:6px; background:#f1f5f9; border-radius:3px; overflow:hidden;">
-                  <div style="width:${bus.load}%; height:100%; background:${loadColor}; border-radius:3px;"></div>
+                  <div style="width:${bus.fuelLevel || 50}%; height:100%; background:${loadColor}; border-radius:3px;"></div>
                 </div>
-                <span style="font-size:10px; font-weight:900; color:${loadColor};">${bus.load}%</span>
+                <span style="font-size:10px; font-weight:900; color:${loadColor};">${bus.fuelLevel || 50}%</span>
               </div>
-              <p style="font-size:9px; color:#cbd5e1; margin:4px 0 0; text-transform:uppercase; letter-spacing:0.1em;">Passenger Load</p>
+              <p style="font-size:9px; color:#cbd5e1; margin:4px 0 0; text-transform:uppercase; letter-spacing:0.1em;">Service Status (Fuel)</p>
             </div>
           `, {
             maxWidth: 220,
@@ -240,7 +235,7 @@ export function LeafletMap({ height = "600px", compact = false }: LeafletMapProp
           </div>
         </div>
         <div className="px-3 py-1.5 bg-white/90 backdrop-blur-md rounded-xl border border-white/60 shadow-lg flex items-center gap-2">
-          <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tracking {FLEET_POSITIONS.filter(b => b.status === "active").length} Active Units</span>
+          <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tracking {displayBuses.filter((b: any) => b.status === "Active" || b.status === "active").length} Active Units</span>
         </div>
       </div>
 

@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import { useTenant } from "@/context/TenantContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { LeafletMap } from "@/components/LeafletMap";
+import { LiveMap } from "@/components/LiveMap";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { MapPin, Bus, Users, Activity, Navigation } from "lucide-react";
+import { MapPin, Bus, Users, Activity, Navigation, Radio } from "lucide-react";
 
 export default function FleetMapPage() {
   const { adminTheme, theme, buses, trips } = useTenant();
+  const [viewMode, setViewMode] = useState<"real" | "radar">("real");
   const isDark = adminTheme === "zinc";
 
   const activeBuses = buses.filter(b => b.status === "Active");
@@ -27,9 +31,31 @@ export default function FleetMapPage() {
             </p>
           </motion.div>
           <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 p-1 rounded-2xl bg-slate-100 dark:bg-zinc-800 border dark:border-zinc-700">
+              <Button 
+                variant={viewMode === "real" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("real")}
+                className="rounded-xl h-9 px-4 text-[10px] font-black uppercase tracking-widest"
+                style={viewMode === "real" ? { backgroundColor: theme.primary } : {}}
+              >
+                <MapPin className="w-3.5 h-3.5 mr-2" />
+                Real Map
+              </Button>
+              <Button 
+                variant={viewMode === "radar" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("radar")}
+                className="rounded-xl h-9 px-4 text-[10px] font-black uppercase tracking-widest"
+                style={viewMode === "radar" ? { backgroundColor: theme.primary } : {}}
+              >
+                <Radio className="w-3.5 h-3.5 mr-2" />
+                Live Radar
+              </Button>
+            </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Live · {activeBuses.length} Active Buses</span>
+              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Live · {activeBuses.length} Active Units</span>
             </div>
           </div>
         </header>
@@ -58,9 +84,13 @@ export default function FleetMapPage() {
           ))}
         </div>
 
-        {/* Full Leaflet Map */}
+        {/* Map Container */}
         <div className={`rounded-[3rem] overflow-hidden shadow-2xl border-4 ${isDark ? "border-zinc-800" : "border-white"}`}>
-          <LeafletMap height="65vh" />
+          {viewMode === "real" ? (
+            <LeafletMap height="65vh" buses={buses} />
+          ) : (
+            <LiveMap />
+          )}
         </div>
 
         {/* Active Trip Feed */}
