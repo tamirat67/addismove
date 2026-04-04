@@ -90,6 +90,31 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           dashArray: "8, 4",
         }).addTo(map);
         polyline.bindTooltip(`<strong>${route.name}</strong>`, { sticky: true });
+
+        // Add directional bus "ghost" icons along the route
+        for (let j = 0; j < route.points.length - 1; j++) {
+          const p1 = route.points[j];
+          const p2 = route.points[j + 1];
+          const midLat = (p1[0] + p2[0]) / 2;
+          const midLng = (p1[1] + p2[1]) / 2;
+          const angle = Math.atan2(p2[0] - p1[0], p2[1] - p1[1]) * (180 / Math.PI);
+          
+          const ghostIcon = L.divIcon({
+            className: "",
+            html: `<div style="
+              width: 14px; height: 14px;
+              opacity: 0.5;
+              transform: rotate(${angle}deg);
+            ">
+              <svg viewBox="0 0 24 24" fill="${route.color}">
+                <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+              </svg>
+            </div>`,
+            iconSize: [14, 14],
+            iconAnchor: [7, 7],
+          });
+          L.marker([midLat, midLng], { icon: ghostIcon, interactive: false }).addTo(map);
+        }
       });
 
       // Add terminal markers for routes

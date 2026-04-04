@@ -37,33 +37,44 @@ export function LiveMap() {
   const animate = (time: number) => {
     if (!startTimeRef.current) startTimeRef.current = time;
     const elapsed = time - startTimeRef.current;
-
+    
+    // Animate Live Fleet (Existing)
     const newPositions = INITIAL_FLEET.map((bus) => {
         const path = pathRefs.current[bus.routeIdx];
         if (!path) return null;
-
         const totalLength = path.getTotalLength();
         const progress = (bus.offset + elapsed * bus.speed) % 1;
         const currentLength = progress * totalLength;
-        
         const point = path.getPointAtLength(currentLength);
         const nextPoint = path.getPointAtLength((currentLength + 1) % totalLength);
-        
-        // Calculate rotation angle
         const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
-
-        return {
-            id: bus.id,
-            x: point.x,
-            y: point.y,
-            angle,
-            info: bus
-        };
+        return { id: bus.id, x: point.x, y: point.y, angle, info: bus };
     }).filter(Boolean) as any[];
 
+    // Animate Route Flow (DECORATION)
+    const newFlowPositions: any[] = [];
+    ROUTES.forEach((route, i) => {
+        const path = pathRefs.current[i];
+        if (!path) return;
+        const totalLength = path.getTotalLength();
+        
+        // Add 3 ghost icons per route
+        [0.1, 0.4, 0.7].forEach((baseOffset, j) => {
+            const progress = (baseOffset + elapsed * 0.0000008) % 1;
+            const currentLength = progress * totalLength;
+            const point = path.getPointAtLength(currentLength);
+            const nextPoint = path.getPointAtLength((currentLength + 0.5) % totalLength);
+            const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * (180 / Math.PI);
+            newFlowPositions.push({ id: `flow-${i}-${j}`, x: point.x, y: point.y, angle, color: route.color });
+        });
+    });
+
     setFleetPositions(newPositions);
+    setRouteFlowPositions(newFlowPositions);
     requestRef.current = requestAnimationFrame(animate);
   };
+
+  const [routeFlowPositions, setRouteFlowPositions] = useState<any[]>([]);
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
@@ -126,6 +137,24 @@ export function LiveMap() {
       
       {/* BUS MARKERS */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+        {/* Route Flow Decoration */}
+        {routeFlowPositions.map((flow) => (
+          <div
+            key={flow.id}
+            style={{ 
+              left: `${flow.x}%`, 
+              top: `${flow.y}%`,
+              transform: `rotate(${flow.angle}deg) translate(-50%, -50%)`,
+              opacity: 0.2
+            } as any}
+            className="absolute z-10"
+          >
+            <svg viewBox="0 0 24 24" fill={flow.color} width="12" height="12">
+              <path d="M18 11V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-1h10v1a2 2 0 002 2h1a2 2 0 002-2v-7a2 2 0 00-2-2zM4 7h12v4H4V7zm1 10a1 1 0 11-2 0 1 1 0 012 0zm14 0a1 1 0 11-2 0 1 1 0 012 0zm0-4h-2V9h2v4z"/>
+            </svg>
+          </div>
+        ))}
+
         <AnimatePresence>
           {fleetPositions.map((bus) => (
             <motion.div
