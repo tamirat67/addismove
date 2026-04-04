@@ -38,6 +38,7 @@ interface LeafletMapProps {
 export function LeafletMap({ height = "600px", compact = false, buses: propBuses }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
+  const busLayerRef = useRef<any>(null);
   const { adminTheme, buses: contextBuses } = useTenant();
   const isDark = adminTheme === "zinc";
   
@@ -180,51 +181,34 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           .bindTooltip(stop.name, { permanent: false, direction: "top", className: "leaflet-stop-tooltip" });
       });
 
-      // Add live bus markers with animated icons
+    };
+  }, []);
+
+  // Update live bus markers when data changes
+  useEffect(() => {
+    const updateMarkers = async () => {
+      if (!mapInstanceRef.current) return;
+      const L = (await import("leaflet")).default;
+
+      if (!busLayerRef.current) {
+        busLayerRef.current = L.layerGroup().addTo(mapInstanceRef.current);
+      }
+
+      busLayerRef.current.clearLayers();
+
       displayBuses.forEach((bus) => {
         const matchingRoute = ROUTES_POLYLINES.find(r => r.name.includes(bus.routeId || "NULL"));
         const routeColor = matchingRoute ? matchingRoute.color : "#64748b";
         const loadColor = (bus.fuelLevel || 50) > 80 ? "#f43f5e" : (bus.fuelLevel || 50) > 50 ? "#FFD600" : "#10b981";
         const statusStr = bus.status?.toLowerCase() || "active";
+        
         const busIcon = L.divIcon({
           className: "",
-          html: `<div style="
-            position: relative;
-            width: 44px; height: 44px;
-          ">
-            ${statusStr === "active" ? `<div style="
-              position: absolute; inset: -4px;
-              border-radius: 12px;
-              background: ${routeColor}33;
-              animation: ping 2s infinite;
-            "></div>` : ""}
-            <div style="
-              width: 48px; height: 48px;
-              position: relative;
-              display: flex; align-items: center; justify-content: center;
-              cursor: pointer;
-            ">
-              {/* High-Visibility Base Ring */}
-              <div style="
-                position: absolute;
-                inset: 4px;
-                background: white;
-                border: 2.5px solid ${routeColor};
-                border-radius: 50%;
-                box-shadow: 0 0 15px ${routeColor}66, 0 4px 8px rgba(0,0,0,0.3);
-              "></div>
-              
-              <img 
-                src="/bus-icon.png" 
-                style="
-                  width: 32px; 
-                  height: auto; 
-                  position: relative;
-                  z-index: 10;
-                  transform: rotate(${bus.angle || 0}deg);
-                  filter: drop-shadow(0 0 2px white);
-                " 
-              />
+          html: `<div style="position: relative; width: 44px; height: 44px;">
+            ${statusStr === "active" ? `<div style="position: absolute; inset: -4px; border-radius: 12px; background: ${routeColor}33; animation: ping 2s infinite;"></div>` : ""}
+            <div style="width: 48px; height: 48px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+              <div style="position: absolute; inset: 4px; background: white; border: 2.5px solid ${routeColor}; border-radius: 50%; box-shadow: 0 0 15px ${routeColor}66, 0 4px 8px rgba(0,0,0,0.3);"></div>
+              <img src="/bus-icon.png" style="width: 32px; height: auto; position: relative; z-index: 10; transform: rotate(${bus.angle || 0}deg); filter: drop-shadow(0 0 2px white);" />
             </div>
           </div>`,
           iconSize: [44, 44],
@@ -235,7 +219,7 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
           icon: busIcon,
           zIndexOffset: 1000
         })
-          .addTo(map)
+          .addTo(busLayerRef.current)
           .bindPopup(`
             <div style="font-family: system-ui; min-width: 180px; padding: 4px;">
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
@@ -250,24 +234,13 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
                 </div>
                 <span style="font-size:10px; font-weight:900; color:${loadColor};">${bus.fuelLevel || 50}%</span>
               </div>
-              <p style="font-size:9px; color:#cbd5e1; margin:4px 0 0; text-transform:uppercase; letter-spacing:0.1em;">Service Status (Fuel)</p>
             </div>
-          `, {
-            maxWidth: 220,
-            className: "leaflet-bus-popup",
-          });
+          `, { maxWidth: 220, className: "leaflet-bus-popup" });
       });
     };
 
-    initMap();
-
-    return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-    };
-  }, []);
+    updateMarkers();
+  }, [displayBuses]);
 
   return (
     <div className="relative w-full overflow-hidden rounded-[2.5rem]" style={{ height }}>
