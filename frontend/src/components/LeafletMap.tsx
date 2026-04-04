@@ -103,11 +103,12 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             className: "",
             html: `<div style="
               width: 22px; height: 14px;
-              opacity: 0.4;
+              opacity: 0.35;
               transform: rotate(${angle}deg);
-              background: url('/bus-icon.png') no-repeat center center;
-              background-size: contain;
-            "></div>`,
+              display: flex; align-items: center; justify-content: center;
+            ">
+              <img src="/bus-icon.png" style="width: 22px; height: auto;" />
+            </div>`,
             iconSize: [22, 14],
             iconAnchor: [11, 7],
           });
