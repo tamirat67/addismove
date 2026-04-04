@@ -133,14 +133,14 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             font-weight: 900;
             padding: 3px 6px;
             border-radius: 6px;
-            border: 1.5px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             gap: 4px;
             white-space: nowrap;
           ">
-            <img src="/bus-icon.png" style="width:14px; height:auto; filter: drop-shadow(0 0 1px white);" />
+            <img src="/bus-icon.png" style="width:14px; height:auto; filter: brightness(0) invert(1);" />
             ${label}
           </div>`,
           iconSize: [30, 16],
@@ -198,11 +198,32 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
               animation: ping 2s infinite;
             "></div>` : ""}
             <div style="
-              width: 44px; height: 44px;
+              width: 48px; height: 48px;
+              position: relative;
               display: flex; align-items: center; justify-content: center;
               cursor: pointer;
             ">
-              <img src="/bus-icon.png" style="width:36px; height:auto; transform: rotate(${bus.angle || 0}deg); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));" />
+              {/* High-Visibility Base Ring */}
+              <div style="
+                position: absolute;
+                inset: 4px;
+                background: white;
+                border: 2.5px solid ${routeColor};
+                border-radius: 50%;
+                box-shadow: 0 0 15px ${routeColor}66, 0 4px 8px rgba(0,0,0,0.3);
+              "></div>
+              
+              <img 
+                src="/bus-icon.png" 
+                style="
+                  width: 32px; 
+                  height: auto; 
+                  position: relative;
+                  z-index: 10;
+                  transform: rotate(${bus.angle || 0}deg);
+                  filter: drop-shadow(0 0 2px white);
+                " 
+              />
             </div>
           </div>`,
           iconSize: [44, 44],

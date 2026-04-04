@@ -198,10 +198,29 @@ export function LiveMap() {
                     </div>
 
                     <div 
-                        className="w-7 h-7 flex items-center justify-center relative transition-all duration-300 group-hover/bus:scale-125"
+                        className="w-10 h-10 flex items-center justify-center relative transition-all duration-300 group-hover/bus:scale-125"
                         style={{ transform: `rotate(${bus.angle}deg)` } as any}
                     >
-                        <img src="/bus-icon.png" style={{ width: "24px", height: "auto", filter: `drop-shadow(0 2px 4px rgba(0,0,0,0.3))` }} />
+                        {/* High-Visibility Base Ring */}
+                        <div style={{
+                            position: "absolute",
+                            inset: "5px",
+                            background: "white",
+                            border: `2px solid ${ROUTES[bus.info.routeIdx].color}`,
+                            borderRadius: "50%",
+                            boxShadow: `0 0 12px ${ROUTES[bus.info.routeIdx].color}88`
+                        }}></div>
+
+                        <img 
+                            src="/bus-icon.png" 
+                            style={{ 
+                                width: "22px", 
+                                height: "auto", 
+                                position: "relative",
+                                zIndex: 10,
+                                filter: `drop-shadow(0 0 1px white)` 
+                            } as any} 
+                        />
                         
                         {/* Status Glow */}
                         <div className={`absolute -inset-1 blur-md opacity-20 rounded-full transition-opacity group-hover/bus:opacity-60`}
