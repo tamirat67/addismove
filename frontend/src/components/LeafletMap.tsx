@@ -141,7 +141,7 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
             gap: 4px;
             white-space: nowrap;
           ">
-            <img src="/bus-icon.png" style="width:14px; height:auto; filter: brightness(0) invert(1);" />
+            <img src="/bus-icon.png" style="width:18px; height:auto; filter: drop-shadow(0 0 1px white);" />
             ${label}
           </div>`,
           iconSize: [30, 16],
