@@ -8,8 +8,8 @@
     "backend"
   ],
   "scripts": {
-    "build": "npm run build --prefix frontend",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npm run build --workspaces --if-present",
+    "install": "npm install --include=dev && npm run prisma:generate --prefix backend"
   },
   "keywords": [],
   "author": "",
