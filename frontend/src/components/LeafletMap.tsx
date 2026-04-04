@@ -52,7 +52,7 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
       if ((mapRef.current as any)._leaflet_id) return;
 
       const L = (await import("leaflet")).default;
-      await import("leaflet/dist/leaflet.css");
+      // await import("leaflet/dist/leaflet.css"); // MOVED TO LAYOUT CDN TO FIX VERCEL OOM/LIGHTNINGCSS ERROR
 
       // Second guard after async gap (in case of rapid unmount/remount)
       if (!mapRef.current || (mapRef.current as any)._leaflet_id) return;
