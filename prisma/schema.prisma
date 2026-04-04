@@ -1,5 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Anbessa Bus Ticketing & Route Automation System
+// Full Prisma schema with all domain models
 
 generator client {
   provider = "prisma-client-js"
@@ -9,33 +9,90 @@ datasource db {
   provider = "postgresql"
 }
 
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
 enum Role {
   PASSENGER
-  ADMIN // Tenant Admin
-  SUPER_ADMIN // System Admin
+  DRIVER
+  CONDUCTOR
+  ADMIN
+  SUPER_ADMIN
 }
+
+enum TicketStatus {
+  ACTIVE
+  USED
+  EXPIRED
+  CANCELLED
+}
+
+enum BusStatus {
+  ACTIVE
+  MAINTENANCE
+  IDLE
+  OUT_OF_SERVICE
+}
+
+enum DriverStatus {
+  ON_DUTY
+  OFF_DUTY
+  LEAVE
+}
+
+enum TripStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TransactionType {
+  TOP_UP
+  TICKET_PURCHASE
+  REFUND
+  TRANSFER
+}
+
+enum TransactionStatus {
+  SUCCESS
+  PENDING
+  FAILED
+}
+
+// ─── Core Models ─────────────────────────────────────────────────────────────
 
 model Tenant {
   id        String   @id @default(uuid())
-  name      String   @unique // e.g., "Anbessa", "LRT"
-  type      String   // e.g., "BUS", "TRAIN"
+  name      String   @unique // e.g. "Anbessa City Bus Service"
+  slug      String   @unique // e.g. "anbessa"
+  type      String   // "BUS", "TRAIN", "LRT"
+  logoUrl   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  routes    Route[]
-  tickets   Ticket[]
+
+  routes   Route[]
+  tickets  Ticket[]
+  buses    Bus[]
+  drivers  Driver[]
+  stops    Stop[]
+  users    User[]   @relation("TenantUsers")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  name      String?
-  role      Role     @default(PASSENGER)
-  tenantId  String?  // If role is ADMIN, which tenant do they manage?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  wallet    Wallet?
-  tickets   Ticket[]
+  id           String   @id @default(uuid())
+  email        String   @unique
+  phone        String?  @unique
+  passwordHash String
+  name         String?
+  role         Role     @default(PASSENGER)
+  tenantId     String?
+  tenant       Tenant?  @relation("TenantUsers", fields: [tenantId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastLoginAt  DateTime?
+
+  wallet       Wallet?
+  tickets      Ticket[]
+  transactions Transaction[]
 }
 
 model Wallet {
@@ -44,31 +101,173 @@ model Wallet {
   balance   Float    @default(0.0)
   user      User     @relation(fields: [userId], references: [id])
   updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id        String            @id @default(uuid())
+  walletId  String
+  wallet    Wallet            @relation(fields: [walletId], references: [id])
+  userId    String
+  user      User              @relation(fields: [userId], references: [id])
+  type      TransactionType
+  amount    Float
+  provider  String?           // "TELEBIRR", "CBE_BIRR", "BANK"
+  reference String?           // External payment reference
+  status    TransactionStatus @default(PENDING)
+  note      String?
+  createdAt DateTime          @default(now())
+}
+
+// ─── Route & Stop Models ──────────────────────────────────────────────────────
+
+model Stop {
+  id        String   @id @default(uuid())
+  name      String
+  nameAm    String?  // Amharic name
+  latitude  Float
+  longitude Float
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  routeStopsAsOrigin      RouteStop[] @relation("OriginStop")
+  routeStopsAsDestination RouteStop[] @relation("DestinationStop")
 }
 
 model Route {
-  id        String   @id @default(uuid())
-  name      String
-  from      String
-  to        String
-  price     Float
-  tenantId  String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  tickets   Ticket[]
+  id          String   @id @default(uuid())
+  name        String
+  from        String   // Human-readable
+  to          String
+  baseFare    Float
+  expressFare Float    @default(0)
+  studentFare Float    @default(0)
+  seniorFare  Float    @default(0)
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tickets    Ticket[]
+  trips      Trip[]
+  routeStops RouteStop[]
+}
+
+model RouteStop {
+  id            String   @id @default(uuid())
+  routeId       String
+  route         Route    @relation(fields: [routeId], references: [id])
+  stopId        String
+  sequence      Int
+  originStop    Stop     @relation("OriginStop", fields: [stopId], references: [id])
+  destinationId String?
+  destinStop    Stop?    @relation("DestinationStop", fields: [destinationId], references: [id])
+
+  @@unique([routeId, sequence])
+}
+
+// ─── Fleet Models ─────────────────────────────────────────────────────────────
+
+model Bus {
+  id          String    @id @default(uuid())
+  plate       String    @unique
+  model       String
+  capacity    Int       @default(45)
+  year        Int
+  status      BusStatus @default(ACTIVE)
+  routeId     String?
+  tenantId    String
+  tenant      Tenant    @relation(fields: [tenantId], references: [id])
+  fuelLevel   Int       @default(100) // 0-100
+  mileage     Int       @default(0)   // km
+  lastService DateTime?
+  gpsLat      Float?
+  gpsLng      Float?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  driver Driver?
+  trips  Trip[]
+}
+
+model Driver {
+  id             String       @id @default(uuid())
+  name           String
+  phone          String       @unique
+  licenseNo      String       @unique
+  licenseExpiry  DateTime
+  status         DriverStatus @default(OFF_DUTY)
+  busId          String?      @unique
+  bus            Bus?         @relation(fields: [busId], references: [id])
+  tenantId       String
+  tenant         Tenant       @relation(fields: [tenantId], references: [id])
+  totalTrips     Int          @default(0)
+  rating         Float        @default(5.0)
+  joinDate       DateTime     @default(now())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  trips Trip[]
+}
+
+// ─── Trip & Ticket Models ─────────────────────────────────────────────────────
+
+model Trip {
+  id                 String     @id @default(uuid())
+  busId              String
+  bus                Bus        @relation(fields: [busId], references: [id])
+  driverId           String
+  driver             Driver     @relation(fields: [driverId], references: [id])
+  routeId            String
+  route              Route      @relation(fields: [routeId], references: [id])
+  startTime          DateTime   @default(now())
+  endTime            DateTime?
+  status             TripStatus @default(IN_PROGRESS)
+  passengersCarried  Int        @default(0)
+  revenue            Float      @default(0)
+  startStopName      String
+  endStopName        String
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  validations TicketValidation[]
 }
 
 model Ticket {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  routeId   String
-  route     Route    @relation(fields: [routeId], references: [id])
-  tenantId  String
-  tenant    Tenant   @relation(fields: [tenantId], references: [id])
-  qrCode    String   @unique
-  status    String   @default("ACTIVE") // ACTIVE, USED, EXPIRED
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String       @id @default(uuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+  routeId      String
+  route        Route        @relation(fields: [routeId], references: [id])
+  tenantId     String
+  tenant       Tenant       @relation(fields: [tenantId], references: [id])
+  type         String       @default("Bus")     // "Bus", "Express", "Combined"
+  price        Float
+  qrCode       String       @unique
+  nfcId        String?      @unique
+  securityCode String
+  status       TicketStatus @default(ACTIVE)
+  plateNumber  String?
+  driverName   String?
+  expiresAt    DateTime
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  validations TicketValidation[]
+}
+
+model TicketValidation {
+  id          String   @id @default(uuid())
+  ticketId    String
+  ticket      Ticket   @relation(fields: [ticketId], references: [id])
+  tripId      String?
+  trip        Trip?    @relation(fields: [tripId], references: [id])
+  validatedAt DateTime @default(now())
+  method      String   @default("QR") // "QR", "NFC", "MANUAL"
+  conductorId String?
+  passed      Boolean  @default(true)
 }

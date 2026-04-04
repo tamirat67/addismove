@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LiveMap } from "@/components/LiveMap";
+import { LeafletMap } from "@/components/LeafletMap";
 import Link from "next/link";
 import { ArrowRight, Bus, Clock, MapPin, Info, Search, Map as MapIcon, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -71,87 +72,93 @@ export default function Home() {
             </h1>
           </motion.div>
 
-          {/* SMART BOOKING CARD (SUBTLE GLASS) */}
+          {/* SMART BOOKING CARD (TRUE TRANSPARENT GLASS) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full max-w-2xl px-2"
+            className="w-full max-w-3xl px-2"
           >
             <div 
-                className="backdrop-blur-2xl bg-white/10 border border-white/30 rounded-[3rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] overflow-hidden relative"
+                className="backdrop-blur-xl bg-white/[0.02] border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden relative"
                 style={{ WebkitBackdropFilter: "blur(24px)" }}
             >
-              {/* Subtle glass gleam */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+              {/* Subtle top reflection */}
+              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
               
-              <div className="px-6 lg:px-8 py-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 bg-white/5 gap-4">
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-[#CC1F1F] rounded-xl border border-white/20 shadow-lg">
+              {/* HEADER */}
+              <div className="px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between border-b border-white/5 gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-[#e53e3e] rounded-xl flex items-center justify-center shadow-md">
                         <Bus className="w-5 h-5 text-white" />
                     </div>
-                    <span className="text-white font-black uppercase tracking-[0.2em] text-[11px] drop-shadow-md tracking-widest">Anbessa Pro</span>
+                    <span className="text-white font-black uppercase tracking-[0.15em] text-sm drop-shadow-md">Anbessa Pro</span>
                 </div>
-                <div className="flex items-center gap-2 text-[9px] sm:text-[10px] font-black text-white/80 uppercase tracking-widest bg-black/20 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md w-fit">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></div>
-                    Live Status: <span className="text-emerald-400 drop-shadow-sm ml-1">Normal Operations</span>
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-inner">
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></div>
+                    <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">Live Status:</span>
+                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest drop-shadow-sm">Normal Operations</span>
                 </div>
               </div>
 
-              <div className="p-6 lg:p-10 space-y-6">
-                <div className="space-y-4 relative">
-                  <div className="absolute left-[1.35rem] top-10 bottom-10 w-0.5 bg-white/10 rounded-full z-0"></div>
+              {/* CARD BODY (INPUTS & CTA) */}
+              <div className="p-6 lg:p-10 space-y-6 relative">
+                 <div className="relative space-y-6 w-full">
+                    
+                    {/* The Connecting Vertical Line */}
+                    <div className="absolute left-[29px] top-[30px] bottom-[30px] w-[2px] bg-white/10 z-0"></div>
 
-                  {/* FROM INPUT */}
-                  <div className="relative z-10 group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white/40 bg-white/10 group-focus-within:border-[#FFD600] transition-colors shadow-sm"></div>
-                    <Input
-                      placeholder="From: Departure Station"
-                      value={from}
-                      onChange={(e) => handleFromChange(e.target.value)}
-                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#FFD600]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-blur-none"
-                    />
-                    <AnimatePresence>
-                      {fromSuggestions.length > 0 && (
-                        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute z-20 w-full mt-2 bg-slate-900/95 backdrop-blur-3xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                          {fromSuggestions.map(s => (
-                            <button key={s} onClick={() => {setFrom(s); setFromSuggestions([]);}} className="w-full text-left px-5 py-4 text-white hover:bg-[#CC1F1F]/60 font-bold text-sm transition-colors border-b border-white/5 last:border-0 flex items-center gap-3">
-                                <MapPin className="w-4 h-4 text-[#FFD600]" /> {s}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                    {/* FROM INPUT */}
+                    <div className="relative z-10 w-full group">
+                        <div className="absolute left-[24px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-[2.5px] border-white/60 bg-transparent shadow-sm"></div>
+                        <Input
+                          placeholder="From: Departure Station"
+                          value={from}
+                          onChange={(e) => handleFromChange(e.target.value)}
+                          className="pl-16 h-16 w-full bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 focus-visible:ring-1 focus-visible:ring-white/30 rounded-2xl text-white text-base font-bold placeholder:text-white/40 transition-all shadow-sm focus-visible:border-white/30"
+                        />
+                        <AnimatePresence>
+                          {fromSuggestions.length > 0 && (
+                            <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute z-20 w-full mt-2 bg-[#1A1A1A]/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                              {fromSuggestions.map(s => (
+                                <button key={s} onClick={() => {setFrom(s); setFromSuggestions([]);}} className="w-full text-left px-5 py-4 text-white hover:bg-white/10 font-bold text-sm transition-colors border-b border-white/5 last:border-0 flex items-center gap-3">
+                                    <MapPin className="w-4 h-4 text-white/50" /> {s}
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                    </div>
 
-                  {/* TO INPUT */}
-                  <div className="relative z-10 group">
-                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-3 h-3 rounded-sm group-focus-within:bg-[#CC1F1F] bg-white/20 transition-colors shadow-sm"></div>
-                    <Input
-                      placeholder="To: Destination Station"
-                      value={to}
-                      onChange={(e) => handleToChange(e.target.value)}
-                      className="pl-12 h-16 !bg-transparent border-white/10 focus-visible:ring-1 focus-visible:ring-[#CC1F1F]/30 rounded-2xl text-white text-lg font-bold placeholder:text-white/40 transition-all border-2 backdrop-blur-none"
-                    />
-                    <AnimatePresence>
-                      {toSuggestions.length > 0 && (
-                        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute z-20 w-full mt-2 bg-slate-900/95 backdrop-blur-3xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                          {toSuggestions.map(s => (
-                            <button key={s} onClick={() => {setTo(s); setToSuggestions([]);}} className="w-full text-left px-5 py-4 text-white hover:bg-[#CC1F1F]/60 font-bold text-sm transition-colors border-b border-white/5 last:border-0 flex items-center gap-3">
-                                <MapPin className="w-4 h-4 text-[#FFD600]" /> {s}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
+                    {/* TO INPUT */}
+                    <div className="relative z-10 w-full group">
+                        <div className="absolute left-[24px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white/40 shadow-sm"></div>
+                        <Input
+                          placeholder="To: Destination Station"
+                          value={to}
+                          onChange={(e) => handleToChange(e.target.value)}
+                          className="pl-16 h-16 w-full bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 focus-visible:ring-1 focus-visible:ring-white/30 rounded-2xl text-white text-base font-bold placeholder:text-white/40 transition-all shadow-sm focus-visible:border-white/30"
+                        />
+                        <AnimatePresence>
+                          {toSuggestions.length > 0 && (
+                            <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute z-20 w-full mt-2 bg-[#1A1A1A]/95 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                              {toSuggestions.map(s => (
+                                <button key={s} onClick={() => {setTo(s); setToSuggestions([]);}} className="w-full text-left px-5 py-4 text-white hover:bg-white/10 font-bold text-sm transition-colors border-b border-white/5 last:border-0 flex items-center gap-3">
+                                    <MapPin className="w-4 h-4 text-white/50" /> {s}
+                                </button>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                    </div>
 
+                 </div>
+
+                {/* SEARCH BUTTON */}
                 <Link href="/results" className="block pt-2">
                   <Button
-                    className="w-full text-white shadow-xl text-base font-black uppercase tracking-widest h-16 rounded-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 hover:opacity-90 border border-white/10"
-                    style={{ backgroundColor: "rgba(204, 31, 31, 0.5)" }}
+                    className="w-full h-16 rounded-2xl bg-[#a02e2e]/90 hover:bg-[#a02e2e] text-white font-black text-lg tracking-widest uppercase transition-all shadow-lg border border-white/10 flex items-center justify-center gap-3"
                   >
-                    <Search className="w-6 h-6" /> Search Routes
+                    <Search className="w-5 h-5" /> Search Routes
                   </Button>
                 </Link>
               </div>
@@ -178,8 +185,8 @@ export default function Home() {
           </div>
 
           <div className="h-[640px] w-full relative group shadow-2xl rounded-[3rem] overflow-hidden border border-slate-200 bg-slate-50">
-              <LiveMap />
-              <div className="absolute top-8 right-8 p-6 bg-white/95 backdrop-blur-xl shadow-2xl rounded-[2rem] z-10 border border-white/20">
+              <LeafletMap height="640px" />
+              <div className="absolute top-8 right-8 p-6 bg-white/95 backdrop-blur-xl shadow-2xl rounded-[2rem] z-[500] border border-white/20">
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]"></div>

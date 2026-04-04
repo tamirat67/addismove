@@ -4,7 +4,7 @@ import { useTenant, FLEET_REGISTRY } from "@/context/TenantContext";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { StatsCards } from "@/components/StatsCards";
 import { RouteManager } from "@/components/RouteManager";
-import { LiveMap } from "@/components/LiveMap";
+import { LeafletMap } from "@/components/LeafletMap";
 import { TicketLog } from "@/components/TicketLog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -443,8 +443,8 @@ export default function Admin() {
                   </div>
                   
                   <TabsContent value="live">
-                    <div className={`p-1 rounded-[3rem] border-4 ${isDark ? "border-zinc-800 shadow-2xl shadow-black/50" : "border-white shadow-xl"}`}>
-                        <LiveMap />
+                    <div className={`rounded-[2.5rem] overflow-hidden border-4 ${isDark ? "border-zinc-800 shadow-2xl shadow-black/50" : "border-white shadow-xl"}`}>
+                        <LeafletMap height="580px" />
                     </div>
                   </TabsContent>
                   

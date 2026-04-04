@@ -104,10 +104,10 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <div className="space-y-1.5 flex-1 overflow-y-auto custom-scrollbar pr-1">
             <NavItem icon={LayoutDashboard} label="Dashboard" href="/admin" active={pathname === '/admin'} />
             <NavItem icon={Ticket} label="Tickets" href="/admin/tickets" active={pathname.startsWith('/admin/tickets')} />
-            <NavItem icon={MapIcon} label="Fleet Map" />
-            <NavItem icon={Bus} label="Bus Fleet" />
-            <NavItem icon={History} label="Operations" />
-            <NavItem icon={Settings} label="Settings" />
+            <NavItem icon={MapIcon} label="Fleet Map" href="/admin/map" active={pathname.startsWith('/admin/map')} />
+            <NavItem icon={Bus} label="Bus Fleet" href="/admin/fleet" active={pathname.startsWith('/admin/fleet')} />
+            <NavItem icon={History} label="Operations" href="/admin/operations" active={pathname.startsWith('/admin/operations')} />
+            <NavItem icon={Settings} label="Settings" href="/admin/settings" active={pathname.startsWith('/admin/settings')} />
           </div>
 
           <div className="mt-auto space-y-3 pt-4 border-t border-slate-100 dark:border-zinc-800">
