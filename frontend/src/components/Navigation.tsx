@@ -32,15 +32,18 @@ export function Navigation() {
           {/* Brand */}
           <Link href="/" className="flex items-center gap-3 group flex-shrink-0">
             <div
-              className="p-2 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ring-2"
+              className="p-2 rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ring-2 animate-float"
               style={{ backgroundColor: "#FFD600" }}
             >
               <BusFront className="w-5 h-5" style={{ color: "#CC1F1F" }} strokeWidth={2.5} />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-black text-sm sm:text-base tracking-wider" style={{ color: "#FFFFFF" }}>
-                Anbessa Bus
-              </span>
+              <div className="flex items-baseline gap-2">
+                <span className="font-black text-sm sm:text-base tracking-wider" style={{ color: "#FFFFFF" }}>
+                  Anbessa Bus
+                </span>
+                <span className="text-[10px] font-bold text-white/60">አንበሳ ባስ</span>
+              </div>
               <span
                 className="font-bold text-[8px] sm:text-[9px] tracking-[0.25em] uppercase"
                 style={{ color: "#FFD600" }}

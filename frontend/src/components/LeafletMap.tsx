@@ -49,11 +49,15 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
 
   useEffect(() => {
     let map: any;
+    let isMounted = true;
 
     const init = async () => {
       if (!mapRef.current || mapInstanceRef.current) return;
 
       const L = (await import("leaflet")).default;
+      
+      if (!isMounted) return;
+      if ((mapRef.current as any)._leaflet_id) return;
       
       // Fix marker asset paths
       delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -147,6 +151,7 @@ export function LeafletMap({ height = "600px", compact = false, buses: propBuses
     init();
 
     return () => {
+      isMounted = false;
       if (map) {
         map.remove();
         mapInstanceRef.current = null;

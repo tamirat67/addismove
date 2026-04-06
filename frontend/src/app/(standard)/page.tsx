@@ -45,7 +45,7 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* 1. HERO SECTION (ORIGINAL FULL-WIDTH STYLE) */}
-      <section className="relative h-[480px] lg:h-[520px] w-full flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[560px] lg:min-h-[600px] w-full flex items-center justify-center overflow-hidden pt-8 lg:pt-16 pb-12">
         {/* Background Image - Cinematic & Clear */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -62,13 +62,14 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-6 lg:mb-8"
+            className="text-center mb-8 lg:mb-10 mt-8 lg:mt-10"
           >
             <p className="text-[#FFD600] font-black uppercase tracking-[0.3em] text-[10px] lg:text-xs mb-2 drop-shadow-lg">
               One App · Bus Rapid · Smart Travel
             </p>
-            <h1 className="text-3xl lg:text-5xl font-black text-white tracking-tighter leading-none uppercase drop-shadow-2xl">
-              Home <span style={{ color: "#FFD600" }}>Dashboard</span>
+            <h1 className="text-3xl lg:text-5xl font-black text-white tracking-tighter leading-none uppercase drop-shadow-2xl flex flex-col items-center">
+              <span>Home <span style={{ color: "#FFD600" }}>Dashboard</span></span>
+              <span className="text-sm lg:text-base font-bold text-white/40 mt-1 uppercase tracking-[0.5em]">አንበሳ ባስ</span>
             </h1>
           </motion.div>
 
@@ -93,7 +94,7 @@ export default function Home() {
                     </div>
                     <span className="text-white font-black uppercase tracking-[0.15em] text-sm drop-shadow-md">Anbessa Pro</span>
                 </div>
-                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-inner">
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md shadow-inner animate-pulse-slow">
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]"></div>
                     <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest ml-1">Live Status:</span>
                     <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest drop-shadow-sm">Normal Operations</span>

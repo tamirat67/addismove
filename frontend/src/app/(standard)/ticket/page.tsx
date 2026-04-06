@@ -22,19 +22,47 @@ export default function Ticket() {
     }
   };
 
-  if (tickets.length === 0) {
     return (
-      <div className="py-24 text-center space-y-6 max-w-sm mx-auto px-6">
-        <div className="p-8 bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200">
-            <QrCode className="w-16 h-16 text-slate-200 mx-auto mb-4" strokeWidth={1} />
-            <p className="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em]">No Active Digital Assets</p>
+      <div className="max-w-7xl mx-auto w-full px-6 pt-20 pb-32 flex flex-col items-center justify-center text-center space-y-12 animate-in fade-in zoom-in-95 duration-700">
+        <div className="relative group">
+            {/* Animated Glow Rings */}
+            <div className="absolute inset-0 bg-[#CC1F1F] rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity animate-pulse"></div>
+            <div className="absolute inset-[-20px] border border-[#CC1F1F10] rounded-full animate-[spin_10s_linear_infinite]"></div>
+            
+            <div className="relative p-12 bg-white rounded-[4rem] shadow-2xl border border-slate-50 flex flex-col items-center">
+                <div className="p-6 bg-[#CC1F1F] rounded-[2rem] shadow-xl shadow-red-500/20 mb-6 animate-float">
+                    <QrCode className="w-12 h-12 text-[#FFD600]" strokeWidth={1.5} />
+                </div>
+                <div className="space-y-2">
+                    <p className="text-[#CC1F1F] font-black uppercase text-[10px] tracking-[0.4em]">Operational Asset Required</p>
+                    <h2 className="text-3xl font-black tracking-tighter text-slate-900 uppercase">No Active <span className="text-[#CC1F1F]">Tokens</span></h2>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">አንበሳ ባስ · Anbessa Bus</p>
+                </div>
+            </div>
         </div>
-        <Link href="/" className="block">
-          <Button className="w-full bg-[#CC1F1F] text-white font-black uppercase tracking-widest h-14 rounded-2xl shadow-xl">Acquire Pass</Button>
-        </Link>
+
+        <div className="space-y-6 w-full max-w-sm">
+            <p className="text-slate-500 text-sm font-medium leading-relaxed">
+                You currently have no active transit assets. Secure your next ride by acquiring a digital pass from the dashboard.
+            </p>
+            <Link href="/" className="block">
+              <Button className="w-full bg-slate-900 hover:bg-[#CC1F1F] text-white font-black uppercase tracking-[0.2em] text-[10px] h-16 rounded-2xl shadow-2xl transition-all active:scale-95 flex items-center justify-center gap-3">
+                <Zap className="w-4 h-4 text-[#FFD600]" /> Acquire Boarding Pass
+              </Button>
+            </Link>
+            <div className="flex items-center justify-center gap-6 pt-4">
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Secured</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-sky-500"></div>
+                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Real-time</span>
+                </div>
+            </div>
+        </div>
       </div>
     );
-  }
 
   // --- FOCUS VIEW (The Cinematic Ticket) ---
   if (focusedTicketId) {

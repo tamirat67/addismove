@@ -38,8 +38,11 @@ export function Footer() {
                             <BusFront className="w-7 h-7 text-white" strokeWidth={2.5} />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-2xl font-black text-white tracking-tighter uppercase">{tenant} <span style={{ color: theme.primary }}>Pro</span></span>
-                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Unified Transit Network</span>
+                            <span className="text-2xl font-black text-white tracking-tighter uppercase">{tenant} <span className="text-anbessa-red">Pro</span></span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em]">Unified Transit Network</span>
+                                <span className="text-[10px] font-bold text-white/30 uppercase">አንበሳ ባስ</span>
+                            </div>
                         </div>
                     </Link>
 
@@ -110,8 +113,8 @@ export function Footer() {
                                 </Link>
                             ))}
                         </div>
-                        <div className="p-4 rounded-2xl bg-[#CC1F1F08] border border-[#CC1F1F20]">
-                            <p className="text-[9px] font-black text-[#CC1F1F] uppercase tracking-widest leading-relaxed">
+                        <div className="p-4 rounded-2xl bg-anbessa-red/5 border border-anbessa-red/20 shadow-[0_0_15px_oklch(0.55_0.22_25_/_0.1)] transition-all hover:bg-anbessa-red/10">
+                            <p className="text-[9px] font-black text-anbessa-red uppercase tracking-widest leading-relaxed">
                                 High-Security <br />Authorized Ops Only
                             </p>
                         </div>

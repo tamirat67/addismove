@@ -29,8 +29,8 @@ export default function Wallet() {
           </div>
         </div>
         <div className="flex gap-3">
-          <button className="flex px-5 py-3 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-800 transition-all shadow-sm active:scale-95 items-center gap-2">
-            <Download className="w-4 h-4" /> Download Statement
+          <button className="flex px-6 py-3.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[#CC1F1F] transition-all shadow-md hover:shadow-xl active:scale-95 items-center gap-2.5 group">
+            <Download className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" /> Download Statement
           </button>
         </div>
       </div>
@@ -43,9 +43,11 @@ export default function Wallet() {
             whileHover={{ y: -5, scale: 1.01 }}
             className="w-full"
           >
-            <Card className="text-white overflow-hidden shadow-2xl border-0 relative rounded-[2rem] aspect-[1.586/1] flex flex-col justify-between" 
+            <Card className="text-white overflow-hidden shadow-2xl border-0 relative rounded-[2rem] aspect-[1.586/1] flex flex-col justify-between shimmer-container" 
                   style={{ background: "linear-gradient(135deg, #CC1F1F 0%, #7F1D1D 100%)" }}>
               
+              <div className="shimmer-overlay opacity-20"></div>
+
               {/* Cinematic Background Patterns */}
               <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/5 rounded-full blur-[100px]"></div>
               <div className="absolute -left-10 -bottom-10 w-64 h-64 bg-[#FFD600]/10 rounded-full blur-[80px]"></div>
@@ -56,13 +58,13 @@ export default function Wallet() {
                 <div className="flex justify-between items-start">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="w-8 h-1 bg-[#FFD600] rounded-full"></div>
+                        <div className="w-8 h-1 bg-[#FFD600] rounded-full shadow-[0_0_8px_oklch(0.85_0.18_85_/_0.5)]"></div>
                         <span className="text-white/70 text-[8px] font-black uppercase tracking-[0.3em]">Anbessa Pro Pass</span>
                     </div>
                     <p className="text-xs font-black tracking-widest uppercase opacity-40">Digital Assets</p>
                   </div>
                   {/* Metallic Chip Effect */}
-                  <div className="w-10 h-8 bg-gradient-to-br from-slate-400 via-slate-200 to-slate-500 rounded-lg shadow-inner flex flex-col justify-around p-1.5 opacity-80">
+                  <div className="w-10 h-8 bg-gradient-to-br from-slate-400 via-slate-200 to-slate-500 rounded-lg shadow-inner flex flex-col justify-around p-1.5 opacity-80 border border-white/20">
                       <div className="w-full h-0.5 bg-black/10 rounded-full"></div>
                       <div className="w-full h-0.5 bg-black/10 rounded-full"></div>
                       <div className="w-full h-0.5 bg-black/10 rounded-full"></div>
@@ -76,7 +78,7 @@ export default function Wallet() {
                     key={balance}
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="text-4xl lg:text-5xl font-black tracking-tighter flex items-baseline gap-2"
+                    className="text-4xl lg:text-5xl font-black tracking-tighter flex items-baseline gap-2 text-glow-red"
                   >
                     {balance.toFixed(2)} <span className="text-sm lg:text-base font-bold opacity-40 uppercase tracking-widest">ETB</span>
                   </motion.h2>
@@ -85,8 +87,8 @@ export default function Wallet() {
                 {/* Card Bottom: Quick Actions */}
                 <div className="flex gap-3 mt-4">
                   <TopUpDialog />
-                  <button className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-md font-black text-[10px] uppercase tracking-widest h-12 rounded-xl border border-white/20 text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg">
-                    <Send className="w-3.5 h-3.5" /> Transfer
+                  <button className="flex-1 bg-white/10 hover:bg-white/20 backdrop-blur-md font-black text-[10px] uppercase tracking-widest h-12 rounded-xl border border-white/20 text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 shadow-lg hover:shadow-white/5 group">
+                    <Send className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /> Transfer
                   </button>
                 </div>
               </CardContent>
